@@ -1,0 +1,68 @@
+name: Football Agent
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # agent utama, tiap 30 menit (UTC)
+    - cron: "0 2 * * *"      # laporan akurasi, 09:00 WIB tiap hari
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Mode jalan manual"
+        type: choice
+        options: [normal, test, report]
+        default: normal
+
+# satu run pada satu waktu, supaya file data tidak bentrok
+concurrency:
+  group: football-agent
+  cancel-in-progress: false
+
+permissions:
+  contents: write   # perlu untuk menyimpan sent.json, predictions.csv, elo_cache.json
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Jalankan agent
+        env:
+          FOOTBALL_DATA_KEY: ${{ secrets.FOOTBALL_DATA_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # jadwal GitHub bisa telat 5-30 menit, jadi jendela dilebarkan
+          NOTIFY_MIN_MINUTES: "30"
+          NOTIFY_MAX_MINUTES: "120"
+          MODE_INPUT: ${{ inputs.mode }}
+          SCHEDULE_NAME: ${{ github.event.schedule }}
+        run: |
+          MODE="$MODE_INPUT"
+          if [ "$SCHEDULE_NAME" = "0 2 * * *" ]; then MODE="report"; fi
+          case "$MODE" in
+            test)   python agent_free.py --test ;;
+            report) python agent_free.py --report ;;
+            *)      python agent_free.py ;;
+          esac
+
+      - name: Simpan data (prediksi, rating, riwayat terkirim)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for f in sent.json predictions.csv elo_cache.json; do
+            [ -f "$f" ] && git add "$f"
+          done
+          if ! git diff --cached --quiet; then
+            git commit -m "data: update $(date -u +%Y-%m-%dT%H:%MZ)"
+            git pull --rebase
+            git push
+          fi
