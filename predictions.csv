@@ -16,3 +16,6 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 560630,2026-10-31T15:00:00Z,Premier League,Brentford FC,Nottingham Forest FC,52,25,23,home,tinggi,2-1,,,,48,28,24,55.5,22.0,22.5,20,Brentford,Nottingham
 564735,2026-10-31T15:15:00Z,Primera Division,Rayo Vallecano de Madrid,RC Celta de Vigo,43,26,31,home,sedang,-,,,,,,,42.6,26.1,31.4,21,Rayo Vallecano,Celta
 558542,2026-10-31T17:00:00Z,Serie A,Udinese Calcio,AS Roma,18,23,59,away,tinggi,0-2,,,,15,25,60,21.9,21.7,56.4,24,Udinese,Roma
+565845,2026-10-31T17:30:00Z,Bundesliga,FC Bayern München,Borussia Dortmund,62,22,16,home,tinggi,3-1,,,,60,25,15,62.8,19.5,17.6,25,Bayern,Dortmund
+564736,2026-10-31T17:30:00Z,Primera Division,Real Betis Balompié,Málaga CF,72,16,12,home,tinggi,3-1,,,,75,15,10,67.9,17.7,14.4,26,Real Betis,Málaga
+560627,2026-10-31T17:30:00Z,Premier League,Tottenham Hotspur FC,Crystal Palace FC,54,24,22,home,tinggi,2-1,,,,55,25,20,54.1,22.5,23.5,27,Tottenham,Crystal Palace
