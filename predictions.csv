@@ -9,3 +9,8 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 565842,2026-10-31T14:30:00Z,Bundesliga,FC Augsburg,SC Freiburg,36,27,37,away,rendah,2-3,,,,30,28,42,42.7,26.0,31.2,13,Augsburg,Freiburg
 565843,2026-10-31T14:30:00Z,Bundesliga,SV Werder Bremen,TSG 1899 Hoffenheim,36,26,38,away,rendah,2-2,,,,35,25,40,37.7,27.5,34.8,14,Bremen,Hoffenheim
 565839,2026-10-31T14:30:00Z,Bundesliga,Borussia Mönchengladbach,SC Paderborn 07,37,28,35,home,rendah,-,,,,,,,37.4,27.6,35.0,15,M'gladbach,SC Paderborn
+560629,2026-10-31T15:00:00Z,Premier League,Hull City AFC,Ipswich Town FC,43,29,28,home,sedang,1-1,,,,35,35,30,50.0,23.8,26.2,16,Hull City,Ipswich Town
+560625,2026-10-31T15:00:00Z,Premier League,Coventry City FC,Sunderland AFC,41,27,32,home,sedang,1-1,,,,35,30,35,47.1,24.7,28.2,17,Coventry City,Sunderland
+560623,2026-10-31T15:00:00Z,Premier League,Manchester City FC,Brighton & Hove Albion FC,57,23,20,home,tinggi,2-1,,,,55,25,20,59.1,20.8,20.1,18,Man City,Brighton Hove
+560624,2026-10-31T15:00:00Z,Premier League,AFC Bournemouth,Leeds United FC,47,26,27,home,tinggi,2-1,,,,45,28,27,49.7,23.9,26.4,19,Bournemouth,Leeds United
+560630,2026-10-31T15:00:00Z,Premier League,Brentford FC,Nottingham Forest FC,52,25,23,home,tinggi,2-1,,,,48,28,24,55.5,22.0,22.5,20,Brentford,Nottingham
