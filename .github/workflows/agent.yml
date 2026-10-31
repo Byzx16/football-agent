@@ -2,8 +2,7 @@ name: Football Agent
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # agent utama, tiap 30 menit (UTC)
-    - cron: "0 2 * * *"      # laporan akurasi, 09:00 WIB tiap hari
+    - cron: "7,27,47 * * * *"   # tiap ~20 menit, menit ganjil supaya tidak kena antrean jam bulat
   workflow_dispatch:
     inputs:
       mode:
@@ -40,14 +39,12 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          # jadwal GitHub bisa telat 5-30 menit, jadi jendela dilebarkan
-          NOTIFY_MIN_MINUTES: "30"
-          NOTIFY_MAX_MINUTES: "120"
+          # jadwal GitHub sering telat/terlewat, jadi jendela dilebarkan
+          NOTIFY_MIN_MINUTES: "20"
+          NOTIFY_MAX_MINUTES: "180"
           MODE_INPUT: ${{ inputs.mode }}
-          SCHEDULE_NAME: ${{ github.event.schedule }}
         run: |
           MODE="$MODE_INPUT"
-          if [ "$SCHEDULE_NAME" = "0 2 * * *" ]; then MODE="report"; fi
           case "$MODE" in
             test)   python agent_free.py --test ;;
             report) python agent_free.py --report ;;
@@ -58,7 +55,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for f in sent.json predictions.csv elo_cache.json; do
+          for f in sent.json predictions.csv elo_cache.json last_report.txt; do
             [ -f "$f" ] && git add "$f"
           done
           if ! git diff --cached --quiet; then

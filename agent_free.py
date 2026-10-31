@@ -28,6 +28,8 @@ NOTIFY_WINDOW_MIN = (int(os.getenv("NOTIFY_MIN_MINUTES", 45)),
 MAX_MATCHES_PER_RUN = 3          # jaga kuota harian Gemini gratis
 SENT_FILE = "sent.json"
 PRED_FILE = "predictions.csv"
+REPORT_FILE = "last_report.txt"
+REPORT_HOUR_WIB = 9                           # laporan harian dikirim di run pertama setelah jam ini (WIB)
 ELO_FILE = "elo_cache.json"
 ELO_CACHE_HOURS = 12
 ELO_K, ELO_HFA, ELO_CARRYOVER = 20, 65, 0.7   # K-factor, keunggulan kandang, sisa rating antar musim
@@ -482,6 +484,29 @@ def build_report():
     return "\n".join(lines)
 
 
+def maybe_send_daily_report():
+    """Kirim laporan akurasi sekali sehari, di run pertama setelah jam 09:00 WIB.
+    Tidak bergantung pada jadwal cron khusus (yang sering telat/terlewat di GitHub)."""
+    wib = dt.datetime.now(dt.timezone(dt.timedelta(hours=7)))
+    if wib.hour < REPORT_HOUR_WIB:
+        return
+    today = wib.date().isoformat()
+    try:
+        last = open(REPORT_FILE).read().strip()
+    except Exception:
+        last = ""
+    if last == today:
+        return
+    try:
+        settle_results(max_calls=8)
+        send_telegram(build_report())
+        with open(REPORT_FILE, "w") as f:
+            f.write(today)
+        print("Laporan harian terkirim.")
+    except Exception as e:
+        print("Laporan harian gagal ->", e)
+
+
 # =====================================================================
 # Main
 # =====================================================================
@@ -498,6 +523,7 @@ def main():
     test_mode = "--test" in args
     sent = set() if test_mode else load_sent()
     if not test_mode:
+        maybe_send_daily_report()
         settle_results()
 
     matches = upcoming_matches(test_mode)
