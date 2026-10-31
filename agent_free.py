@@ -25,7 +25,7 @@ GEMINI_MODEL = "gemini-2.5-flash"
 LEAGUES = "PL,PD,SA,BL1,FL1,CL"
 NOTIFY_WINDOW_MIN = (int(os.getenv("NOTIFY_MIN_MINUTES", 45)),
                      int(os.getenv("NOTIFY_MAX_MINUTES", 90)))   # kirim saat kick-off tinggal sekian menit
-MAX_MATCHES_PER_RUN = 3          # jaga kuota harian Gemini gratis
+MAX_MATCHES_PER_RUN = 8          # maksimal laga yang dianalisa dalam satu run
 SENT_FILE = "sent.json"
 PRED_FILE = "predictions.csv"
 REPORT_FILE = "last_report.txt"
@@ -173,6 +173,18 @@ def elo_predict(R, hid, aid):
     tot = ph + d + pa
     return (ph / tot * 100, d / tot * 100, pa / tot * 100)
 
+def elo_only(elo):
+    """Sinyal cadangan kalau analisa AI gagal: hanya dari model Elo."""
+    res = normalize({
+        "home_win": elo[0], "draw": elo[1], "away_win": elo[2],
+        "key_factors": ["Analisa AI tidak tersedia (kuota atau gangguan), sinyal ini hanya dari model Elo, yaitu kekuatan tim berdasarkan hasil pertandingan."],
+        "risks": ["Tanpa info berita, cedera, dan lineup. Perlakukan dengan lebih hati-hati."],
+        "likely_score": "-", "summary": "Hanya berdasarkan rating Elo, tanpa berita terbaru.",
+    })
+    res["e"] = elo
+    res["ai_failed"] = True
+    return res
+
 def combine(res, elo):
     """Gabungkan probabilitas AI dan Elo. Kalau Elo tidak tersedia, pakai AI saja."""
     res["g"] = (res["home_win"], res["draw"], res["away_win"])
@@ -233,9 +245,14 @@ Berikan analisa dalam format JSON."""
 
     r = gemini_call(prompt, use_search=True)
     if r.status_code != 200:
-        print(f"[gemini] dengan search gagal ({r.status_code}), coba tanpa search...")
+        print(f"[gemini] dengan search gagal ({r.status_code}): {r.text[:200]}")
         r = gemini_call(prompt, use_search=False)
-    r.raise_for_status()
+    if r.status_code == 429:
+        print("[gemini] kena batas kuota, tunggu 45 detik lalu coba sekali lagi...")
+        time.sleep(45)
+        r = gemini_call(prompt, use_search=False)
+    if r.status_code != 200:
+        raise RuntimeError(f"Gemini error {r.status_code}: {r.text[:300]}")
     data = r.json()
     cands = data.get("candidates") or []
     if not cands:
@@ -323,7 +340,9 @@ def format_msg(match, res):
     )
 
     title, models = "PROBABILITAS", ""
-    if res.get("e"):
+    if res.get("ai_failed"):
+        title = "PROBABILITAS (Elo saja, AI sedang tidak tersedia)"
+    elif res.get("e") and res.get("g"):
         g, e = res["g"], res["e"]
         title = "PROBABILITAS (gabungan AI + Elo)"
         models = (f"<code>🤖 AI {g[0]:.0f}/{g[1]:.0f}/{g[2]:.0f}   "
@@ -446,7 +465,7 @@ def format_result_msg(r):
         f"📊 Peluang yang kami beri untuk hasil ini: {float(prob):.0f}%",
     ]
     ls = (r.get("likely_score") or "").strip()
-    if ls:
+    if ls and ls != "-":
         lines.append(f"🔢 Skor tebakan {esc(ls)} → aktual {esc(r['final_score'])}"
                      + ("  🎯 <b>tepat!</b>" if ls == r["final_score"] else ""))
     lines += [LINE, track_record_line()]
@@ -633,6 +652,8 @@ def main():
         print("Tidak ada laga yang cocok saat ini.")
         return
 
+    print(f"{len(matches)} laga di jendela waktu:",
+          "; ".join(f'{m["homeTeam"]["shortName"]} vs {m["awayTeam"]["shortName"]}' for m in matches))
     try:
         ratings = build_ratings()
     except Exception as e:
@@ -655,7 +676,15 @@ def main():
             "away_form": team_form(aid),
         }
         try:
-            res = combine(analyze(m, ctx), elo_predict(ratings, hid, aid))
+            elo = elo_predict(ratings, hid, aid)
+            try:
+                res = combine(analyze(m, ctx), elo)
+            except Exception as ai_err:
+                print("[ai] analisa gagal ->", ai_err)
+                if not elo:
+                    raise
+                print("[ai] pakai sinyal Elo saja untuk laga ini")
+                res = elo_only(elo)
             msg_id = send_telegram(format_msg(m, res))
             if not test_mode:
                 log_prediction(m, res, msg_id)
