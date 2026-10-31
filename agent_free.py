@@ -37,7 +37,8 @@ W_GEMINI = 0.5                                # bobot AI di probabilitas gabunga
 PRED_FIELDS = ["match_id", "kickoff_utc", "competition", "home", "away",
                "p_home", "p_draw", "p_away", "pick", "confidence",
                "likely_score", "outcome", "final_score", "correct",
-               "g_home", "g_draw", "g_away", "e_home", "e_draw", "e_away"]
+               "g_home", "g_draw", "g_away", "e_home", "e_draw", "e_away",
+               "tg_msg_id", "home_s", "away_s"]
 
 FD = "https://api.football-data.org/v4"
 FD_HEADERS = {"X-Auth-Token": FOOTBALL_DATA_KEY}
@@ -277,24 +278,28 @@ def normalize(res):
 # =====================================================================
 # Telegram: tampilan pesan
 # =====================================================================
-def send_telegram(text):
+def _tg_error(r):
+    try:
+        return r.json().get("description", r.text)
+    except Exception:
+        return r.text
+
+def send_telegram(text, reply_to=None):
+    """Kirim pesan ke Telegram dan kembalikan message_id-nya.
+    reply_to = message_id pesan yang mau dibalas (tampil sebagai reply)."""
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    r = requests.post(
-        url,
-        json={"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML",
-              "disable_web_page_preview": True},
-        timeout=30,
-    )
+    base = {"chat_id": TELEGRAM_CHAT_ID, "disable_web_page_preview": True}
+    if reply_to:
+        base["reply_parameters"] = {"message_id": int(reply_to), "allow_sending_without_reply": True}
+    r = requests.post(url, json={**base, "text": text, "parse_mode": "HTML"}, timeout=30)
     if r.status_code == 200:
-        return
-    reason = r.json().get("description", r.text) if r.headers.get("content-type", "").startswith("application/json") else r.text
-    print(f"[telegram] gagal kirim (HTML): {r.status_code} - {reason}")
+        return r.json()["result"]["message_id"]
+    print(f"[telegram] gagal kirim (HTML): {r.status_code} - {_tg_error(r)}")
     plain = html.unescape(re.sub(r"<[^>]+>", "", text))
-    r2 = requests.post(url, json={"chat_id": TELEGRAM_CHAT_ID, "text": plain,
-                                  "disable_web_page_preview": True}, timeout=30)
+    r2 = requests.post(url, json={**base, "text": plain}, timeout=30)
     if r2.status_code != 200:
-        reason2 = r2.json().get("description", r2.text) if r2.headers.get("content-type", "").startswith("application/json") else r2.text
-        raise RuntimeError(f"Telegram menolak pesan: {r2.status_code} - {reason2}")
+        raise RuntimeError(f"Telegram menolak pesan: {r2.status_code} - {_tg_error(r2)}")
+    return r2.json()["result"]["message_id"]
 
 def bar(p, width=10):
     f = max(0, min(width, round(p / 100 * width)))
@@ -385,7 +390,7 @@ def track_record_line():
         line += "\n<i>(sampel masih kecil, belum bisa disimpulkan)</i>"
     return line
 
-def log_prediction(match, res):
+def log_prediction(match, res, msg_id=None):
     rows = read_preds()
     if any(r["match_id"] == str(match["id"]) for r in rows):
         return
@@ -395,6 +400,9 @@ def log_prediction(match, res):
         "competition": match["competition"]["name"],
         "home": match["homeTeam"]["name"],
         "away": match["awayTeam"]["name"],
+        "home_s": match["homeTeam"].get("shortName") or "",
+        "away_s": match["awayTeam"].get("shortName") or "",
+        "tg_msg_id": msg_id or "",
         "p_home": res["home_win"], "p_draw": res["draw"], "p_away": res["away_win"],
         "pick": res["pick"], "confidence": res["confidence"],
         "likely_score": res.get("likely_score", ""),
@@ -404,83 +412,175 @@ def log_prediction(match, res):
     })
     write_preds(rows)
 
-def settle_results(max_calls=4):
-    """Cek hasil akhir pertandingan yang sudah dicatat dan belum diisi hasilnya."""
+def _nm(r, side):
+    """Nama tim singkat untuk tampilan (pakai nama pendek kalau ada)."""
+    name = r.get(f"{side}_s") or r.get(side) or "?"
+    return name if len(name) <= 18 else name[:17] + "…"
+
+def _pick_label(r, key):
+    return {"home": _nm(r, "home"), "away": _nm(r, "away"), "draw": "Seri"}[key]
+
+def format_result_msg(r):
+    """Pesan FULL TIME yang dikirim sebagai reply ke pesan analisa."""
+    esc = lambda x: html.escape(str(x))
+    h, a = esc(_nm(r, "home")), esc(_nm(r, "away"))
+    try:
+        hs, as_ = r["final_score"].split("-")
+    except Exception:
+        hs, as_ = "?", "?"
+    ok = r["correct"] == "1"
+    names = {"home": f"{h} menang", "away": f"{a} menang", "draw": "Seri"}
+    lean = "condong ke " if r["confidence"] == "rendah" and r["pick"] != "draw" else ""
+    prob = {"home": r["p_home"], "draw": r["p_draw"], "away": r["p_away"]}[r["outcome"]]
+    verdict = "✅ <b>TEBAKAN BENAR</b>" if ok else "❌ <b>TEBAKAN MELESET</b>"
+    if not ok and r["confidence"] == "rendah":
+        verdict += "  <i>(sinyal lemah)</i>"
+    lines = [
+        f"🏁 <b>FULL TIME</b>  •  {esc(r['competition'])}",
+        LINE,
+        f"⚽ <b>{h}</b>  <code>{esc(hs)} – {esc(as_)}</code>  <b>{a}</b>",
+        LINE,
+        verdict,
+        f"🎯 Prediksi: {lean}{names[r['pick']]} (keyakinan {esc(r['confidence'])})",
+        f"🏆 Hasil: {names[r['outcome']]}",
+        f"📊 Peluang yang kami beri untuk hasil ini: {float(prob):.0f}%",
+    ]
+    ls = (r.get("likely_score") or "").strip()
+    if ls:
+        lines.append(f"🔢 Skor tebakan {esc(ls)} → aktual {esc(r['final_score'])}"
+                     + ("  🎯 <b>tepat!</b>" if ls == r["final_score"] else ""))
+    lines += [LINE, track_record_line()]
+    return "\n".join(lines)
+
+RESULT_DELAY_MIN = 105   # laga paling cepat selesai sekitar 105 menit setelah kick-off
+
+def settle_results(max_calls=3, notify=True):
+    """Cek hasil akhir laga yang sudah dicatat. Begitu ada yang selesai, isi hasilnya
+    dan (kalau notify) kirim pesan FULL TIME sebagai reply ke pesan analisanya."""
     rows = read_preds()
     now = dt.datetime.now(dt.timezone.utc)
-    calls, changed = 0, False
     winner_map = {"HOME_TEAM": "home", "AWAY_TEAM": "away", "DRAW": "draw"}
+
+    pending = []
     for r in rows:
         if r["outcome"]:
             continue
         ko = dt.datetime.fromisoformat(r["kickoff_utc"].replace("Z", "+00:00"))
-        if now - ko < dt.timedelta(hours=3):
+        if now - ko >= dt.timedelta(minutes=RESULT_DELAY_MIN):
+            pending.append((r, ko))
+    if not pending:
+        return 0
+
+    # 1 panggilan API untuk semua laga dalam 8 hari terakhir
+    recent = [(r, ko) for r, ko in pending if now - ko <= dt.timedelta(days=8)]
+    found, bulk_ok = {}, False
+    if recent:
+        d0 = min(ko for _, ko in recent).date()
+        d1 = max(ko for _, ko in recent).date() + dt.timedelta(days=1)
+        data = fd_get("/matches", {"dateFrom": d0.isoformat(), "dateTo": d1.isoformat(),
+                                   "competitions": LEAGUES})
+        if data:
+            bulk_ok = True
+            found = {m["id"]: m for m in data.get("matches", [])}
+
+    calls, newly = 0, []
+    for r, ko in pending:
+        mid = int(r["match_id"])
+        m = found.get(mid)
+        if m is None and calls < max_calls and (not bulk_ok or now - ko > dt.timedelta(days=8)):
+            data = fd_get(f"/matches/{mid}")
+            calls += 1
+            m = (data.get("match", data) if data else None)
+        if not m or m.get("status") != "FINISHED":
             continue
-        if calls >= max_calls:
-            break
-        data = fd_get(f"/matches/{r['match_id']}")
-        calls += 1
-        if not data:
-            continue
-        m = data.get("match", data)
-        if m.get("status") != "FINISHED":
-            continue
-        winner = (m.get("score") or {}).get("winner")
-        ft = (m.get("score") or {}).get("fullTime") or {}
-        if winner not in winner_map:
+        score = m.get("score") or {}
+        winner, ft = score.get("winner"), score.get("fullTime") or {}
+        if winner not in winner_map or ft.get("home") is None:
             continue
         r["outcome"] = winner_map[winner]
-        r["final_score"] = f'{ft.get("home")}-{ft.get("away")}'
+        r["final_score"] = f'{ft["home"]}-{ft["away"]}'
         r["correct"] = "1" if r["pick"] == r["outcome"] else "0"
-        changed = True
-    if changed:
+        newly.append(r)
+
+    if newly:
         write_preds(rows)
+        if notify:
+            for r in newly:
+                try:
+                    send_telegram(format_result_msg(r), reply_to=r.get("tg_msg_id") or None)
+                except Exception as e:
+                    print("Gagal kirim hasil akhir ->", e)
+    return len(newly)
+
+def _brier(rows, pref):
+    tot = 0.0
+    for r in rows:
+        p = [float(r[f"{pref}_{k}"]) / 100 for k in ("home", "draw", "away")]
+        o = [1.0 if r["outcome"] == k else 0.0 for k in ("home", "draw", "away")]
+        tot += sum((x - y) ** 2 for x, y in zip(p, o))
+    return tot / len(rows)
 
 def build_report():
     rows = read_preds()
-    done = [r for r in rows if r["outcome"]]
+    done = sorted([r for r in rows if r["outcome"]], key=lambda r: r["kickoff_utc"])
     pending = len(rows) - len(done)
+    wib = dt.datetime.now(dt.timezone(dt.timedelta(hours=7)))
+    head = f"📈 <b>LAPORAN HARIAN</b>  •  {wib:%d %b %Y}"
     if not done:
-        return (f"📈 <b>LAPORAN AKURASI</b>\nBelum ada prediksi yang selesai "
-                f"({pending} masih menunggu hasil).")
+        return f"{head}\n{LINE}\nBelum ada prediksi yang selesai ({pending} menunggu hasil)."
+
+    esc = lambda x: html.escape(str(x))
     n = len(done)
     acc = sum(r["correct"] == "1" for r in done) / n * 100
     home_base = sum(r["outcome"] == "home" for r in done) / n * 100
 
-    brier_sum = 0.0
-    for r in done:
-        p = [float(r["p_home"]) / 100, float(r["p_draw"]) / 100, float(r["p_away"]) / 100]
-        o = [1.0 if r["outcome"] == k else 0.0 for k in ("home", "draw", "away")]
-        brier_sum += sum((pi - oi) ** 2 for pi, oi in zip(p, o))
-    brier = brier_sum / n
+    recent = []
+    for r in reversed(done[-5:]):
+        icon = "✅" if r["correct"] == "1" else "❌"
+        lean = "condong " if r["confidence"] == "rendah" and r["pick"] != "draw" else ""
+        recent.append(
+            f"{icon} {esc(_nm(r, 'home'))} {esc(r['final_score'])} {esc(_nm(r, 'away'))}\n"
+            f"      <i>tebakan: {lean}{esc(_pick_label(r, r['pick']))} ({esc(r['confidence'])})</i>"
+        )
+    last = done[-10:]
+    streak = "".join("🟢" if r["correct"] == "1" else "🔴" for r in last)
 
     lines = [
-        "📈 <b>LAPORAN AKURASI</b>",
-        LINE,
-        f"Prediksi selesai: <b>{n}</b>   (menunggu hasil: {pending})",
-        f"🎯 Akurasi sinyal: <b>{acc:.0f}%</b>",
-        f"🏠 Pembanding (selalu pilih tuan rumah): {home_base:.0f}%",
-        f"📐 Brier score: <b>{brier:.3f}</b>  (tebak acak 33/33/33 = 0.667, makin kecil makin baik)",
-        LINE,
-        "<b>Per tingkat keyakinan</b>",
+        head, LINE,
+        "🕐 <b>HASIL TERAKHIR</b>", *recent, LINE,
+        f"🎯 <b>AKURASI</b>  ({n} laga selesai, {pending} menunggu)",
+        f"<code>Agent      {bar(acc)} {acc:>3.0f}%</code>",
+        f"<code>Tuan rumah {bar(home_base)} {home_base:>3.0f}%</code>  <i>(pembanding)</i>",
+        f"Tren {len(last)} terakhir: {streak}",
+        LINE, "🔒 <b>PER KEYAKINAN</b>",
     ]
-    cmp_rows = [r for r in done if r.get("g_home") and r.get("e_home")]
-    if cmp_rows:
-        def _b(pref):
-            tot = 0.0
-            for r in cmp_rows:
-                p = [float(r[f"{pref}_{k}"]) / 100 for k in ("home", "draw", "away")]
-                o = [1.0 if r["outcome"] == k else 0.0 for k in ("home", "draw", "away")]
-                tot += sum((x - y) ** 2 for x, y in zip(p, o))
-            return tot / len(cmp_rows)
-        lines.insert(6, f"🤖 vs 📐 Brier ({len(cmp_rows)} laga): AI {_b('g'):.3f} • Elo {_b('e'):.3f} • Gabungan {_b('p'):.3f}")
     for c in ("tinggi", "sedang", "rendah"):
         sub = [r for r in done if r["confidence"] == c]
         if sub:
             a = sum(r["correct"] == "1" for r in sub) / len(sub) * 100
-            lines.append(f"{CONF_ICON[c]} {c}: {a:.0f}% benar  ({len(sub)} laga)")
+            lines.append(f"{CONF_ICON[c]} <code>{c:<7} {bar(a)} {a:>3.0f}%</code>  ({len(sub)} laga)")
+        else:
+            lines.append(f"{CONF_ICON[c]} <code>{c:<7}</code> <i>belum ada laga</i>")
+
+    lines += [LINE, "📐 <b>KUALITAS PROBABILITAS</b>  <i>(Brier, makin kecil makin baik)</i>"]
+    cmp_rows = [r for r in done if r.get("g_home") and r.get("e_home")]
+    if cmp_rows:
+        sc = {"🤖 AI": _brier(cmp_rows, "g"), "📐 Elo": _brier(cmp_rows, "e"),
+              "🔀 Gabungan": _brier(cmp_rows, "p")}
+        best = min(sc, key=sc.get)
+        for k, v in sc.items():
+            lines.append(f"{k}: <b>{v:.3f}</b>" + ("  🏅" if k == best else ""))
+        lines.append(f"<i>({len(cmp_rows)} laga; tebak acak = 0.667)</i>")
+    else:
+        lines.append(f"Gabungan: <b>{_brier(done, 'p'):.3f}</b>  <i>(tebak acak = 0.667)</i>")
+
+    lines.append(LINE)
     if n < 30:
-        lines.append(f"\n<i>Sampel baru {n} laga, terlalu sedikit untuk disimpulkan. Tunggu minimal 30-50 laga.</i>")
+        lines.append(f"<i>⚠️ Sampel baru {n} laga, terlalu sedikit untuk disimpulkan. Tunggu minimal 30-50 laga.</i>")
+    else:
+        edge = acc - home_base
+        verdict = "mengungguli" if edge > 3 else "setara dengan" if edge >= -3 else "di bawah"
+        lines.append(f"💬 Agent {verdict} pembanding tuan rumah ({edge:+.0f} poin).")
     return "\n".join(lines)
 
 
@@ -556,9 +656,9 @@ def main():
         }
         try:
             res = combine(analyze(m, ctx), elo_predict(ratings, hid, aid))
-            send_telegram(format_msg(m, res))
+            msg_id = send_telegram(format_msg(m, res))
             if not test_mode:
-                log_prediction(m, res)
+                log_prediction(m, res, msg_id)
                 sent.add(str(m["id"]))
                 save_sent(sent)
             done += 1
