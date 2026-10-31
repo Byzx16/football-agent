@@ -39,9 +39,9 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          # jadwal GitHub sering telat/terlewat, jadi jendela dilebarkan
-          NOTIFY_MIN_MINUTES: "20"
-          NOTIFY_MAX_MINUTES: "180"
+          # pemicu cron-job.org tiap 15 menit; analisa dikirim 25-75 menit sebelum kick-off
+          NOTIFY_MIN_MINUTES: "25"
+          NOTIFY_MAX_MINUTES: "75"
           MODE_INPUT: ${{ inputs.mode }}
         run: |
           MODE="$MODE_INPUT"
