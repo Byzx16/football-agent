@@ -11,9 +11,9 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 565839,2026-10-31T14:30:00Z,Bundesliga,Borussia Mönchengladbach,SC Paderborn 07,37,28,35,home,rendah,-,draw,0-0,0,,,,37.4,27.6,35.0,15,M'gladbach,SC Paderborn
 560629,2026-10-31T15:00:00Z,Premier League,Hull City AFC,Ipswich Town FC,43,29,28,home,sedang,1-1,,,,35,35,30,50.0,23.8,26.2,16,Hull City,Ipswich Town
 560625,2026-10-31T15:00:00Z,Premier League,Coventry City FC,Sunderland AFC,41,27,32,home,sedang,1-1,,,,35,30,35,47.1,24.7,28.2,17,Coventry City,Sunderland
-560623,2026-10-31T15:00:00Z,Premier League,Manchester City FC,Brighton & Hove Albion FC,57,23,20,home,tinggi,2-1,,,,55,25,20,59.1,20.8,20.1,18,Man City,Brighton Hove
+560623,2026-10-31T15:00:00Z,Premier League,Manchester City FC,Brighton & Hove Albion FC,57,23,20,home,tinggi,2-1,away,0-1,0,55,25,20,59.1,20.8,20.1,18,Man City,Brighton Hove
 560624,2026-10-31T15:00:00Z,Premier League,AFC Bournemouth,Leeds United FC,47,26,27,home,tinggi,2-1,,,,45,28,27,49.7,23.9,26.4,19,Bournemouth,Leeds United
-560630,2026-10-31T15:00:00Z,Premier League,Brentford FC,Nottingham Forest FC,52,25,23,home,tinggi,2-1,,,,48,28,24,55.5,22.0,22.5,20,Brentford,Nottingham
+560630,2026-10-31T15:00:00Z,Premier League,Brentford FC,Nottingham Forest FC,52,25,23,home,tinggi,2-1,home,2-0,1,48,28,24,55.5,22.0,22.5,20,Brentford,Nottingham
 564735,2026-10-31T15:15:00Z,Primera Division,Rayo Vallecano de Madrid,RC Celta de Vigo,43,26,31,home,sedang,-,,,,,,,42.6,26.1,31.4,21,Rayo Vallecano,Celta
 558542,2026-10-31T17:00:00Z,Serie A,Udinese Calcio,AS Roma,18,23,59,away,tinggi,0-2,,,,15,25,60,21.9,21.7,56.4,24,Udinese,Roma
 565845,2026-10-31T17:30:00Z,Bundesliga,FC Bayern München,Borussia Dortmund,62,22,16,home,tinggi,3-1,,,,60,25,15,62.8,19.5,17.6,25,Bayern,Dortmund
