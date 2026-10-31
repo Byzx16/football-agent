@@ -21,3 +21,5 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 560627,2026-10-31T17:30:00Z,Premier League,Tottenham Hotspur FC,Crystal Palace FC,54,24,22,home,tinggi,2-1,,,,55,25,20,54.1,22.5,23.5,27,Tottenham,Crystal Palace
 558548,2026-10-31T19:45:00Z,Serie A,AC Milan,FC Internazionale Milano,31,27,42,away,sedang,1-2,,,,30,28,42,32.6,26.6,40.8,40,Milan,Inter
 559643,2026-10-31T19:45:00Z,Ligue 1,ES Troyes AC,Le Mans FC,35,31,34,home,rendah,0-1,,,,30,35,35,41.1,26.5,32.4,41,Troyes,Le Mans
+564732,2026-10-31T20:00:00Z,Primera Division,FC Barcelona,Deportivo Alavés,77,14,9,home,tinggi,3-0,,,,75,15,10,79.3,13.1,7.6,42,Barça,Alavés
+560628,2026-10-31T20:00:00Z,Premier League,Aston Villa FC,Fulham FC,53,25,22,home,tinggi,2-1,,,,47,29,24,59.3,20.7,19.9,43,Aston Villa,Fulham
