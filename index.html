@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a1812">
+<title>Football Agent</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚽%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pitch:#0a1812;--turf:#10241b;--chalk:#e8efe4;--mute:#8fa598;--amber:#ffc94a;--ok:#5ee08a;--no:#ff6b6b;--line:rgba(232,239,228,.14);--dg:"Barlow Condensed","Arial Narrow",sans-serif}
+*{box-sizing:border-box;margin:0}
+html{color-scheme:dark}
+body{background:var(--pitch) repeating-linear-gradient(90deg,transparent 0 80px,rgba(255,255,255,.02) 80px 160px);color:var(--chalk);font:16px/1.55 "Barlow",system-ui,sans-serif;min-height:100vh;padding:28px 18px 56px}
+.wrap{max-width:1040px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:14px;padding-bottom:22px}
+h1{font:700 clamp(40px,8vw,68px)/.95 var(--dg);letter-spacing:.01em}
+h2{font:600 28px/1.1 var(--dg);margin-bottom:6px}
+.sub{color:var(--mute);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--mute);font:inherit;font-size:14px;cursor:pointer}
+.pill:hover{color:var(--chalk);border-color:var(--chalk)}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+.live{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(94,224,138,.6)}70%,100%{box-shadow:0 0 0 9px rgba(94,224,138,0)}}
+section{border-top:1px solid var(--line);padding:30px 0}
+.board{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#07110c;box-shadow:inset 0 0 0 6px #0d1c15,inset 0 0 0 7px var(--line);padding:34px 22px 26px;display:grid;grid-template-columns:1fr auto 1fr;gap:6px 14px;text-align:center;margin:6px 0 30px}
+.board:before{content:"";position:absolute;left:50%;top:50%;width:420px;height:420px;transform:translate(-50%,-50%);border:2px solid rgba(232,239,228,.06);border-radius:50%;pointer-events:none}
+.board:after{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:2px solid rgba(232,239,228,.06);pointer-events:none}
+.side{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}
+.lb{font:600 24px/1 var(--dg);letter-spacing:.02em}
+.dg{font:700 clamp(64px,15vw,132px)/1 var(--dg);color:var(--amber);text-shadow:0 0 26px rgba(255,201,74,.4);font-variant-numeric:tabular-nums}
+.side.b .dg{color:var(--chalk);text-shadow:0 0 22px rgba(232,239,228,.22)}
+.ds{color:var(--mute);font-size:14px;max-width:24ch}
+.vs{position:relative;z-index:1;align-self:center;font:700 clamp(40px,8vw,80px)/1 var(--dg);color:var(--mute)}
+.note{grid-column:1/-1;position:relative;z-index:1;margin-top:14px}
+.rail{grid-column:1/-1;position:relative;z-index:1;height:6px;background:rgba(232,239,228,.1);border-radius:2px;overflow:hidden}
+.rail i{display:block;height:100%;width:0;background:var(--amber);transition:width 1.6s cubic-bezier(.2,.7,.2,1) .4s}
+.in .rail i{width:var(--w)}
+.rl{grid-column:1/-1;position:relative;z-index:1;color:var(--mute);font-size:13px}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0;border-top:none;padding:0 0 30px}
+.strip div{padding:6px 20px 6px 0;margin-right:20px;border-right:1px solid var(--line)}
+.strip div:last-child{border-right:0}
+.strip b{display:block;font:700 44px/1.05 var(--dg);font-variant-numeric:tabular-nums}
+.strip span{color:var(--mute);font-size:14px;display:block;max-width:26ch}
+.chart{width:100%;height:auto;display:block;margin-top:14px}
+.ln{stroke-dasharray:1;stroke-dashoffset:1}
+.in .ln{stroke-dashoffset:0;transition:stroke-dashoffset 1.8s ease .2s}
+.ar,.pt,.bs{opacity:0;transition:opacity .8s ease 1.2s}
+.in .ar,.in .pt,.in .bs{opacity:1}
+.lg{display:flex;flex-wrap:wrap;gap:6px 20px;color:var(--mute);font-size:14px;margin-top:4px}
+.lg i{display:inline-block;width:18px;height:0;border-top:3px solid var(--amber);vertical-align:middle;margin-right:7px}
+.lg i.d{border-top:2px dashed var(--chalk)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+@media(max-width:760px){.cols{grid-template-columns:1fr;gap:26px}.strip div{border-right:0;margin-right:0}.pc{display:none}.board:before{width:300px;height:300px}}
+.br{display:grid;grid-template-columns:96px 1fr auto;gap:12px;align-items:center;margin-top:14px;font-size:15px}
+.br em{font-style:normal;color:var(--mute);font-size:14px;text-align:right;min-width:64px}
+.bar{height:10px;background:rgba(232,239,228,.09);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--c,var(--ok));transition:width 1.2s cubic-bezier(.2,.7,.2,1) .2s}
+.in .bar i{width:var(--w)}
+.sq{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:8px;background:var(--c)}
+.best{color:var(--amber)}
+.pr{display:grid;grid-template-columns:130px 1fr auto;gap:6px 18px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center}
+.pr small,td small{color:var(--mute);font-size:13px}
+.pr .legs{color:var(--mute);font-size:14px}
+@media(max-width:640px){.pr{grid-template-columns:1fr}}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;font-size:13px;border:1px solid var(--line);white-space:nowrap}
+.tag.ok{color:var(--ok);border-color:rgba(94,224,138,.4)}
+.tag.no{color:var(--no);border-color:rgba(255,107,107,.4)}
+.tag.wait{color:var(--amber);border-color:rgba(255,201,74,.35)}
+.f{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.f select,.f input{background:var(--turf);color:var(--chalk);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font:inherit;font-size:14px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:560px}
+th{text-align:left;color:var(--mute);font-weight:500;font-size:13px;padding:8px 10px;border-bottom:1px solid var(--chalk)}
+td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:hover td{background:rgba(232,239,228,.03)}
+td small{display:block}
+.sc{font:700 24px/1 var(--dg);margin-right:10px;font-variant-numeric:tabular-nums}
+.pb{display:flex;height:8px;width:130px;border-radius:2px;overflow:hidden;margin-bottom:4px}
+.pb i{display:block;height:100%}
+.more{margin-top:16px}
+.err,.empty{color:var(--mute);padding:30px 0}
+footer{border-top:1px solid var(--line);padding-top:20px;color:var(--mute);font-size:13px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.ln{stroke-dashoffset:0}.ar,.pt,.bs{opacity:1}.rail i,.bar i{width:var(--w)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div><h1>Football Agent</h1><p class="sub">Pantauan akurasi tebakan dari semua liga, diperbarui otomatis dari data di repo.</p></div>
+  <button class="pill" id="rf" title="Muat ulang data"><i class="live"></i>Data terbaru: <span id="up">memuat</span></button>
+</header>
+<main id="app"><p class="empty">Memuat data…</p></main>
+<footer>Ini analisa probabilitas, bukan jaminan hasil dan bukan saran taruhan. Waktu ditampilkan dalam WIB.</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s),N=parseFloat,K=['home','draw','away'],
+esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
+RM=matchMedia('(prefers-reduced-motion:reduce)').matches,
+F2=(v,d)=>v.toFixed(d).replace('.',','),
+nm=(r,s)=>r[s+'_s']||r[s]||'?',
+fmt=iso=>{const d=new Date(iso),o={timeZone:'Asia/Jakarta'};return d.toLocaleDateString('id-ID',{...o,day:'numeric',month:'short'})+', '+d.toLocaleTimeString('id-ID',{...o,hour:'2-digit',minute:'2-digit',hour12:false}).replace('.',':')},
+br=(rs,p)=>rs.reduce((s,r)=>s+K.reduce((a,k)=>a+Math.pow(N(r[p+'_'+k])/100-(r.outcome==k?1:0),2),0),0)/rs.length,
+CF={tinggi:'var(--ok)',sedang:'var(--amber)',rendah:'#7f9488'};
+let ROWS=[],PAR=[],LM=null,S={lg:'',rs:'',q:'',lim:40};
+
+function csv(t){t=t.replace(/^\uFEFF/,'');const R=[];let r=[],f='',q=0;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=0}else f+=c}else if(c=='"')q=1;else if(c==','){r.push(f);f=''}else if(c=='\n'||c=='\r'){if(c=='\r'&&t[i+1]=='\n')i++;r.push(f);f='';if(r.length>1||r[0]!=='')R.push(r);r=[]}else f+=c}if(f!==''||r.length){r.push(f);R.push(r)}const h=R.shift()||[];return R.map(x=>Object.fromEntries(h.map((k,i)=>[k.trim(),x[i]==null?'':x[i]])))}
+
+function cu(el){const to=N(el.dataset.to)||0,dec=+(el.dataset.dec||0),suf=el.dataset.suf||'',d=RM?1:1400,t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,4);el.textContent=F2(to*e,dec)+suf;if(k<1)requestAnimationFrame(f)})(t0)}
+
+function line(done){
+  if(done.length<2)return '<p class="empty">Grafik muncul setelah minimal 2 laga selesai.</p>';
+  const W=640,H=240,P={l:36,r:14,t:12,b:14},iw=W-P.l-P.r,ih=H-P.t-P.b,n=done.length;
+  let h=0,b=0;const A=[],B=[];
+  done.forEach((r,i)=>{h+=r.correct=='1'?1:0;b+=r.outcome=='home'?1:0;A.push(h/(i+1)*100);B.push(b/(i+1)*100)});
+  const X=i=>P.l+iw*i/(n-1),Y=v=>P.t+ih*(1-v/100),
+  pth=a=>a.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join('');
+  const grid=[0,25,50,75,100].map(v=>`<line x1="${P.l}" x2="${W-P.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(232,239,228,${v==50?.22:.08})"/><text x="${P.l-8}" y="${Y(v)+4}" text-anchor="end" fill="#8fa598" font-size="12">${v}%</text>`).join('');
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Akurasi kumulatif agent dibanding pembanding tuan rumah">
+  <defs><linearGradient id="ga" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffc94a" stop-opacity=".28"/><stop offset="1" stop-color="#ffc94a" stop-opacity="0"/></linearGradient></defs>
+  ${grid}<path class="ar" d="${pth(A)} L${X(n-1)} ${Y(0)} L${X(0)} ${Y(0)}Z" fill="url(#ga)"/>
+  <path class="bs" d="${pth(B)}" fill="none" stroke="#e8efe4" stroke-width="2" stroke-dasharray="6 6"/>
+  <path class="ln" pathLength="1" d="${pth(A)}" fill="none" stroke="#ffc94a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle class="pt" cx="${X(n-1)}" cy="${Y(A[n-1])}" r="5.5" fill="#ffc94a"/></svg>
+  <div class="lg"><span><i></i>Agent</span><span><i class="d"></i>Pembanding tuan rumah</span></div>`;
+}
+
+function parlays(){
+  if(!PAR.length)return '<p class="empty">Belum ada kombinasi tercatat. Kombinasi pertama dikirim sekitar jam 15:00 WIB.</p>';
+  const fin=PAR.filter(x=>x.outcome=='win'||x.outcome=='lose');
+  const sum=[['aman','Aman'],['mix','Mix']].map(([k,l])=>{const s=fin.filter(x=>x.kind==k);if(!s.length)return '';const w=s.filter(x=>x.outcome=='win').length,e=s.reduce((a,x)=>a+N(x.p_comb||0),0),ok=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[0]||0),0),tt=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[1]||0),0);return `<p>${l}: menang ${w} dari ${s.length} kombinasi (perkiraan ${F2(e,1)}), pilihan benar ${ok} dari ${tt}.</p>`}).join('');
+  const list=PAR.slice(-8).reverse().map(x=>{
+    const lab={win:['ok','Menang'],lose:['no','Gagal'],void:['wait','Dibatalkan']}[x.outcome]||['wait','Berjalan'];
+    const legs=(x.legs||[]).map(l=>esc(l.pick=='home'?l.home_s:l.pick=='away'?l.away_s:'Seri')).join(', ');
+    const d=new Date(x.date+'T00:00:00+07:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'});
+    return `<div class="pr"><div><b>${x.kind=='aman'?'Aman':'Mix'}</b><small> ${d}</small></div><div class="legs">${legs}</div><div><span class="tag ${lab[0]}">${lab[1]}</span> <small>peluang ${Math.round(N(x.p_comb||0)*100)}%${x.legs_hit?', '+esc(x.legs_hit)+' benar':''}</small></div></div>`}).join('');
+  return (sum?`<div class="sub" style="margin-bottom:8px">${sum}</div>`:'')+list;
+}
+
+function render(){
+  if(!ROWS.length){$('#app').innerHTML='<p class="empty">Belum ada tebakan tercatat. Tebakan pertama muncul saat ada laga 25 sampai 75 menit sebelum kick-off.</p>';return}
+  const done=ROWS.filter(r=>r.outcome),n=done.length,pend=ROWS.length-n,
+  hit=done.filter(r=>r.correct=='1').length,acc=n?hit/n*100:0,base=n?done.filter(r=>r.outcome=='home').length/n*100:0,
+  strong=done.filter(r=>r.confidence!='rendah'),sh=strong.filter(r=>r.correct=='1').length,
+  cmp=done.filter(r=>r.g_home&&r.e_home),d=acc-base,
+  pf=PAR.filter(x=>x.outcome=='win'||x.outcome=='lose'),pw=pf.filter(x=>x.outcome=='win').length;
+  const verdict=!n?'Belum ada laga selesai. Skor pertama muncul setelah laga yang dicatat berakhir.':n<30?`Agent ${d>=0?'unggul':'tertinggal'} ${Math.round(Math.abs(d))} poin dari pembanding, tapi sampel baru ${n} laga dan belum bisa disimpulkan.`:`Agent ${d>3?'unggul':d>=-3?'setara':'tertinggal'} ${Math.round(Math.abs(d))} poin dari pembanding tuan rumah.`;
+  const bars=['tinggi','sedang','rendah'].map(c=>{const s=done.filter(r=>r.confidence==c);if(!s.length)return `<div class="br"><span><i class="sq" style="--c:${CF[c]}"></i>${c}</span><div class="bar"></div><em>belum ada laga</em></div>`;const a=s.filter(r=>r.correct=='1').length/s.length*100;return `<div class="br"><span><i class="sq" style="--c:${CF[c]}"></i>${c}</span><div class="bar"><i style="--w:${a}%;--c:${CF[c]}"></i></div><em>${Math.round(a)}% dari ${s.length}</em></div>`}).join('');
+  let bri='<p class="empty" style="padding:14px 0">Perbandingan muncul setelah ada laga selesai yang punya probabilitas AI dan Elo.</p>';
+  if(cmp.length){const sc=[['AI',br(cmp,'g')],['Elo',br(cmp,'e')],['Gabungan',br(cmp,'p')]],best=Math.min(...sc.map(x=>x[1]));
+    bri=sc.map(([l,v])=>`<div class="br"><span class="${v==best?'best':''}">${l}</span><div class="bar"><i style="--w:${Math.min(100,v/.8*100)}%;--c:${v==best?'var(--amber)':'#7f9488'}"></i></div><em class="${v==best?'best':''}">${F2(v,3)}</em></div>`).join('')+`<p class="sub" style="margin-top:12px;font-size:14px">Skor Brier dari ${cmp.length} laga. Makin kecil makin baik, tebakan acak 0,667. Warna kuning menandai yang terbaik.</p>`}
+  const lgs=[...new Set(ROWS.map(r=>r.competition))].sort();
+  $('#app').innerHTML=`
+  <div class="board obs">
+    <div class="side"><span class="lb">Agent</span><b class="dg cu" data-to="${acc}" data-suf="%">0%</b><span class="ds">akurasi tebakan dari ${n} laga</span></div>
+    <div class="vs">:</div>
+    <div class="side b"><span class="lb">Tuan rumah</span><b class="dg cu" data-to="${base}" data-suf="%">0%</b><span class="ds">bila selalu memilih tuan rumah</span></div>
+    <p class="note">${verdict}</p>
+    <div class="rail"><i style="--w:${Math.min(100,n/50*100)}%"></i></div>
+    <p class="rl">${n} dari 50 laga untuk kesimpulan yang layak</p>
+  </div>
+  <div class="strip">
+    <div><b class="cu" data-to="${cmp.length||n?br(cmp.length?cmp:done,'p'):0}" data-dec="3">0</b><span>Skor Brier gabungan, acak 0,667, makin kecil makin baik</span></div>
+    <div><b>${sh}/${strong.length}</b><span>Sinyal kuat yang benar</span></div>
+    <div><b>${pend}</b><span>Laga menunggu hasil</span></div>
+    <div><b>${pw}/${pf.length}</b><span>Kombinasi harian yang menang</span></div>
+  </div>
+  <section class="obs"><h2>Akurasi dari laga ke laga</h2><p class="sub">Setiap titik adalah akurasi kumulatif sampai laga itu.</p>${line(done)}</section>
+  <section class="cols obs"><div><h2>Akurasi per tingkat keyakinan</h2><p class="sub">Sinyal yang diberi keyakinan tinggi seharusnya lebih sering benar.</p>${bars}</div><div><h2>Siapa yang paling jitu</h2><p class="sub">Kualitas probabilitas AI, model Elo, dan gabungan keduanya.</p>${bri}</div></section>
+  <section><h2>Kombinasi harian</h2><p class="sub" style="margin-bottom:10px">Gabungan pilihan terkuat dari semua liga. Satu laga meleset, seluruh kombinasi gagal.</p>${parlays()}</section>
+  <section><h2>Riwayat tebakan</h2>
+    <div class="f"><select id="lg" aria-label="Filter liga"><option value="">Semua liga</option>${lgs.map(l=>`<option${S.lg==l?' selected':''}>${esc(l)}</option>`).join('')}</select>
+    <select id="rs" aria-label="Filter hasil">${[['','Semua hasil'],['ok','Benar'],['no','Meleset'],['wait','Menunggu']].map(([v,t])=>`<option value="${v}"${S.rs==v?' selected':''}>${t}</option>`).join('')}</select>
+    <input id="q" type="search" placeholder="Cari tim" value="${esc(S.q)}" aria-label="Cari tim"></div>
+    <div class="tw"><table><thead><tr><th>Kick-off</th><th>Laga</th><th class="pc">Peluang tuan rumah, seri, tamu</th><th>Tebakan</th><th>Hasil</th></tr></thead><tbody id="tb"></tbody></table></div>
+    <button class="pill more" id="more" style="display:none">Tampilkan lebih banyak</button>
+  </section>`;
+  $('#lg').onchange=e=>{S.lg=e.target.value;S.lim=40;table()};
+  $('#rs').onchange=e=>{S.rs=e.target.value;S.lim=40;table()};
+  $('#q').oninput=e=>{S.q=e.target.value;S.lim=40;table()};
+  $('#more').onclick=()=>{S.lim+=40;table()};
+  table();
+  document.querySelectorAll('.cu').forEach(cu);
+  document.querySelectorAll('.obs').forEach(el=>io.observe(el));
+}
+
+function table(){
+  const q=S.q.trim().toLowerCase();
+  const rows=ROWS.filter(r=>(!S.lg||r.competition==S.lg)&&(!S.rs||(S.rs=='wait'?!r.outcome:r.outcome&&(S.rs=='ok')==(r.correct=='1')))&&(!q||(r.home+' '+r.away+' '+nm(r,'home')+' '+nm(r,'away')).toLowerCase().includes(q))).reverse();
+  $('#tb').innerHTML=rows.slice(0,S.lim).map(r=>{
+    const a=K.map(k=>N(r['p_'+k])||0),pk={home:nm(r,'home'),away:nm(r,'away'),draw:'Seri'}[r.pick]||'-';
+    const res=r.outcome?`<span class="sc">${esc(r.final_score.replace('-',' - '))}</span><span class="tag ${r.correct=='1'?'ok':'no'}">${r.correct=='1'?'Benar':'Meleset'}</span>`:'<span class="tag wait">Menunggu</span>';
+    return `<tr><td>${fmt(r.kickoff_utc)}</td><td><b>${esc(nm(r,'home'))}</b> lawan <b>${esc(nm(r,'away'))}</b><small>${esc(r.competition)}</small></td><td class="pc"><div class="pb"><i style="width:${a[0]}%;background:var(--ok)"></i><i style="width:${a[1]}%;background:#6f8478"></i><i style="width:${a[2]}%;background:var(--amber)"></i></div><small>${a.map(v=>Math.round(v)).join(' / ')}</small></td><td><i class="sq" style="--c:${CF[r.confidence]||CF.rendah}"></i>${r.confidence=='rendah'&&r.pick!='draw'?'Condong ':''}${esc(pk)}<small>keyakinan ${esc(r.confidence)}</small></td><td>${res}</td></tr>`}).join('')||'<tr><td colspan="5" class="empty">Tidak ada tebakan yang cocok dengan filter ini.</td></tr>';
+  $('#more').style.display=rows.length>S.lim?'inline-flex':'none';
+}
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+
+function ago(){const el=$('#up');if(!LM){el.textContent='baru saja';return}const m=Math.round((Date.now()-new Date(LM))/6e4);el.textContent=m<1?'baru saja':m<60?m+' menit lalu':Math.round(m/60)+' jam lalu'}
+
+async function load(){
+  try{
+    const t=Date.now(),r=await fetch('predictions.csv?t='+t,{cache:'no-store'});
+    if(!r.ok)throw new Error(r.status);
+    LM=r.headers.get('last-modified');
+    ROWS=csv(await r.text()).filter(x=>x.match_id).sort((a,b)=>a.kickoff_utc<b.kickoff_utc?-1:1);
+    try{const p=await fetch('parlays.json?t='+t,{cache:'no-store'});PAR=p.ok?await p.json():[]}catch(e){PAR=[]}
+    render();ago();
+  }catch(e){$('#app').innerHTML='<p class="err">Data belum bisa dimuat. Buka halaman ini lewat alamat GitHub Pages, bukan dengan klik dua kali pada file, dan pastikan predictions.csv ada di folder yang sama.</p>'}
+}
+$('#rf').onclick=load;
+setInterval(load,3e5);setInterval(ago,3e4);
+load();
+</script>
+</body>
+</html>
