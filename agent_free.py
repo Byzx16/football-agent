@@ -28,6 +28,12 @@ NOTIFY_WINDOW_MIN = (int(os.getenv("NOTIFY_MIN_MINUTES", 45)),
 MAX_MATCHES_PER_RUN = 8          # maksimal laga yang dianalisa dalam satu run
 SENT_FILE = "sent.json"
 PRED_FILE = "predictions.csv"
+PARLAY_HOUR_WIB = int(os.getenv("PARLAY_HOUR_WIB", 6))   # jam kombinasi harian dikirim (WIB)
+PARLAY_FILE = "parlays.json"
+PARLAY_LAST_FILE = "last_parlay.txt"
+PARLAY_SHORTLIST = 5         # jumlah laga yang dianalisa AI untuk kombinasi (hemat kuota Gemini)
+PARLAY_MIN_PROB = 55         # peluang minimal sebuah pilihan supaya boleh masuk kombinasi (%)
+BULAN = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"]
 REPORT_FILE = "last_report.txt"
 REPORT_HOUR_WIB = 9                           # laporan harian dikirim di run pertama setelah jam ini (WIB)
 ELO_FILE = "elo_cache.json"
@@ -318,6 +324,9 @@ def send_telegram(text, reply_to=None):
         raise RuntimeError(f"Telegram menolak pesan: {r2.status_code} - {_tg_error(r2)}")
     return r2.json()["result"]["message_id"]
 
+def _tgl(d):
+    return f"{d.day} {BULAN[d.month - 1]} {d.year}"
+
 def bar(p, width=10):
     f = max(0, min(width, round(p / 100 * width)))
     return "█" * f + "░" * (width - f)
@@ -360,7 +369,7 @@ def format_msg(match, res):
 
     return (
         f"⚽ <b>{esc(h_full)} vs {esc(a_full)}</b>\n"
-        f"🏆 {esc(match['competition']['name'])}  •  🕐 {ko_wib:%d %b, %H:%M} WIB\n"
+        f"🏆 {esc(match['competition']['name'])}  •  🕐 {ko_wib.day} {BULAN[ko_wib.month - 1]}, {ko_wib:%H:%M} WIB\n"
         f"{LINE}\n"
         f"📊 <b>{title}</b>\n{prob_lines}\n{models}"
         f"{LINE}\n"
@@ -544,7 +553,7 @@ def build_report():
     done = sorted([r for r in rows if r["outcome"]], key=lambda r: r["kickoff_utc"])
     pending = len(rows) - len(done)
     wib = dt.datetime.now(dt.timezone(dt.timedelta(hours=7)))
-    head = f"📈 <b>LAPORAN HARIAN</b>  •  {wib:%d %b %Y}"
+    head = f"📈 <b>LAPORAN HARIAN</b>  •  {_tgl(wib)}"
     if not done:
         return f"{head}\n{LINE}\nBelum ada prediksi yang selesai ({pending} menunggu hasil)."
 
@@ -593,6 +602,17 @@ def build_report():
     else:
         lines.append(f"Gabungan: <b>{_brier(done, 'p'):.3f}</b>  <i>(tebak acak = 0.667)</i>")
 
+    ps = [x for x in _load_parlays() if x["outcome"] in ("win", "lose")]
+    if ps:
+        lines += [LINE, "🎰 <b>KOMBINASI HARIAN</b>  <i>(hasil nyata vs perkiraan)</i>"]
+        for kind, label in (("aman", "🛡️ Aman"), ("mix", "🎲 Mix")):
+            sub = [x for x in ps if x["kind"] == kind]
+            if sub:
+                wins = sum(x["outcome"] == "win" for x in sub)
+                expected = sum(x["p_comb"] for x in sub)
+                hit = sum(int(x["legs_hit"].split("/")[0]) for x in sub)
+                tot = sum(int(x["legs_hit"].split("/")[1]) for x in sub)
+                lines.append(f"{label}: menang {wins}/{len(sub)} (perkiraan {expected:.1f}) • pilihan benar {hit}/{tot}")
     lines.append(LINE)
     if n < 30:
         lines.append(f"<i>⚠️ Sampel baru {n} laga, terlalu sedikit untuk disimpulkan. Tunggu minimal 30-50 laga.</i>")
@@ -601,6 +621,236 @@ def build_report():
         verdict = "mengungguli" if edge > 3 else "setara dengan" if edge >= -3 else "di bawah"
         lines.append(f"💬 Agent {verdict} pembanding tuan rumah ({edge:+.0f} poin).")
     return "\n".join(lines)
+
+
+# =====================================================================
+# Kombinasi harian (parlay): gabungan pilihan terkuat dari semua liga
+# =====================================================================
+WINNER_MAP = {"HOME_TEAM": "home", "AWAY_TEAM": "away", "DRAW": "draw"}
+
+def _load_parlays():
+    try:
+        with open(PARLAY_FILE, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+def _save_parlays(items):
+    with open(PARLAY_FILE, "w", encoding="utf-8") as f:
+        json.dump(items, f, ensure_ascii=False, indent=1)
+
+def matches_next_24h():
+    now = dt.datetime.now(dt.timezone.utc)
+    data = fd_get("/matches", {
+        "dateFrom": now.date().isoformat(),
+        "dateTo": (now + dt.timedelta(days=2)).date().isoformat(),
+        "competitions": LEAGUES,
+    })
+    out = []
+    for m in (data or {}).get("matches", []):
+        if m["status"] not in ("TIMED", "SCHEDULED"):
+            continue
+        ko = dt.datetime.fromisoformat(m["utcDate"].replace("Z", "+00:00"))
+        mins = (ko - now).total_seconds() / 60
+        if 20 <= mins <= 24 * 60:
+            out.append(m)
+    out.sort(key=lambda m: m["utcDate"])
+    return out
+
+def _leg_from(m, res):
+    key = {"home": "home_win", "draw": "draw", "away": "away_win"}[res["pick"]]
+    return {
+        "match_id": m["id"], "kickoff_utc": m["utcDate"],
+        "competition": m["competition"]["name"],
+        "home": m["homeTeam"]["name"], "away": m["awayTeam"]["name"],
+        "home_s": m["homeTeam"].get("shortName") or m["homeTeam"]["name"],
+        "away_s": m["awayTeam"].get("shortName") or m["awayTeam"]["name"],
+        "pick": res["pick"], "p": float(res[key]),
+        "ai": bool(res.get("g")),
+    }
+
+def _leg_pick_text(leg):
+    return {"home": f'{leg["home_s"]} menang', "away": f'{leg["away_s"]} menang', "draw": "Seri"}[leg["pick"]]
+
+def _combo(legs):
+    prod = 1.0
+    for l in legs:
+        prod *= l["p"] / 100
+    return prod
+
+def build_parlay_legs(ratings):
+    """Pilih laga terkuat berdasarkan Elo, analisa AI untuk shortlist, lalu susun pilihan."""
+    cands = []
+    for m in matches_next_24h():
+        elo = elo_predict(ratings, m["homeTeam"]["id"], m["awayTeam"]["id"])
+        if elo:
+            cands.append((max(elo), m, elo))
+    cands.sort(key=lambda x: -x[0])
+    n_scanned = len(cands)
+
+    legs = []
+    for _, m, elo in cands[:PARLAY_SHORTLIST]:
+        comp = m["competition"]["code"]
+        table = standings(comp) if comp != "CL" else {}
+        hid, aid = m["homeTeam"]["id"], m["awayTeam"]["id"]
+        ctx = {"home_rank": table.get(hid, "n/a"), "away_rank": table.get(aid, "n/a"),
+               "home_form": team_form(hid), "away_form": team_form(aid)}
+        try:
+            res = combine(analyze(m, ctx), elo)
+        except Exception as e:
+            print("[parlay] AI gagal, pakai Elo saja ->", e)
+            res = elo_only(elo)
+        leg = _leg_from(m, res)
+        if leg["p"] >= PARLAY_MIN_PROB:
+            legs.append(leg)
+    legs.sort(key=lambda l: -l["p"])
+    return legs, n_scanned
+
+def _fmt_leg(i, leg):
+    ko = dt.datetime.fromisoformat(leg["kickoff_utc"].replace("Z", "+00:00"))
+    ko_wib = ko.astimezone(dt.timezone(dt.timedelta(hours=7)))
+    esc = lambda x: html.escape(str(x))
+    tag = "" if leg["ai"] else " <i>(Elo saja)</i>"
+    return (f"{i}. {ko_wib:%H:%M} WIB • {esc(leg['competition'])}\n"
+            f"    {esc(leg['home_s'])} vs {esc(leg['away_s'])} → <b>{esc(_leg_pick_text(leg))}</b> ({leg['p']:.0f}%){tag}")
+
+def _fmt_combo(title, legs):
+    prod = _combo(legs)
+    odds = 1 / prod if prod > 0 else 0
+    rows = "\n".join(_fmt_leg(i, l) for i, l in enumerate(sorted(legs, key=lambda l: l["kickoff_utc"]), 1))
+    return (f"{title} — {len(legs)} pilihan\n{rows}\n"
+            f"📊 Peluang SEMUA benar: <b>{prod * 100:.0f}%</b>  <i>(odds adil ≈ {odds:.1f})</i>")
+
+def format_parlay_msg(safe, mix, n_scanned):
+    wib = dt.datetime.now(dt.timezone(dt.timedelta(hours=7)))
+    lines = [
+        f"🎰 <b>KOMBINASI HARIAN</b>  •  {_tgl(wib)}",
+        f"<i>Draft: lineup belum keluar, bisa berubah. {n_scanned} laga dipindai dari semua liga. "
+        f"Analisa per laga tetap datang sekitar 1 jam sebelum kick-off.</i>",
+        LINE,
+    ]
+    if safe:
+        lines.append(_fmt_combo("🛡️ <b>AMAN</b>", safe))
+    else:
+        lines.append(f"Hari ini tidak ada kombinasi yang layak: tidak ada cukup pilihan dengan peluang ≥ {PARLAY_MIN_PROB}%.")
+    if mix:
+        lines += [LINE, _fmt_combo("🎲 <b>MIX</b>", mix)]
+    lines += [
+        LINE,
+        "⚠️ <b>Ingat:</b> peluang gabungan jauh lebih kecil dari peluang tiap pilihan "
+        "(3 pilihan @70% hanya sekitar 34% benar semuanya). Satu laga meleset, seluruh kombinasi gagal.",
+        track_record_line(),
+        "",
+        "<i>Ini analisa probabilitas, bukan jaminan hasil maupun saran taruhan.</i>",
+    ]
+    return "\n".join(lines)
+
+def run_daily_parlay(manual=False):
+    try:
+        ratings = build_ratings()
+    except Exception as e:
+        print("[parlay] rating Elo gagal ->", e)
+        return False
+    legs, n_scanned = build_parlay_legs(ratings)
+    safe = legs[:3] if len(legs) >= 2 else []
+    mix = legs[:5] if len(legs) > len(safe) and len(legs) >= 4 else []
+    msg_id = send_telegram(format_parlay_msg(safe, mix, n_scanned))
+
+    today = dt.datetime.now(dt.timezone(dt.timedelta(hours=7))).date().isoformat()
+    items = [x for x in _load_parlays() if not (x["date"] == today and not x["outcome"])]
+    for kind, combo in (("aman", safe), ("mix", mix)):
+        if combo:
+            items.append({"id": f"{today}-{kind}", "date": today, "kind": kind, "legs": combo,
+                          "p_comb": round(_combo(combo), 4), "tg_msg_id": msg_id,
+                          "outcome": "", "legs_hit": ""})
+    _save_parlays(items)
+    return True
+
+def maybe_send_daily_parlay():
+    """Kirim kombinasi harian sekali sehari, di run pertama setelah PARLAY_HOUR_WIB (WIB)."""
+    wib = dt.datetime.now(dt.timezone(dt.timedelta(hours=7)))
+    if wib.hour < PARLAY_HOUR_WIB:
+        return
+    today = wib.date().isoformat()
+    try:
+        last = open(PARLAY_LAST_FILE).read().strip()
+    except Exception:
+        last = ""
+    if last == today:
+        return
+    try:
+        if run_daily_parlay():
+            with open(PARLAY_LAST_FILE, "w") as f:
+                f.write(today)
+            print("Kombinasi harian terkirim.")
+    except Exception as e:
+        print("Kombinasi harian gagal ->", e)
+
+def format_parlay_result(x, details):
+    esc = lambda ee: html.escape(str(ee))
+    names = {"aman": "🛡️ AMAN", "mix": "🎲 MIX"}
+    rows = []
+    for leg, w, score in details:
+        ok = leg["pick"] == w
+        rows.append(f"{'✅' if ok else '❌'} {esc(leg['home_s'])} {esc(score)} {esc(leg['away_s'])}\n"
+                    f"      <i>pilihan: {esc(_leg_pick_text(leg))}</i>")
+    win = x["outcome"] == "win"
+    return "\n".join([
+        f"🏁 <b>HASIL KOMBINASI {names.get(x['kind'], x['kind'].upper())}</b>",
+        LINE, *rows, LINE,
+        f"{'✅ <b>KOMBINASI MENANG</b>' if win else '❌ <b>KOMBINASI GAGAL</b>'}  ({x['legs_hit']} pilihan benar)",
+        f"📊 Peluang awal semua benar: {x['p_comb'] * 100:.0f}%",
+    ])
+
+def settle_parlays(notify=True):
+    items = _load_parlays()
+    if not any(not x["outcome"] for x in items):
+        return 0
+    now = dt.datetime.now(dt.timezone.utc)
+    parse = lambda z: dt.datetime.fromisoformat(z.replace("Z", "+00:00"))
+    changed = False
+    ready = []
+    for x in items:
+        if x["outcome"]:
+            continue
+        last_ko = max(parse(l["kickoff_utc"]) for l in x["legs"])
+        if now - last_ko > dt.timedelta(days=3):      # laga tertunda terlalu lama: abaikan
+            x["outcome"], changed = "void", True
+        elif now - last_ko >= dt.timedelta(minutes=RESULT_DELAY_MIN):
+            ready.append(x)
+    newly = []
+    if ready:
+        kos = [parse(l["kickoff_utc"]) for x in ready for l in x["legs"]]
+        data = fd_get("/matches", {"dateFrom": min(kos).date().isoformat(),
+                                   "dateTo": (max(kos).date() + dt.timedelta(days=1)).isoformat(),
+                                   "competitions": LEAGUES})
+        found = {m["id"]: m for m in (data or {}).get("matches", [])}
+        for x in ready:
+            details, complete = [], True
+            for leg in x["legs"]:
+                m = found.get(int(leg["match_id"]))
+                sc = (m or {}).get("score") or {}
+                ft = sc.get("fullTime") or {}
+                if not m or m.get("status") != "FINISHED" or sc.get("winner") not in WINNER_MAP or ft.get("home") is None:
+                    complete = False
+                    break
+                details.append((leg, WINNER_MAP[sc["winner"]], f'{ft["home"]}-{ft["away"]}'))
+            if not complete:
+                continue
+            hits = sum(1 for leg, w, _ in details if leg["pick"] == w)
+            x["legs_hit"] = f"{hits}/{len(details)}"
+            x["outcome"] = "win" if hits == len(details) else "lose"
+            newly.append((x, details))
+            changed = True
+    if changed:
+        _save_parlays(items)
+    if notify:
+        for x, details in newly:
+            try:
+                send_telegram(format_parlay_result(x, details), reply_to=x.get("tg_msg_id") or None)
+            except Exception as e:
+                print("Gagal kirim hasil kombinasi ->", e)
+    return len(newly)
 
 
 def maybe_send_daily_report():
@@ -632,8 +882,13 @@ def maybe_send_daily_report():
 def main():
     args = sys.argv[1:]
 
+    if "--parlay" in args:
+        run_daily_parlay(manual=True)
+        return
+
     if "--report" in args:
         settle_results(max_calls=8)
+        settle_parlays()
         text = build_report()
         print(html.unescape(re.sub(r"<[^>]+>", "", text)))
         send_telegram(text)
@@ -642,8 +897,10 @@ def main():
     test_mode = "--test" in args
     sent = set() if test_mode else load_sent()
     if not test_mode:
-        maybe_send_daily_report()
         settle_results()
+        settle_parlays()
+        maybe_send_daily_report()
+        maybe_send_daily_parlay()
 
     matches = upcoming_matches(test_mode)
     if test_mode:
