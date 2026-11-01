@@ -89,6 +89,7 @@ td .pill{padding:4px 12px;font-size:13px}
 .tag.no{color:var(--no);border-color:rgba(255,107,107,.4)}
 .tag.wait{color:var(--amber);border-color:rgba(255,201,74,.35)}
 .f{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.f label{display:flex;align-items:center;gap:8px;color:var(--mute);font-size:14px}
 .f select,.f input{background:var(--turf);color:var(--chalk);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font:inherit;font-size:14px}
 .tw{overflow-x:auto}
 table{width:100%;border-collapse:collapse;min-width:560px}
@@ -123,7 +124,7 @@ nm=(r,s)=>r[s+'_s']||r[s]||'?',
 fmt=iso=>{const d=new Date(iso),o={timeZone:'Asia/Jakarta'};return d.toLocaleDateString('id-ID',{...o,day:'numeric',month:'short'})+', '+d.toLocaleTimeString('id-ID',{...o,hour:'2-digit',minute:'2-digit',hour12:false}).replace('.',':')},
 br=(rs,p)=>rs.reduce((s,r)=>s+K.reduce((a,k)=>a+Math.pow(N(r[p+'_'+k])/100-(r.outcome==k?1:0),2),0),0)/rs.length,
 CF={tinggi:'var(--ok)',sedang:'var(--amber)',rendah:'#7f9488'};
-let ROWS=[],PAR=[],CR={},AN={},LM=null,S={lg:'',rs:'',q:'',lim:40,open:new Set()};
+let ROWS=[],PAR=[],CR={},AN={},LM=null,S={lg:'',rs:'',q:'',lim:40,d1:'',d2:'',open:new Set()};
 
 function logo(full,short){const u=CR[full]||CR[short],ini=esc((short||full||'?').replace(/[^A-Za-z]/g,'').slice(0,3));
   return u?`<img class="cr" src="${esc(u)}" alt="" loading="lazy" onerror="this.outerHTML='&lt;span class=&quot;cr ini&quot;&gt;${ini}&lt;/span&gt;'">`:`<span class="cr ini">${ini}</span>`}
@@ -173,7 +174,7 @@ function render(){
   let bri='<p class="empty" style="padding:14px 0">Perbandingan muncul setelah ada laga selesai yang punya probabilitas AI dan Elo.</p>';
   if(cmp.length){const sc=[['AI',br(cmp,'g')],['Elo',br(cmp,'e')],['Gabungan',br(cmp,'p')]],best=Math.min(...sc.map(x=>x[1]));
     bri=sc.map(([l,v])=>`<div class="br"><span class="${v==best?'best':''}">${l}</span><div class="bar"><i style="--w:${Math.min(100,v/.8*100)}%;--c:${v==best?'var(--amber)':'#7f9488'}"></i></div><em class="${v==best?'best':''}">${F2(v,3)}</em></div>`).join('')+`<p class="sub" style="margin-top:12px;font-size:14px">Skor Brier dari ${cmp.length} laga. Makin kecil makin baik, tebakan acak 0,667. Warna kuning menandai yang terbaik.</p>`}
-  const lgs=[...new Set(ROWS.map(r=>r.competition))].sort();
+  const lgs=[...new Set(ROWS.map(r=>r.competition))].sort(),dmin=wd(ROWS[0]),dmax=wd(ROWS[ROWS.length-1]);
   $('#app').innerHTML=`
   <div class="board obs">
     <div class="side"><span class="lb">Agent</span><b class="dg cu" data-to="${acc}" data-suf="%">0%</b><span class="ds">akurasi tebakan dari ${n} laga</span></div>
@@ -196,13 +197,16 @@ function render(){
   <section><h2>Riwayat tebakan</h2>
     <div class="f"><select id="lg" aria-label="Filter liga"><option value="">Semua liga</option>${lgs.map(l=>`<option${S.lg==l?' selected':''}>${esc(l)}</option>`).join('')}</select>
     <select id="rs" aria-label="Filter hasil">${[['','Semua hasil'],['ok','Benar'],['no','Meleset'],['wait','Menunggu']].map(([v,t])=>`<option value="${v}"${S.rs==v?' selected':''}>${t}</option>`).join('')}</select>
-    <input id="q" type="search" placeholder="Cari tim" value="${esc(S.q)}" aria-label="Cari tim"></div>
+    <input id="q" type="search" placeholder="Cari tim" value="${esc(S.q)}" aria-label="Cari tim"><label>Dari <input id="d1" type="date" value="${S.d1}" min="${dmin}" max="${dmax}"></label><label>Sampai <input id="d2" type="date" value="${S.d2}" min="${dmin}" max="${dmax}"></label><button class="pill" id="rst">Atur ulang</button></div><p class="sub" id="cnt" aria-live="polite"></p>
     <div class="tw"><table><thead><tr><th>Kick-off</th><th>Laga</th><th class="pc">Peluang tuan rumah, seri, tamu</th><th>Tebakan</th><th>Hasil</th><th>Analisa</th></tr></thead><tbody id="tb"></tbody></table></div>
     <button class="pill more" id="more" style="display:none">Tampilkan lebih banyak</button>
   </section>`;
   $('#lg').onchange=e=>{S.lg=e.target.value;S.lim=40;table()};
   $('#rs').onchange=e=>{S.rs=e.target.value;S.lim=40;table()};
   $('#q').oninput=e=>{S.q=e.target.value;S.lim=40;table()};
+  $('#d1').onchange=e=>{S.d1=e.target.value;S.lim=40;table()};
+  $('#d2').onchange=e=>{S.d2=e.target.value;S.lim=40;table()};
+  $('#rst').onclick=()=>{S.lg=S.rs=S.q=S.d1=S.d2='';S.lim=40;['lg','rs','q','d1','d2'].forEach(i=>$('#'+i).value='');table()};
   $('#more').onclick=()=>{S.lim+=40;table()};
   $('#tb').onclick=e=>{const b=e.target.closest('button[data-id]');if(!b)return;const id=b.dataset.id;S.open.has(id)?S.open.delete(id):S.open.add(id);table()};
   table();
@@ -210,6 +214,7 @@ function render(){
   document.querySelectorAll('.obs').forEach(el=>io.observe(el));
 }
 
+const wd=r=>new Date(Date.parse(r.kickoff_utc)+252e5).toISOString().slice(0,10);
 const pick=r=>({home:nm(r,'home'),away:nm(r,'away'),draw:'Seri'}[r.pick]||'-');
 
 function detail(r){
@@ -225,12 +230,13 @@ function detail(r){
 
 function table(){
   const q=S.q.trim().toLowerCase();
-  const rows=ROWS.filter(r=>(!S.lg||r.competition==S.lg)&&(!S.rs||(S.rs=='wait'?!r.outcome:r.outcome&&(S.rs=='ok')==(r.correct=='1')))&&(!q||(r.home+' '+r.away+' '+nm(r,'home')+' '+nm(r,'away')).toLowerCase().includes(q))).reverse();
+  const rows=ROWS.filter(r=>(!S.lg||r.competition==S.lg)&&(!S.d1||wd(r)>=S.d1)&&(!S.d2||wd(r)<=S.d2)&&(!S.rs||(S.rs=='wait'?!r.outcome:r.outcome&&(S.rs=='ok')==(r.correct=='1')))&&(!q||(r.home+' '+r.away+' '+nm(r,'home')+' '+nm(r,'away')).toLowerCase().includes(q))).reverse();
   $('#tb').innerHTML=rows.slice(0,S.lim).map(r=>{
     const a=K.map(k=>N(r['p_'+k])||0),open=S.open.has(r.match_id);
     const res=r.outcome?`<span class="sc">${esc(r.final_score.replace('-',' - '))}</span><span class="tag ${r.correct=='1'?'ok':'no'}">${r.correct=='1'?'Benar':'Meleset'}</span>`:'<span class="tag wait">Menunggu</span>';
     return `<tr><td>${fmt(r.kickoff_utc)}</td><td><div class="tm">${logo(r.home,r.home_s)}<b>${esc(nm(r,'home'))}</b></div><div class="tm">${logo(r.away,r.away_s)}<b>${esc(nm(r,'away'))}</b></div><small>${esc(r.competition)}</small></td><td class="pc"><div class="pb"><i style="width:${a[0]}%;background:var(--ok)"></i><i style="width:${a[1]}%;background:#6f8478"></i><i style="width:${a[2]}%;background:var(--amber)"></i></div><small>${a.map(v=>Math.round(v)).join(' / ')}</small></td><td><i class="sq" style="--c:${CF[r.confidence]||CF.rendah}"></i>${r.confidence=='rendah'&&r.pick!='draw'?'Condong ':''}${esc(pick(r))}<small>keyakinan ${esc(r.confidence)}</small></td><td>${res}</td><td><button class="pill" data-id="${esc(r.match_id)}" aria-expanded="${open}">${open?'Tutup':'Lihat'}</button></td></tr>`+(open?`<tr class="det"><td colspan="6">${detail(r)}</td></tr>`:'')}).join('')||'<tr><td colspan="6" class="empty">Tidak ada tebakan yang cocok dengan filter ini.</td></tr>';
   $('#more').style.display=rows.length>S.lim?'inline-flex':'none';
+  $('#cnt').textContent=`Menampilkan ${Math.min(rows.length,S.lim)} dari ${rows.length} tebakan${rows.length<ROWS.length?`, total ${ROWS.length}`:''}.`;
 }
 
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
