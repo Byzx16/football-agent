@@ -24,3 +24,4 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 564732,2026-10-31T20:00:00Z,Primera Division,FC Barcelona,Deportivo Alavés,77,14,9,home,tinggi,3-0,home,6-1,1,75,15,10,79.3,13.1,7.6,42,Barça,Alavés
 560628,2026-10-31T20:00:00Z,Premier League,Aston Villa FC,Fulham FC,53,25,22,home,tinggi,2-1,draw,1-1,0,47,29,24,59.3,20.7,19.9,43,Aston Villa,Fulham
 558543,2026-11-01T11:30:00Z,Serie A,Como 1907,Venezia FC,74,17,9,home,tinggi,2-0,,,,70,20,10,76.8,14.2,9.0,54,Como 1907,Venezia FC
+564733,2026-11-01T13:00:00Z,Primera Division,Getafe CF,Sevilla FC,35,28,37,away,rendah,1-2,,,,28,30,42,41.6,26.4,32.0,55,Getafe,Sevilla FC
