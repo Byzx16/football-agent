@@ -157,7 +157,8 @@ function parlays(){
   const sum=[['aman','Aman'],['mix','Mix']].map(([k,l])=>{const s=fin.filter(x=>x.kind==k);if(!s.length)return '';const w=s.filter(x=>x.outcome=='win').length,e=s.reduce((a,x)=>a+N(x.p_comb||0),0),ok=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[0]||0),0),tt=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[1]||0),0);return `<p>${l}: menang ${w} dari ${s.length} kombinasi (perkiraan ${F2(e,1)}), pilihan benar ${ok} dari ${tt}.</p>`}).join('');
   const list=PAR.slice(-8).reverse().map(x=>{
     const lab={win:['ok','Menang'],lose:['no','Gagal'],void:['wait','Dibatalkan']}[x.outcome]||['wait','Berjalan'];
-    const legs=(x.legs||[]).map(l=>esc(l.pick=='home'?l.home_s:l.pick=='away'?l.away_s:'Seri')).join(', ');
+    const MK={over15:'Over 1.5',over25:'Over 2.5',under25:'Under 2.5',under35:'Under 3.5',btts:'Kedua tim cetak gol'},
+    legs=(x.legs||[]).map(l=>esc(l.market&&l.market!='1x2'?MK[l.market]+' ('+l.home_s+' lawan '+l.away_s+')':l.pick=='home'?l.home_s:l.pick=='away'?l.away_s:'Seri')).join(', ');
     const d=new Date(x.date+'T00:00:00+07:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'});
     return `<div class="pr"><div><b>${x.kind=='aman'?'Aman':'Mix'}</b><small> ${d}</small></div><div class="legs">${legs}</div><div><span class="tag ${lab[0]}">${lab[1]}</span> <small>peluang ${Math.round(N(x.p_comb||0)*100)}%${x.legs_hit?', '+esc(x.legs_hit)+' benar':''}</small></div></div>`}).join('');
   return (sum?`<div class="sub" style="margin-bottom:8px">${sum}</div>`:'')+list;
@@ -225,8 +226,9 @@ function detail(r){
   ai=pr('g_home')?P('AI',K.map(k=>Math.round(N(r['g_'+k])))):'',
   el=pr('e_home')?P('Elo',K.map(k=>Math.round(N(r['e_'+k])))):'',
   ls=r.likely_score&&r.likely_score!='-'?`<p class="sub">Skor tebakan ${esc(r.likely_score)}${r.outcome?`, skor akhir ${esc(r.final_score)}`:''}</p>`:'',
+  gl=pr('o25')?`<p class="sub">Perkiraan gol ${F2(N(r.lam_h),1)} lawan ${F2(N(r.lam_a),1)}. Over 1.5: ${Math.round(N(r.o15))}%, Over 2.5: ${Math.round(N(r.o25))}%, Over 3.5: ${Math.round(N(r.o35))}%, kedua tim cetak gol: ${Math.round(N(r.btts))}%.</p>`:'',
   L=(t,x)=>x&&x.length?`<h3>${t}</h3><ul>${x.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`:'';
-  return `<div class="pvs">${fin}${ai}${el}</div><p class="sub" style="margin-bottom:6px">Peluang tuan rumah, seri, tamu (dalam persen).</p>${ls}${a?`<p>${esc(a.summary)}</p>${L('Faktor kunci',a.factors)}${L('Risiko',a.risks)}`:'<p class="sub">Teks analisa belum tersimpan untuk tebakan ini. Tebakan yang dicatat setelah pembaruan ini akan menampilkan ringkasan, faktor kunci, dan risikonya di sini.</p>'}`;
+  return `<div class="pvs">${fin}${ai}${el}</div><p class="sub" style="margin-bottom:6px">Peluang tuan rumah, seri, tamu (dalam persen).</p>${ls}${gl}${a?`<p>${esc(a.summary)}</p>${L('Faktor kunci',a.factors)}${L('Risiko',a.risks)}`:'<p class="sub">Teks analisa belum tersimpan untuk tebakan ini. Tebakan yang dicatat setelah pembaruan ini akan menampilkan ringkasan, faktor kunci, dan risikonya di sini.</p>'}`;
 }
 
 function table(){

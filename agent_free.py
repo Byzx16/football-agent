@@ -10,7 +10,7 @@ Pemakaian:
     python agent_free.py            # mode normal: kirim laga yang kick-off 45-90 menit lagi + catat prediksi
     python agent_free.py --report   # hitung akurasi prediksi yang sudah selesai, kirim ke Telegram
 """
-import os, sys, json, re, time, csv, html, datetime as dt
+import os, sys, json, re, time, csv, html, math, datetime as dt
 import requests
 from dotenv import load_dotenv
 
@@ -38,6 +38,9 @@ CREST_FILE = "crests.json"
 ANALYSIS_FILE = "analyses.json"
 REPORT_FILE = "last_report.txt"
 REPORT_HOUR_WIB = 9                           # laporan harian dikirim di run pertama setelah jam ini (WIB)
+GOALS_FILE = "goals_cache.json"
+GOAL_PRIOR = 8.0                 # kekuatan prior model gol (setara kira-kira 6 laga)
+PARLAY_MIN_GOAL_PROB = 62        # peluang minimal pasar gol (over/under) supaya boleh masuk kombinasi (%)
 ELO_FILE = "elo_cache.json"
 ELO_CACHE_HOURS = 12
 ELO_K, ELO_HFA, ELO_CARRYOVER = 20, 65, 0.7   # K-factor, keunggulan kandang, sisa rating antar musim
@@ -46,7 +49,8 @@ PRED_FIELDS = ["match_id", "kickoff_utc", "competition", "home", "away",
                "p_home", "p_draw", "p_away", "pick", "confidence",
                "likely_score", "outcome", "final_score", "correct",
                "g_home", "g_draw", "g_away", "e_home", "e_draw", "e_away",
-               "tg_msg_id", "home_s", "away_s"]
+               "tg_msg_id", "home_s", "away_s",
+               "lam_h", "lam_a", "o15", "o25", "o35", "btts"]
 
 FD = "https://api.football-data.org/v4"
 FD_HEADERS = {"X-Auth-Token": FOOTBALL_DATA_KEY}
@@ -147,13 +151,13 @@ def build_ratings():
     try:
         c = json.load(open(ELO_FILE))
         built = dt.datetime.fromisoformat(c["built_utc"])
-        if now - built < dt.timedelta(hours=ELO_CACHE_HOURS) and c.get("ratings"):
+        if now - built < dt.timedelta(hours=ELO_CACHE_HOURS) and c.get("ratings") and _load_goals():
             return {int(k): v for k, v in c["ratings"].items()}
     except Exception:
         pass
     print("[elo] menghitung rating dari hasil pertandingan (sekitar 1-2 menit)...")
     cur = now.year if now.month >= 7 else now.year - 1
-    R = {}
+    R, allm = {}, []
     for season in (cur - 1, cur):
         ms = []
         for code in LEAGUES.split(","):
@@ -161,15 +165,109 @@ def build_ratings():
             if data:
                 ms += data.get("matches", [])
         ms.sort(key=lambda m: m["utcDate"])
+        allm += [((1.0 if season == cur else 0.5), m) for m in ms]
         for m in ms:
             _elo_update(R, m)
         if season == cur - 1:   # antar musim, rating ditarik sebagian ke rata-rata
             R = {k: 1500 + (v - 1500) * ELO_CARRYOVER for k, v in R.items()}
+    try:
+        _build_goals(allm)
+    except Exception as e:
+        print("[gol] gagal membangun model gol ->", e)
     if not R:
         return {}
     with open(ELO_FILE, "w") as f:
         json.dump({"built_utc": now.isoformat(), "ratings": {str(k): v for k, v in R.items()}}, f)
     return R
+
+GOALS = None
+
+def _load_goals():
+    global GOALS
+    try:
+        with open(GOALS_FILE, encoding="utf-8") as f:
+            c = json.load(f)
+        if c.get("teams") and c.get("avg"):
+            GOALS = {"avg": c["avg"], "teams": {int(i): tuple(v) for i, v in c["teams"].items()}}
+            return GOALS
+    except Exception:
+        pass
+    return None
+
+def _build_goals(allm):
+    """Model gol (Poisson): kekuatan serang dan bertahan tiap tim relatif terhadap rata-rata kompetisinya."""
+    global GOALS
+    comp = {}
+    for w, m in allm:
+        ft = (m.get("score") or {}).get("fullTime") or {}
+        if ft.get("home") is None or ft.get("away") is None:
+            continue
+        t = comp.setdefault(m["competition"]["code"], [0.0, 0.0, 0.0])
+        t[0] += w * ft["home"]
+        t[1] += w * ft["away"]
+        t[2] += w
+    avg = {c: {"home": t[0] / t[2], "away": t[1] / t[2]} for c, t in comp.items() if t[2] > 0}
+    team = {}
+    for w, m in allm:
+        ft = (m.get("score") or {}).get("fullTime") or {}
+        a = avg.get(m["competition"]["code"])
+        if not a or ft.get("home") is None or ft.get("away") is None:
+            continue
+        th = team.setdefault(m["homeTeam"]["id"], [0.0] * 4)
+        ta = team.setdefault(m["awayTeam"]["id"], [0.0] * 4)
+        th[0] += w * ft["home"]; th[1] += w * ft["away"]; th[2] += w * a["home"]; th[3] += w * a["away"]
+        ta[0] += w * ft["away"]; ta[1] += w * ft["home"]; ta[2] += w * a["away"]; ta[3] += w * a["home"]
+    k = GOAL_PRIOR
+    teams = {str(i): [(v[0] + k) / (v[2] + k), (v[1] + k) / (v[3] + k)] for i, v in team.items()}
+    if not teams:
+        return
+    with open(GOALS_FILE, "w", encoding="utf-8") as f:
+        json.dump({"built_utc": dt.datetime.now(dt.timezone.utc).isoformat(), "avg": avg, "teams": teams}, f)
+    GOALS = {"avg": avg, "teams": {int(i): tuple(v) for i, v in teams.items()}}
+
+def goal_probs(hid, aid, comp_code):
+    """Perkiraan gol dan peluang over/under, kedua tim cetak gol, serta skor paling mungkin (Poisson)."""
+    g = GOALS or _load_goals()
+    if not g or hid not in g["teams"] or aid not in g["teams"]:
+        return None
+    avg = g["avg"].get(comp_code) or {"home": 1.5, "away": 1.2}
+    att_h, def_h = g["teams"][hid]
+    att_a, def_a = g["teams"][aid]
+    lh = max(0.2, min(4.5, avg["home"] * att_h * def_a))
+    la = max(0.2, min(4.5, avg["away"] * att_a * def_h))
+    n = 11
+    ph = [math.exp(-lh) * lh ** i / math.factorial(i) for i in range(n)]
+    pa = [math.exp(-la) * la ** i / math.factorial(i) for i in range(n)]
+    grid = {(i, j): ph[i] * pa[j] for i in range(n) for j in range(n)}
+    norm = sum(grid.values())
+    pct = lambda f: sum(p for (i, j), p in grid.items() if f(i, j)) / norm * 100
+    top = sorted(grid.items(), key=lambda kv: -kv[1])[:3]
+    return {
+        "lam_h": lh, "lam_a": la,
+        "o15": pct(lambda i, j: i + j >= 2), "o25": pct(lambda i, j: i + j >= 3),
+        "o35": pct(lambda i, j: i + j >= 4), "btts": pct(lambda i, j: i >= 1 and j >= 1),
+        "top": [(f"{i}-{j}", p / norm * 100) for (i, j), p in top],
+    }
+
+def _total_goals(r):
+    try:
+        h, a = r["final_score"].split("-")
+        return int(h) + int(a)
+    except Exception:
+        return None
+
+def _both_scored(r):
+    try:
+        h, a = r["final_score"].split("-")
+        return int(h) > 0 and int(a) > 0
+    except Exception:
+        return False
+
+def goal_lean(gp):
+    """Sinyal gol terkuat dari model: pasar over/under dengan peluang tertinggi."""
+    opts = [("Over 1.5", gp["o15"]), ("Under 1.5", 100 - gp["o15"]), ("Over 2.5", gp["o25"]),
+            ("Under 2.5", 100 - gp["o25"]), ("Over 3.5", gp["o35"]), ("Under 3.5", 100 - gp["o35"])]
+    return max(opts, key=lambda x: x[1])
 
 def elo_predict(R, hid, aid):
     """Probabilitas (home, seri, away) dalam persen, atau None kalau salah satu tim belum punya rating."""
@@ -366,6 +464,17 @@ def format_msg(match, res):
     else:
         signal = f"🎯 <b>Sinyal: {esc(pick_name)}{' menang' if res['pick'] != 'draw' else ''}</b>"
 
+    goals_block, gp = "", res.get("goals")
+    if gp:
+        lean_name, lean_p = goal_lean(gp)
+        goals_block = (
+            f"⚽ <b>GOL</b>  <i>(model statistik)</i>\n"
+            f"Perkiraan gol: {esc(h)} <b>{gp['lam_h']:.1f}</b> – <b>{gp['lam_a']:.1f}</b> {esc(a)}\n"
+            f"📈 Over 1.5: <b>{gp['o15']:.0f}%</b>   Over 2.5: <b>{gp['o25']:.0f}%</b>   Over 3.5: <b>{gp['o35']:.0f}%</b>\n"
+            f"🤝 Kedua tim cetak gol: <b>{gp['btts']:.0f}%</b>\n"
+            f"🔢 Skor paling mungkin: " + ", ".join(f"{sc} ({pp:.0f}%)" for sc, pp in gp["top"]) + "\n"
+            f"🎯 Sinyal gol terkuat: <b>{lean_name}</b> ({lean_p:.0f}%)\n{LINE}\n"
+        )
     factors = "\n".join(f"✅ {esc(x)}" for x in res.get("key_factors", [])[:4])
     risks = "\n".join(f"⚠️ {esc(x)}" for x in res.get("risks", [])[:3])
 
@@ -378,6 +487,7 @@ def format_msg(match, res):
         f"{signal}\n"
         f"{CONF_ICON[conf]} Keyakinan: <b>{conf}</b>   🔢 Skor mungkin: <b>{esc(res.get('likely_score', '-'))}</b>\n"
         f"{LINE}\n"
+        f"{goals_block}"
         f"💡 <b>FAKTOR KUNCI</b>\n{factors}\n\n"
         f"🚧 <b>RISIKO</b>\n{risks}\n"
         f"{LINE}\n"
@@ -460,6 +570,7 @@ def log_prediction(match, res, msg_id=None):
         "outcome": "", "final_score": "", "correct": "",
         **{k: round(v, 1) for k, v in zip(("g_home", "g_draw", "g_away"), res.get("g") or ())},
         **{k: round(v, 1) for k, v in zip(("e_home", "e_draw", "e_away"), res.get("e") or ())},
+        **({k: round(res["goals"][k], 1) for k in ("lam_h", "lam_a", "o15", "o25", "o35", "btts")} if res.get("goals") else {}),
     })
     write_preds(rows)
 
@@ -500,6 +611,16 @@ def format_result_msg(r):
     if ls and ls != "-":
         lines.append(f"🔢 Skor tebakan {esc(ls)} → aktual {esc(r['final_score'])}"
                      + ("  🎯 <b>tepat!</b>" if ls == r["final_score"] else ""))
+    tg = _total_goals(r)
+    if tg is not None and r.get("o25"):
+        both = _both_scored(r)
+
+        def g_line(label, p, hit):
+            ok = (float(p) >= 50) == hit
+            return f"{'✅' if ok else '❌'} {label}: model {float(p):.0f}%, {'terjadi' if hit else 'tidak terjadi'}"
+        lines += [LINE, f"⚽ <b>Total gol: {tg}</b>",
+                  g_line("Over 1.5", r["o15"], tg >= 2), g_line("Over 2.5", r["o25"], tg >= 3),
+                  g_line("Over 3.5", r["o35"], tg >= 4), g_line("Kedua tim cetak gol", r["btts"], both)]
     lines += [LINE, track_record_line()]
     return "\n".join(lines)
 
@@ -625,6 +746,15 @@ def build_report():
     else:
         lines.append(f"Gabungan: <b>{_brier(done, 'p'):.3f}</b>  <i>(tebak acak = 0.667)</i>")
 
+    gl = [r for r in done if r.get("o25") and _total_goals(r) is not None]
+    if gl:
+        lines += [LINE, f"⚽ <b>GOL</b>  <i>(model Poisson, {len(gl)} laga)</i>"]
+        for label, key, f in (("Over 1.5", "o15", lambda r: _total_goals(r) >= 2),
+                              ("Over 2.5", "o25", lambda r: _total_goals(r) >= 3),
+                              ("Kedua tim cetak gol", "btts", _both_scored)):
+            okn = sum((float(r[key]) >= 50) == f(r) for r in gl)
+            a = okn / len(gl) * 100
+            lines.append(f"<code>{label:<19} {bar(a)} {a:>3.0f}%</code>")
     ps = [x for x in _load_parlays() if x["outcome"] in ("win", "lose")]
     if ps:
         lines += [LINE, "🎰 <b>KOMBINASI HARIAN</b>  <i>(hasil nyata vs perkiraan)</i>"]
@@ -680,20 +810,54 @@ def matches_next_24h():
     out.sort(key=lambda m: m["utcDate"])
     return out
 
-def _leg_from(m, res):
-    key = {"home": "home_win", "draw": "draw", "away": "away_win"}[res["pick"]]
+GOAL_LABEL = {"over15": "Over 1.5 gol", "over25": "Over 2.5 gol", "under25": "Under 2.5 gol",
+              "under35": "Under 3.5 gol", "btts": "Kedua tim cetak gol"}
+GOAL_MARKETS = [("over15", "o15", False), ("over25", "o25", False), ("under25", "o25", True),
+                ("under35", "o35", True), ("btts", "btts", False)]
+
+def _base_leg(m):
     return {
         "match_id": m["id"], "kickoff_utc": m["utcDate"],
         "competition": m["competition"]["name"],
         "home": m["homeTeam"]["name"], "away": m["awayTeam"]["name"],
         "home_s": m["homeTeam"].get("shortName") or m["homeTeam"]["name"],
         "away_s": m["awayTeam"].get("shortName") or m["awayTeam"]["name"],
-        "pick": res["pick"], "p": float(res[key]),
-        "ai": bool(res.get("g")),
     }
 
+def _leg_from(m, res):
+    key = {"home": "home_win", "draw": "draw", "away": "away_win"}[res["pick"]]
+    leg = _base_leg(m)
+    leg.update(market="1x2", pick=res["pick"], p=float(res[key]), ai=bool(res.get("g")))
+    return leg
+
+def _goal_legs(m, gp):
+    out = []
+    for mk, key, inv in GOAL_MARKETS:
+        p = 100 - gp[key] if inv else gp[key]
+        if p >= PARLAY_MIN_GOAL_PROB:
+            leg = _base_leg(m)
+            leg.update(market=mk, pick=mk, p=float(p), ai=True)
+            out.append(leg)
+    return out
+
 def _leg_pick_text(leg):
+    if leg.get("market", "1x2") != "1x2":
+        return GOAL_LABEL[leg["market"]]
     return {"home": f'{leg["home_s"]} menang', "away": f'{leg["away_s"]} menang', "draw": "Seri"}[leg["pick"]]
+
+def _leg_hit(leg, gh, ga):
+    mk, t = leg.get("market", "1x2"), gh + ga
+    if mk == "over15":
+        return t >= 2
+    if mk == "over25":
+        return t >= 3
+    if mk == "under25":
+        return t <= 2
+    if mk == "under35":
+        return t <= 3
+    if mk == "btts":
+        return gh > 0 and ga > 0
+    return leg["pick"] == ("home" if gh > ga else "away" if ga > gh else "draw")
 
 def _combo(legs):
     prod = 1.0
@@ -702,38 +866,49 @@ def _combo(legs):
     return prod
 
 def build_parlay_legs(ratings):
-    """Pilih laga terkuat berdasarkan Elo, analisa AI untuk shortlist, lalu susun pilihan."""
-    cands = []
+    """Kumpulkan pilihan per laga: hasil laga (untuk shortlist yang dianalisa AI) dan pasar gol (model Poisson)."""
+    info = []
     for m in matches_next_24h():
-        elo = elo_predict(ratings, m["homeTeam"]["id"], m["awayTeam"]["id"])
-        if elo:
-            cands.append((max(elo), m, elo))
-    cands.sort(key=lambda x: -x[0])
-    n_scanned = len(cands)
-
-    legs = []
-    for _, m, elo in cands[:PARLAY_SHORTLIST]:
-        comp = m["competition"]["code"]
-        table = standings(comp) if comp != "CL" else {}
         hid, aid = m["homeTeam"]["id"], m["awayTeam"]["id"]
-        ctx = {"home_rank": table.get(hid, "n/a"), "away_rank": table.get(aid, "n/a"),
-               "home_form": team_form(hid), "away_form": team_form(aid)}
-        try:
-            res = combine(analyze(m, ctx), elo)
-        except Exception as e:
-            print("[parlay] AI gagal, pakai Elo saja ->", e)
-            res = elo_only(elo)
-        leg = _leg_from(m, res)
-        if leg["p"] >= PARLAY_MIN_PROB:
-            legs.append(leg)
-    legs.sort(key=lambda l: -l["p"])
-    return legs, n_scanned
+        elo = elo_predict(ratings, hid, aid)
+        gp = goal_probs(hid, aid, m["competition"]["code"])
+        if elo or gp:
+            info.append((m, elo, gp))
+    n_scanned = len(info)
+    ranked = sorted([x for x in info if x[1]], key=lambda x: -max(x[1]))
+    short_ids = {x[0]["id"] for x in ranked[:PARLAY_SHORTLIST]}
+
+    per_match = []
+    for m, elo, gp in info:
+        opts = []
+        if m["id"] in short_ids:
+            comp = m["competition"]["code"]
+            table = standings(comp) if comp != "CL" else {}
+            hid, aid = m["homeTeam"]["id"], m["awayTeam"]["id"]
+            ctx = {"home_rank": table.get(hid, "n/a"), "away_rank": table.get(aid, "n/a"),
+                   "home_form": team_form(hid), "away_form": team_form(aid)}
+            try:
+                res = combine(analyze(m, ctx), elo)
+            except Exception as e:
+                print("[parlay] AI gagal, pakai Elo saja ->", e)
+                res = elo_only(elo)
+            leg = _leg_from(m, res)
+            if leg["p"] >= PARLAY_MIN_PROB:
+                opts.append(leg)
+        if gp:
+            opts += _goal_legs(m, gp)
+        if opts:
+            per_match.append(opts)
+    return per_match, n_scanned
 
 def _fmt_leg(i, leg):
     ko = dt.datetime.fromisoformat(leg["kickoff_utc"].replace("Z", "+00:00"))
     ko_wib = ko.astimezone(dt.timezone(dt.timedelta(hours=7)))
     esc = lambda x: html.escape(str(x))
-    tag = "" if leg["ai"] else " <i>(Elo saja)</i>"
+    if leg.get("market", "1x2") != "1x2":
+        tag = " <i>(model gol)</i>"
+    else:
+        tag = "" if leg["ai"] else " <i>(Elo saja)</i>"
     return (f"{i}. {ko_wib:%H:%M} WIB • {esc(leg['competition'])}\n"
             f"    {esc(leg['home_s'])} vs {esc(leg['away_s'])} → <b>{esc(_leg_pick_text(leg))}</b> ({leg['p']:.0f}%){tag}")
 
@@ -749,6 +924,7 @@ def format_parlay_msg(safe, mix, n_scanned):
     lines = [
         f"🎰 <b>KOMBINASI HARIAN</b>  •  {_tgl(wib)}",
         f"<i>Draft: lineup belum keluar, bisa berubah. {n_scanned} laga dipindai dari semua liga. "
+        f"Pilihan mencakup hasil laga dan over/under gol. "
         f"Analisa per laga tetap datang sekitar 1 jam sebelum kick-off.</i>",
         LINE,
     ]
@@ -774,9 +950,17 @@ def run_daily_parlay(manual=False):
     except Exception as e:
         print("[parlay] rating Elo gagal ->", e)
         return False
-    legs, n_scanned = build_parlay_legs(ratings)
-    safe = legs[:3] if len(legs) >= 2 else []
-    mix = legs[:5] if len(legs) > len(safe) and len(legs) >= 4 else []
+    per_match, n_scanned = build_parlay_legs(ratings)
+    # AMAN: satu pilihan terkuat per laga (pasar apa pun), ambil 3 teratas
+    best = sorted((max(o, key=lambda l: l["p"]) for o in per_match), key=lambda l: -l["p"])
+    safe = best[:3] if len(best) >= 2 else []
+    # MIX: utamakan hasil laga (menang/seri/kalah); kalau tidak layak, pakai pasar gol terbaik laga itu
+    mixp = []
+    for o in per_match:
+        r1 = [l for l in o if l.get("market", "1x2") == "1x2"]
+        mixp.append(max(r1, key=lambda l: l["p"]) if r1 else max(o, key=lambda l: l["p"]))
+    mixp.sort(key=lambda l: -l["p"])
+    mix = mixp[:5] if len(mixp) > len(safe) and len(mixp) >= 4 else []
     msg_id = send_telegram(format_parlay_msg(safe, mix, n_scanned))
 
     today = dt.datetime.now(dt.timezone(dt.timedelta(hours=7))).date().isoformat()
@@ -814,7 +998,7 @@ def format_parlay_result(x, details):
     names = {"aman": "🛡️ AMAN", "mix": "🎲 MIX"}
     rows = []
     for leg, w, score in details:
-        ok = leg["pick"] == w
+        ok = _leg_hit(leg, *map(int, score.split("-")))
         rows.append(f"{'✅' if ok else '❌'} {esc(leg['home_s'])} {esc(score)} {esc(leg['away_s'])}\n"
                     f"      <i>pilihan: {esc(_leg_pick_text(leg))}</i>")
     win = x["outcome"] == "win"
@@ -860,7 +1044,7 @@ def settle_parlays(notify=True):
                 details.append((leg, WINNER_MAP[sc["winner"]], f'{ft["home"]}-{ft["away"]}'))
             if not complete:
                 continue
-            hits = sum(1 for leg, w, _ in details if leg["pick"] == w)
+            hits = sum(1 for leg, w, sc in details if _leg_hit(leg, *map(int, sc.split("-"))))
             x["legs_hit"] = f"{hits}/{len(details)}"
             x["outcome"] = "win" if hits == len(details) else "lose"
             newly.append((x, details))
@@ -993,6 +1177,10 @@ def main():
                     raise
                 print("[ai] pakai sinyal Elo saja untuk laga ini")
                 res = elo_only(elo)
+            gp = goal_probs(hid, aid, comp)
+            if gp:
+                res["goals"] = gp
+                res["likely_score"] = gp["top"][0][0]
             msg_id = send_telegram(format_msg(m, res))
             if not test_mode:
                 log_prediction(m, res, msg_id)
