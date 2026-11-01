@@ -25,9 +25,9 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 560628,2026-10-31T20:00:00Z,Premier League,Aston Villa FC,Fulham FC,53,25,22,home,tinggi,2-1,draw,1-1,0,47,29,24,59.3,20.7,19.9,43,Aston Villa,Fulham
 558543,2026-11-01T11:30:00Z,Serie A,Como 1907,Venezia FC,74,17,9,home,tinggi,2-0,home,1-0,1,70,20,10,76.8,14.2,9.0,54,Como 1907,Venezia FC
 564733,2026-11-01T13:00:00Z,Primera Division,Getafe CF,Sevilla FC,35,28,37,away,rendah,1-2,home,3-1,0,28,30,42,41.6,26.4,32.0,55,Getafe,Sevilla FC
-559647,2026-11-01T14:00:00Z,Ligue 1,RC Strasbourg Alsace,AJ Auxerre,41,27,32,home,sedang,1-2,,,,30,30,40,51.8,23.2,25.0,56,Strasbourg,Auxerre
-558544,2026-11-01T14:00:00Z,Serie A,Frosinone Calcio,Torino FC,50,26,24,home,tinggi,2-1,,,,43,30,27,56.9,21.5,21.5,57,Frosinone,Torino
-558546,2026-11-01T14:00:00Z,Serie A,SS Lazio,Cagliari Calcio,69,18,13,home,tinggi,2-0,,,,70,18,12,67.9,17.7,14.4,58,Lazio,Cagliari
+559647,2026-11-01T14:00:00Z,Ligue 1,RC Strasbourg Alsace,AJ Auxerre,41,27,32,home,sedang,1-2,home,5-1,1,30,30,40,51.8,23.2,25.0,56,Strasbourg,Auxerre
+558544,2026-11-01T14:00:00Z,Serie A,Frosinone Calcio,Torino FC,50,26,24,home,tinggi,2-1,home,2-0,1,43,30,27,56.9,21.5,21.5,57,Frosinone,Torino
+558546,2026-11-01T14:00:00Z,Serie A,SS Lazio,Cagliari Calcio,69,18,13,home,tinggi,2-0,home,2-1,1,70,18,12,67.9,17.7,14.4,58,Lazio,Cagliari
 565841,2026-11-01T14:30:00Z,Bundesliga,1. FC Union Berlin,1. FC Köln,44,28,28,home,sedang,1-1,,,,38,32,30,49.0,24.1,26.9,59,Union Berlin,1. FC Köln
 564734,2026-11-01T15:15:00Z,Primera Division,Real Racing Club de Santander,Real Madrid CF,19,20,61,away,tinggi,-,,,,,,,18.8,20.2,61.0,61,Santander,Real Madrid
 559640,2026-11-01T16:15:00Z,Ligue 1,Olympique Lyonnais,Angers SCO,67,18,15,home,tinggi,-,,,,,,,67.4,17.9,14.7,62,Olympique Lyon,Angers SCO
