@@ -65,6 +65,22 @@ section{border-top:1px solid var(--line);padding:30px 0}
 .pr small,td small{color:var(--mute);font-size:13px}
 .pr .legs{color:var(--mute);font-size:14px}
 @media(max-width:640px){.pr{grid-template-columns:1fr}}
+.trend{display:flex;align-items:center;gap:6px;margin:12px 0 6px}
+.trend i{width:22px;height:22px;border-radius:4px;background:var(--ok)}
+.trend i.l{background:var(--no)}
+.trend span{color:var(--mute);font-size:14px;margin-left:8px}
+.lr{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 20px;padding:12px 0;border-bottom:1px solid var(--line)}
+.lr .m{display:flex;align-items:center;flex-wrap:wrap;gap:2px 0}
+.lr .sc{margin:0 12px}
+.lr small{color:var(--mute);font-size:13px;margin-left:8px}
+td .pill{padding:4px 12px;font-size:13px}
+.det td{background:rgba(232,239,228,.04);padding:16px 14px}
+.pvs{display:flex;gap:26px;flex-wrap:wrap;margin-bottom:8px}
+.pv span{display:block;color:var(--mute);font-size:13px}
+.pv b{font:700 26px/1.1 var(--dg)}
+.det h3{font:600 18px/1.2 var(--dg);margin:14px 0 4px}
+.det ul{padding-left:18px}
+.det li{margin:3px 0}
 .cr{width:28px;height:28px;object-fit:contain;flex:none;margin-right:9px;padding:3px;border-radius:50%;background:#e8efe4}
 .cr.ini{display:inline-flex;align-items:center;justify-content:center;padding:0;background:transparent;border:1px solid var(--line);font:600 11px/1 var(--dg);color:var(--mute)}
 .tm{display:flex;align-items:center;margin:3px 0}
@@ -107,7 +123,7 @@ nm=(r,s)=>r[s+'_s']||r[s]||'?',
 fmt=iso=>{const d=new Date(iso),o={timeZone:'Asia/Jakarta'};return d.toLocaleDateString('id-ID',{...o,day:'numeric',month:'short'})+', '+d.toLocaleTimeString('id-ID',{...o,hour:'2-digit',minute:'2-digit',hour12:false}).replace('.',':')},
 br=(rs,p)=>rs.reduce((s,r)=>s+K.reduce((a,k)=>a+Math.pow(N(r[p+'_'+k])/100-(r.outcome==k?1:0),2),0),0)/rs.length,
 CF={tinggi:'var(--ok)',sedang:'var(--amber)',rendah:'#7f9488'};
-let ROWS=[],PAR=[],CR={},LM=null,S={lg:'',rs:'',q:'',lim:40};
+let ROWS=[],PAR=[],CR={},AN={},LM=null,S={lg:'',rs:'',q:'',lim:40,open:new Set()};
 
 function logo(full,short){const u=CR[full]||CR[short],ini=esc((short||full||'?').replace(/[^A-Za-z]/g,'').slice(0,3));
   return u?`<img class="cr" src="${esc(u)}" alt="" loading="lazy" onerror="this.outerHTML='&lt;span class=&quot;cr ini&quot;&gt;${ini}&lt;/span&gt;'">`:`<span class="cr ini">${ini}</span>`}
@@ -173,6 +189,7 @@ function render(){
     <div><b>${pend}</b><span>Laga menunggu hasil</span></div>
     <div><b>${pw}/${pf.length}</b><span>Kombinasi harian yang menang</span></div>
   </div>
+  ${n?`<section><h2>Hasil terakhir</h2><div class="trend" aria-label="Tren 10 laga terakhir">${done.slice(-10).map(r=>`<i class="${r.correct=='1'?'w':'l'}" title="${esc(nm(r,'home'))} ${esc(r.final_score)} ${esc(nm(r,'away'))}"></i>`).join('')}<span>10 laga terakhir, hijau benar, merah meleset</span></div>${done.slice(-5).reverse().map(r=>`<div class="lr"><div class="m">${logo(r.home,r.home_s)}<b>${esc(nm(r,'home'))}</b><span class="sc">${esc(r.final_score.replace('-',' - '))}</span>${logo(r.away,r.away_s)}<b>${esc(nm(r,'away'))}</b></div><div><span class="tag ${r.correct=='1'?'ok':'no'}">${r.correct=='1'?'Benar':'Meleset'}</span><small>tebakan: ${r.confidence=='rendah'&&r.pick!='draw'?'condong ':''}${esc(pick(r))}</small></div></div>`).join('')}</section>`:''}
   <section class="obs"><h2>Akurasi dari laga ke laga</h2><p class="sub">Setiap titik adalah akurasi kumulatif sampai laga itu.</p>${line(done)}</section>
   <section class="cols obs"><div><h2>Akurasi per tingkat keyakinan</h2><p class="sub">Sinyal yang diberi keyakinan tinggi seharusnya lebih sering benar.</p>${bars}</div><div><h2>Siapa yang paling jitu</h2><p class="sub">Kualitas probabilitas AI, model Elo, dan gabungan keduanya.</p>${bri}</div></section>
   <section><h2>Kombinasi harian</h2><p class="sub" style="margin-bottom:10px">Gabungan pilihan terkuat dari semua liga. Satu laga meleset, seluruh kombinasi gagal.</p>${parlays()}</section>
@@ -180,25 +197,39 @@ function render(){
     <div class="f"><select id="lg" aria-label="Filter liga"><option value="">Semua liga</option>${lgs.map(l=>`<option${S.lg==l?' selected':''}>${esc(l)}</option>`).join('')}</select>
     <select id="rs" aria-label="Filter hasil">${[['','Semua hasil'],['ok','Benar'],['no','Meleset'],['wait','Menunggu']].map(([v,t])=>`<option value="${v}"${S.rs==v?' selected':''}>${t}</option>`).join('')}</select>
     <input id="q" type="search" placeholder="Cari tim" value="${esc(S.q)}" aria-label="Cari tim"></div>
-    <div class="tw"><table><thead><tr><th>Kick-off</th><th>Laga</th><th class="pc">Peluang tuan rumah, seri, tamu</th><th>Tebakan</th><th>Hasil</th></tr></thead><tbody id="tb"></tbody></table></div>
+    <div class="tw"><table><thead><tr><th>Kick-off</th><th>Laga</th><th class="pc">Peluang tuan rumah, seri, tamu</th><th>Tebakan</th><th>Hasil</th><th>Analisa</th></tr></thead><tbody id="tb"></tbody></table></div>
     <button class="pill more" id="more" style="display:none">Tampilkan lebih banyak</button>
   </section>`;
   $('#lg').onchange=e=>{S.lg=e.target.value;S.lim=40;table()};
   $('#rs').onchange=e=>{S.rs=e.target.value;S.lim=40;table()};
   $('#q').oninput=e=>{S.q=e.target.value;S.lim=40;table()};
   $('#more').onclick=()=>{S.lim+=40;table()};
+  $('#tb').onclick=e=>{const b=e.target.closest('button[data-id]');if(!b)return;const id=b.dataset.id;S.open.has(id)?S.open.delete(id):S.open.add(id);table()};
   table();
   document.querySelectorAll('.cu').forEach(cu);
   document.querySelectorAll('.obs').forEach(el=>io.observe(el));
+}
+
+const pick=r=>({home:nm(r,'home'),away:nm(r,'away'),draw:'Seri'}[r.pick]||'-');
+
+function detail(r){
+  const a=AN[r.match_id],pr=k=>r[k]!==''&&r[k]!=null,
+  P=(l,v)=>v?`<div class="pv"><span>${l}</span><b>${v.join(' / ')}</b></div>`:'',
+  fin=P('Gabungan',K.map(k=>Math.round(N(r['p_'+k])))),
+  ai=pr('g_home')?P('AI',K.map(k=>Math.round(N(r['g_'+k])))):'',
+  el=pr('e_home')?P('Elo',K.map(k=>Math.round(N(r['e_'+k])))):'',
+  ls=r.likely_score&&r.likely_score!='-'?`<p class="sub">Skor tebakan ${esc(r.likely_score)}${r.outcome?`, skor akhir ${esc(r.final_score)}`:''}</p>`:'',
+  L=(t,x)=>x&&x.length?`<h3>${t}</h3><ul>${x.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`:'';
+  return `<div class="pvs">${fin}${ai}${el}</div><p class="sub" style="margin-bottom:6px">Peluang tuan rumah, seri, tamu (dalam persen).</p>${ls}${a?`<p>${esc(a.summary)}</p>${L('Faktor kunci',a.factors)}${L('Risiko',a.risks)}`:'<p class="sub">Teks analisa belum tersimpan untuk tebakan ini. Tebakan yang dicatat setelah pembaruan ini akan menampilkan ringkasan, faktor kunci, dan risikonya di sini.</p>'}`;
 }
 
 function table(){
   const q=S.q.trim().toLowerCase();
   const rows=ROWS.filter(r=>(!S.lg||r.competition==S.lg)&&(!S.rs||(S.rs=='wait'?!r.outcome:r.outcome&&(S.rs=='ok')==(r.correct=='1')))&&(!q||(r.home+' '+r.away+' '+nm(r,'home')+' '+nm(r,'away')).toLowerCase().includes(q))).reverse();
   $('#tb').innerHTML=rows.slice(0,S.lim).map(r=>{
-    const a=K.map(k=>N(r['p_'+k])||0),pk={home:nm(r,'home'),away:nm(r,'away'),draw:'Seri'}[r.pick]||'-';
+    const a=K.map(k=>N(r['p_'+k])||0),open=S.open.has(r.match_id);
     const res=r.outcome?`<span class="sc">${esc(r.final_score.replace('-',' - '))}</span><span class="tag ${r.correct=='1'?'ok':'no'}">${r.correct=='1'?'Benar':'Meleset'}</span>`:'<span class="tag wait">Menunggu</span>';
-    return `<tr><td>${fmt(r.kickoff_utc)}</td><td><div class="tm">${logo(r.home,r.home_s)}<b>${esc(nm(r,'home'))}</b></div><div class="tm">${logo(r.away,r.away_s)}<b>${esc(nm(r,'away'))}</b></div><small>${esc(r.competition)}</small></td><td class="pc"><div class="pb"><i style="width:${a[0]}%;background:var(--ok)"></i><i style="width:${a[1]}%;background:#6f8478"></i><i style="width:${a[2]}%;background:var(--amber)"></i></div><small>${a.map(v=>Math.round(v)).join(' / ')}</small></td><td><i class="sq" style="--c:${CF[r.confidence]||CF.rendah}"></i>${r.confidence=='rendah'&&r.pick!='draw'?'Condong ':''}${esc(pk)}<small>keyakinan ${esc(r.confidence)}</small></td><td>${res}</td></tr>`}).join('')||'<tr><td colspan="5" class="empty">Tidak ada tebakan yang cocok dengan filter ini.</td></tr>';
+    return `<tr><td>${fmt(r.kickoff_utc)}</td><td><div class="tm">${logo(r.home,r.home_s)}<b>${esc(nm(r,'home'))}</b></div><div class="tm">${logo(r.away,r.away_s)}<b>${esc(nm(r,'away'))}</b></div><small>${esc(r.competition)}</small></td><td class="pc"><div class="pb"><i style="width:${a[0]}%;background:var(--ok)"></i><i style="width:${a[1]}%;background:#6f8478"></i><i style="width:${a[2]}%;background:var(--amber)"></i></div><small>${a.map(v=>Math.round(v)).join(' / ')}</small></td><td><i class="sq" style="--c:${CF[r.confidence]||CF.rendah}"></i>${r.confidence=='rendah'&&r.pick!='draw'?'Condong ':''}${esc(pick(r))}<small>keyakinan ${esc(r.confidence)}</small></td><td>${res}</td><td><button class="pill" data-id="${esc(r.match_id)}" aria-expanded="${open}">${open?'Tutup':'Lihat'}</button></td></tr>`+(open?`<tr class="det"><td colspan="6">${detail(r)}</td></tr>`:'')}).join('')||'<tr><td colspan="6" class="empty">Tidak ada tebakan yang cocok dengan filter ini.</td></tr>';
   $('#more').style.display=rows.length>S.lim?'inline-flex':'none';
 }
 
@@ -214,6 +245,7 @@ async function load(){
     ROWS=csv(await r.text()).filter(x=>x.match_id).sort((a,b)=>a.kickoff_utc<b.kickoff_utc?-1:1);
     try{const p=await fetch('parlays.json?t='+t,{cache:'no-store'});PAR=p.ok?await p.json():[]}catch(e){PAR=[]}
     try{const c=await fetch('crests.json?t='+t);CR=c.ok?((await c.json()).crests||{}):{}}catch(e){CR={}}
+    try{const c=await fetch('analyses.json?t='+t);AN=c.ok?await c.json():{}}catch(e){AN={}}
     render();ago();
   }catch(e){$('#app').innerHTML='<p class="err">Data belum bisa dimuat. Buka halaman ini lewat alamat GitHub Pages, bukan dengan klik dua kali pada file, dan pastikan predictions.csv ada di folder yang sama.</p>'}
 }

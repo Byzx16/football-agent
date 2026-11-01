@@ -35,6 +35,7 @@ PARLAY_SHORTLIST = 5         # jumlah laga yang dianalisa AI untuk kombinasi (he
 PARLAY_MIN_PROB = 55         # peluang minimal sebuah pilihan supaya boleh masuk kombinasi (%)
 BULAN = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"]
 CREST_FILE = "crests.json"
+ANALYSIS_FILE = "analyses.json"
 REPORT_FILE = "last_report.txt"
 REPORT_HOUR_WIB = 9                           # laporan harian dikirim di run pertama setelah jam ini (WIB)
 ELO_FILE = "elo_cache.json"
@@ -419,10 +420,31 @@ def track_record_line():
         line += "\n<i>(sampel masih kecil, belum bisa disimpulkan)</i>"
     return line
 
+def _save_analysis(match_id, res):
+    """Simpan teks analisa (ringkasan, faktor kunci, risiko) agar bisa dibaca di dashboard."""
+    try:
+        with open(ANALYSIS_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception:
+        data = {}
+    data[str(match_id)] = {
+        "summary": res.get("summary", ""),
+        "factors": list(res.get("key_factors") or [])[:4],
+        "risks": list(res.get("risks") or [])[:3],
+    }
+    for k in list(data)[:-400]:      # simpan 400 analisa terakhir saja
+        del data[k]
+    with open(ANALYSIS_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False)
+
 def log_prediction(match, res, msg_id=None):
     rows = read_preds()
     if any(r["match_id"] == str(match["id"]) for r in rows):
         return
+    try:
+        _save_analysis(match["id"], res)
+    except Exception as e:
+        print("[analisa] gagal menyimpan ->", e)
     rows.append({
         "match_id": match["id"],
         "kickoff_utc": match["utcDate"],
