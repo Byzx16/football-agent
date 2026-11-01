@@ -43,8 +43,8 @@
   ],
   "p_comb": 0.377,
   "tg_msg_id": 53,
-  "outcome": "",
-  "legs_hit": ""
+  "outcome": "win",
+  "legs_hit": "3/3"
  },
  {
   "id": "2026-11-01-mix",
@@ -102,7 +102,7 @@
   ],
   "p_comb": 0.2564,
   "tg_msg_id": 53,
-  "outcome": "",
-  "legs_hit": ""
+  "outcome": "win",
+  "legs_hit": "4/4"
  }
 ]
