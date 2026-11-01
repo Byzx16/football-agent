@@ -1,0 +1,108 @@
+[
+ {
+  "id": "2026-11-01-aman",
+  "date": "2026-11-01",
+  "kind": "aman",
+  "legs": [
+   {
+    "match_id": 558543,
+    "kickoff_utc": "2026-11-01T11:30:00Z",
+    "competition": "Serie A",
+    "home": "Como 1907",
+    "away": "Venezia FC",
+    "home_s": "Como 1907",
+    "away_s": "Venezia FC",
+    "pick": "home",
+    "p": 77.0,
+    "ai": false
+   },
+   {
+    "match_id": 558546,
+    "kickoff_utc": "2026-11-01T14:00:00Z",
+    "competition": "Serie A",
+    "home": "SS Lazio",
+    "away": "Cagliari Calcio",
+    "home_s": "Lazio",
+    "away_s": "Cagliari",
+    "pick": "home",
+    "p": 72.0,
+    "ai": true
+   },
+   {
+    "match_id": 559640,
+    "kickoff_utc": "2026-11-01T16:15:00Z",
+    "competition": "Ligue 1",
+    "home": "Olympique Lyonnais",
+    "away": "Angers SCO",
+    "home_s": "Olympique Lyon",
+    "away_s": "Angers SCO",
+    "pick": "home",
+    "p": 68.0,
+    "ai": true
+   }
+  ],
+  "p_comb": 0.377,
+  "tg_msg_id": 53,
+  "outcome": "",
+  "legs_hit": ""
+ },
+ {
+  "id": "2026-11-01-mix",
+  "date": "2026-11-01",
+  "kind": "mix",
+  "legs": [
+   {
+    "match_id": 558543,
+    "kickoff_utc": "2026-11-01T11:30:00Z",
+    "competition": "Serie A",
+    "home": "Como 1907",
+    "away": "Venezia FC",
+    "home_s": "Como 1907",
+    "away_s": "Venezia FC",
+    "pick": "home",
+    "p": 77.0,
+    "ai": false
+   },
+   {
+    "match_id": 558546,
+    "kickoff_utc": "2026-11-01T14:00:00Z",
+    "competition": "Serie A",
+    "home": "SS Lazio",
+    "away": "Cagliari Calcio",
+    "home_s": "Lazio",
+    "away_s": "Cagliari",
+    "pick": "home",
+    "p": 72.0,
+    "ai": true
+   },
+   {
+    "match_id": 559640,
+    "kickoff_utc": "2026-11-01T16:15:00Z",
+    "competition": "Ligue 1",
+    "home": "Olympique Lyonnais",
+    "away": "Angers SCO",
+    "home_s": "Olympique Lyon",
+    "away_s": "Angers SCO",
+    "pick": "home",
+    "p": 68.0,
+    "ai": true
+   },
+   {
+    "match_id": 564734,
+    "kickoff_utc": "2026-11-01T15:15:00Z",
+    "competition": "Primera Division",
+    "home": "Real Racing Club de Santander",
+    "away": "Real Madrid CF",
+    "home_s": "Santander",
+    "away_s": "Real Madrid",
+    "pick": "away",
+    "p": 68.0,
+    "ai": true
+   }
+  ],
+  "p_comb": 0.2564,
+  "tg_msg_id": 53,
+  "outcome": "",
+  "legs_hit": ""
+ }
+]
