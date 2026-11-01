@@ -34,6 +34,7 @@ PARLAY_LAST_FILE = "last_parlay.txt"
 PARLAY_SHORTLIST = 5         # jumlah laga yang dianalisa AI untuk kombinasi (hemat kuota Gemini)
 PARLAY_MIN_PROB = 55         # peluang minimal sebuah pilihan supaya boleh masuk kombinasi (%)
 BULAN = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"]
+CREST_FILE = "crests.json"
 REPORT_FILE = "last_report.txt"
 REPORT_HOUR_WIB = 9                           # laporan harian dikirim di run pertama setelah jam ini (WIB)
 ELO_FILE = "elo_cache.json"
@@ -853,6 +854,30 @@ def settle_parlays(notify=True):
     return len(newly)
 
 
+def update_crests(max_age_days=14):
+    """Simpan peta nama tim -> URL logo (dari football-data.org) untuk dashboard.
+    Dihitung ulang tiap 14 hari saja (6 panggilan API)."""
+    now = dt.datetime.now(dt.timezone.utc)
+    try:
+        with open(CREST_FILE, encoding="utf-8") as f:
+            c = json.load(f)
+        limit = max_age_days if c.get("crests") else 1
+        if now - dt.datetime.fromisoformat(c["built_utc"]) < dt.timedelta(days=limit):
+            return
+    except Exception:
+        pass
+    crests = {}
+    for code in LEAGUES.split(","):
+        data = fd_get(f"/competitions/{code}/teams")
+        for t in (data or {}).get("teams", []):
+            if t.get("crest"):
+                crests[t["name"]] = t["crest"]
+                if t.get("shortName"):
+                    crests.setdefault(t["shortName"], t["crest"])
+    with open(CREST_FILE, "w", encoding="utf-8") as f:
+        json.dump({"built_utc": now.isoformat(), "crests": crests}, f, ensure_ascii=False)
+    print(f"[logo] {len(crests)} logo tim tersimpan")
+
 def maybe_send_daily_report():
     """Kirim laporan akurasi sekali sehari, di run pertama setelah jam 09:00 WIB.
     Tidak bergantung pada jadwal cron khusus (yang sering telat/terlewat di GitHub)."""
@@ -901,6 +926,10 @@ def main():
         settle_parlays()
         maybe_send_daily_report()
         maybe_send_daily_parlay()
+        try:
+            update_crests()
+        except Exception as e:
+            print("[logo] gagal ->", e)
 
     matches = upcoming_matches(test_mode)
     if test_mode:

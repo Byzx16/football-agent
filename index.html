@@ -65,6 +65,9 @@ section{border-top:1px solid var(--line);padding:30px 0}
 .pr small,td small{color:var(--mute);font-size:13px}
 .pr .legs{color:var(--mute);font-size:14px}
 @media(max-width:640px){.pr{grid-template-columns:1fr}}
+.cr{width:28px;height:28px;object-fit:contain;flex:none;margin-right:9px;padding:3px;border-radius:50%;background:#e8efe4}
+.cr.ini{display:inline-flex;align-items:center;justify-content:center;padding:0;background:transparent;border:1px solid var(--line);font:600 11px/1 var(--dg);color:var(--mute)}
+.tm{display:flex;align-items:center;margin:3px 0}
 .tag{display:inline-block;padding:2px 10px;border-radius:99px;font-size:13px;border:1px solid var(--line);white-space:nowrap}
 .tag.ok{color:var(--ok);border-color:rgba(94,224,138,.4)}
 .tag.no{color:var(--no);border-color:rgba(255,107,107,.4)}
@@ -104,7 +107,10 @@ nm=(r,s)=>r[s+'_s']||r[s]||'?',
 fmt=iso=>{const d=new Date(iso),o={timeZone:'Asia/Jakarta'};return d.toLocaleDateString('id-ID',{...o,day:'numeric',month:'short'})+', '+d.toLocaleTimeString('id-ID',{...o,hour:'2-digit',minute:'2-digit',hour12:false}).replace('.',':')},
 br=(rs,p)=>rs.reduce((s,r)=>s+K.reduce((a,k)=>a+Math.pow(N(r[p+'_'+k])/100-(r.outcome==k?1:0),2),0),0)/rs.length,
 CF={tinggi:'var(--ok)',sedang:'var(--amber)',rendah:'#7f9488'};
-let ROWS=[],PAR=[],LM=null,S={lg:'',rs:'',q:'',lim:40};
+let ROWS=[],PAR=[],CR={},LM=null,S={lg:'',rs:'',q:'',lim:40};
+
+function logo(full,short){const u=CR[full]||CR[short],ini=esc((short||full||'?').replace(/[^A-Za-z]/g,'').slice(0,3));
+  return u?`<img class="cr" src="${esc(u)}" alt="" loading="lazy" onerror="this.outerHTML='&lt;span class=&quot;cr ini&quot;&gt;${ini}&lt;/span&gt;'">`:`<span class="cr ini">${ini}</span>`}
 
 function csv(t){t=t.replace(/^\uFEFF/,'');const R=[];let r=[],f='',q=0;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=0}else f+=c}else if(c=='"')q=1;else if(c==','){r.push(f);f=''}else if(c=='\n'||c=='\r'){if(c=='\r'&&t[i+1]=='\n')i++;r.push(f);f='';if(r.length>1||r[0]!=='')R.push(r);r=[]}else f+=c}if(f!==''||r.length){r.push(f);R.push(r)}const h=R.shift()||[];return R.map(x=>Object.fromEntries(h.map((k,i)=>[k.trim(),x[i]==null?'':x[i]])))}
 
@@ -192,7 +198,7 @@ function table(){
   $('#tb').innerHTML=rows.slice(0,S.lim).map(r=>{
     const a=K.map(k=>N(r['p_'+k])||0),pk={home:nm(r,'home'),away:nm(r,'away'),draw:'Seri'}[r.pick]||'-';
     const res=r.outcome?`<span class="sc">${esc(r.final_score.replace('-',' - '))}</span><span class="tag ${r.correct=='1'?'ok':'no'}">${r.correct=='1'?'Benar':'Meleset'}</span>`:'<span class="tag wait">Menunggu</span>';
-    return `<tr><td>${fmt(r.kickoff_utc)}</td><td><b>${esc(nm(r,'home'))}</b> lawan <b>${esc(nm(r,'away'))}</b><small>${esc(r.competition)}</small></td><td class="pc"><div class="pb"><i style="width:${a[0]}%;background:var(--ok)"></i><i style="width:${a[1]}%;background:#6f8478"></i><i style="width:${a[2]}%;background:var(--amber)"></i></div><small>${a.map(v=>Math.round(v)).join(' / ')}</small></td><td><i class="sq" style="--c:${CF[r.confidence]||CF.rendah}"></i>${r.confidence=='rendah'&&r.pick!='draw'?'Condong ':''}${esc(pk)}<small>keyakinan ${esc(r.confidence)}</small></td><td>${res}</td></tr>`}).join('')||'<tr><td colspan="5" class="empty">Tidak ada tebakan yang cocok dengan filter ini.</td></tr>';
+    return `<tr><td>${fmt(r.kickoff_utc)}</td><td><div class="tm">${logo(r.home,r.home_s)}<b>${esc(nm(r,'home'))}</b></div><div class="tm">${logo(r.away,r.away_s)}<b>${esc(nm(r,'away'))}</b></div><small>${esc(r.competition)}</small></td><td class="pc"><div class="pb"><i style="width:${a[0]}%;background:var(--ok)"></i><i style="width:${a[1]}%;background:#6f8478"></i><i style="width:${a[2]}%;background:var(--amber)"></i></div><small>${a.map(v=>Math.round(v)).join(' / ')}</small></td><td><i class="sq" style="--c:${CF[r.confidence]||CF.rendah}"></i>${r.confidence=='rendah'&&r.pick!='draw'?'Condong ':''}${esc(pk)}<small>keyakinan ${esc(r.confidence)}</small></td><td>${res}</td></tr>`}).join('')||'<tr><td colspan="5" class="empty">Tidak ada tebakan yang cocok dengan filter ini.</td></tr>';
   $('#more').style.display=rows.length>S.lim?'inline-flex':'none';
 }
 
@@ -207,6 +213,7 @@ async function load(){
     LM=r.headers.get('last-modified');
     ROWS=csv(await r.text()).filter(x=>x.match_id).sort((a,b)=>a.kickoff_utc<b.kickoff_utc?-1:1);
     try{const p=await fetch('parlays.json?t='+t,{cache:'no-store'});PAR=p.ok?await p.json():[]}catch(e){PAR=[]}
+    try{const c=await fetch('crests.json?t='+t);CR=c.ok?((await c.json()).crests||{}):{}}catch(e){CR={}}
     render();ago();
   }catch(e){$('#app').innerHTML='<p class="err">Data belum bisa dimuat. Buka halaman ini lewat alamat GitHub Pages, bukan dengan klik dua kali pada file, dan pastikan predictions.csv ada di folder yang sama.</p>'}
 }
