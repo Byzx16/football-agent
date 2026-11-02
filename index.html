@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚽%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Barlow+Condensed:wght@600;700&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--pitch:#0a1812;--turf:#10241b;--chalk:#e8efe4;--mute:#8fa598;--amber:#ffc94a;--ok:#5ee08a;--no:#ff6b6b;--line:rgba(232,239,228,.14);--dg:"Barlow Condensed","Arial Narrow",sans-serif}
 *{box-sizing:border-box;margin:0}
@@ -66,6 +66,32 @@ section{border-top:1px solid var(--line);padding:30px 0}
 .pr small,td small{color:var(--mute);font-size:13px}
 .pr .legs{color:var(--mute);font-size:14px}
 @media(max-width:640px){.pr{grid-template-columns:1fr}}
+.sh{font:600 20px/1.2 var(--dg);margin:22px 0 6px}
+.cb{border-top:1px solid var(--line);padding:14px 0 4px}
+.ch{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-bottom:4px}
+.ch b{font:600 24px/1 var(--dg)}
+.cb summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;padding:10px 0;border-top:1px solid var(--line)}
+.cb summary::-webkit-details-marker{display:none}
+.cb summary:before{content:"+";color:var(--mute);width:12px}
+.cb details[open] summary:before{content:"\2212"}
+.cb .dd{padding:4px 0 16px 26px}
+.tmi{display:inline-flex;align-items:center}
+.pk{color:var(--amber)}
+.cats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:6px}
+.cat{background:transparent;color:var(--mute);border:1px solid var(--line);border-radius:99px;padding:8px 18px;font:inherit;font-size:15px;cursor:pointer;transition:color .2s,border-color .2s,background .2s}
+.cat:hover{color:var(--chalk);border-color:var(--chalk)}
+.cat[aria-pressed=true]{color:#fff;background:var(--abg,rgba(255,201,74,.14));border-color:var(--amber)}
+body.ucl{--pitch:#040c26;--turf:#0a1b49;--chalk:#eef4ff;--mute:#93a6d1;--amber:#7fd1ff;--abg:rgba(127,209,255,.16);--line:rgba(160,190,255,.2);--dg:"Montserrat","Arial Black",sans-serif;font-family:"Montserrat",system-ui,sans-serif;font-size:15px;background:radial-gradient(900px 520px at 50% -140px,#14337f 0,transparent 70%),radial-gradient(1px 1px at 18px 24px,rgba(255,255,255,.55),transparent),radial-gradient(1px 1px at 92px 82px,rgba(255,255,255,.35),transparent),radial-gradient(1.5px 1.5px at 150px 32px,rgba(255,255,255,.5),transparent),var(--pitch);background-size:auto,170px 130px,170px 130px,170px 130px,auto}
+body.ucl h1,body.ucl h2{text-transform:uppercase;letter-spacing:.02em;font-weight:800}
+body.ucl h1{font-size:clamp(30px,6.4vw,54px);line-height:1.05}
+body.ucl h2{font-size:22px}
+body.ucl .dg{font-weight:800;font-size:clamp(46px,11vw,104px);letter-spacing:-.03em;text-shadow:0 0 30px rgba(127,209,255,.5)}
+body.ucl .side.b .dg{text-shadow:0 0 22px rgba(238,244,255,.25)}
+body.ucl .lb{font-weight:700;font-size:20px}
+body.ucl .strip b{font-weight:800;font-size:34px}
+body.ucl .sc,body.ucl .ch b,body.ucl .pv b{font-weight:800}
+body.ucl .board{background:#030a20;box-shadow:inset 0 0 0 6px #08163c,inset 0 0 0 7px var(--line)}
+body.ucl .board:before,body.ucl .board:after{border-color:rgba(160,190,255,.12)}
 .trend{display:flex;align-items:center;gap:6px;margin:12px 0 6px}
 .trend i{width:22px;height:22px;border-radius:4px;background:var(--ok)}
 .trend i.l{background:var(--no)}
@@ -79,9 +105,9 @@ td .pill{padding:4px 12px;font-size:13px}
 .pvs{display:flex;gap:26px;flex-wrap:wrap;margin-bottom:8px}
 .pv span{display:block;color:var(--mute);font-size:13px}
 .pv b{font:700 26px/1.1 var(--dg)}
-.det h3{font:600 18px/1.2 var(--dg);margin:14px 0 4px}
-.det ul{padding-left:18px}
-.det li{margin:3px 0}
+.det h3,.dd h3{font:600 18px/1.2 var(--dg);margin:14px 0 4px}
+.det ul,.dd ul{padding-left:18px}
+.det li,.dd li{margin:3px 0}
 .cr{width:28px;height:28px;object-fit:contain;flex:none;margin-right:9px;padding:3px;border-radius:50%;background:#e8efe4}
 .cr.ini{display:inline-flex;align-items:center;justify-content:center;padding:0;background:transparent;border:1px solid var(--line);font:600 11px/1 var(--dg);color:var(--mute)}
 .tm{display:flex;align-items:center;margin:3px 0}
@@ -110,9 +136,10 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--mute);font-
 <body>
 <div class="wrap">
 <header>
-  <div><h1>Football Agent</h1><p class="sub">Pantauan akurasi tebakan dari semua liga, diperbarui otomatis dari data di repo.</p></div>
+  <div><h1 id="ttl">Football Agent</h1><p class="sub" id="sb">Pantauan akurasi tebakan dari semua liga, diperbarui otomatis dari data di repo.</p></div>
   <button class="pill" id="rf" title="Muat ulang data"><i class="live"></i>Data terbaru: <span id="up">memuat</span></button>
 </header>
+<nav class="cats" id="cats" aria-label="Kategori"><button class="cat" data-c="all" aria-pressed="true">Semua liga</button><button class="cat" data-c="ucl" aria-pressed="false">★ Liga Champions <span id="nu"></span></button></nav>
 <main id="app"><p class="empty">Memuat data…</p></main>
 <footer>Ini analisa probabilitas, bukan jaminan hasil dan bukan saran taruhan. Waktu ditampilkan dalam WIB.</footer>
 </div>
@@ -125,7 +152,7 @@ nm=(r,s)=>r[s+'_s']||r[s]||'?',
 fmt=iso=>{const d=new Date(iso),o={timeZone:'Asia/Jakarta'};return d.toLocaleDateString('id-ID',{...o,day:'numeric',month:'short'})+', '+d.toLocaleTimeString('id-ID',{...o,hour:'2-digit',minute:'2-digit',hour12:false}).replace('.',':')},
 br=(rs,p)=>rs.reduce((s,r)=>s+K.reduce((a,k)=>a+Math.pow(N(r[p+'_'+k])/100-(r.outcome==k?1:0),2),0),0)/rs.length,
 CF={tinggi:'var(--ok)',sedang:'var(--amber)',rendah:'#7f9488'};
-let ROWS=[],PAR=[],CR={},AN={},LM=null,S={lg:'',rs:'',q:'',lim:40,d1:'',d2:'',open:new Set()};
+let ROWS=[],PAR=[],CR={},AN={},LM=null,S={lg:'',rs:'',q:'',lim:40,d1:'',d2:'',open:new Set(),pop:new Set(),cat:'all'};
 
 function logo(full,short){const u=CR[full]||CR[short],ini=esc((short||full||'?').replace(/[^A-Za-z]/g,'').slice(0,3));
   return u?`<img class="cr" src="${esc(u)}" alt="" loading="lazy" onerror="this.outerHTML='&lt;span class=&quot;cr ini&quot;&gt;${ini}&lt;/span&gt;'">`:`<span class="cr ini">${ini}</span>`}
@@ -143,40 +170,62 @@ function line(done){
   pth=a=>a.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join('');
   const grid=[0,25,50,75,100].map(v=>`<line x1="${P.l}" x2="${W-P.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(232,239,228,${v==50?.22:.08})"/><text x="${P.l-8}" y="${Y(v)+4}" text-anchor="end" fill="#8fa598" font-size="12">${v}%</text>`).join('');
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Akurasi kumulatif agent dibanding pembanding tuan rumah">
-  <defs><linearGradient id="ga" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffc94a" stop-opacity=".28"/><stop offset="1" stop-color="#ffc94a" stop-opacity="0"/></linearGradient></defs>
+  <defs><linearGradient id="ga" x1="0" x2="0" y1="0" y2="1"><stop offset="0" style="stop-color:var(--amber)" stop-opacity=".28"/><stop offset="1" style="stop-color:var(--amber)" stop-opacity="0"/></linearGradient></defs>
   ${grid}<path class="ar" d="${pth(A)} L${X(n-1)} ${Y(0)} L${X(0)} ${Y(0)}Z" fill="url(#ga)"/>
   <path class="bs" d="${pth(B)}" fill="none" stroke="#e8efe4" stroke-width="2" stroke-dasharray="6 6"/>
-  <path class="ln" pathLength="1" d="${pth(A)}" fill="none" stroke="#ffc94a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
-  <circle class="pt" cx="${X(n-1)}" cy="${Y(A[n-1])}" r="5.5" fill="#ffc94a"/></svg>
+  <path class="ln" pathLength="1" d="${pth(A)}" fill="none" style="stroke:var(--amber)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle class="pt" cx="${X(n-1)}" cy="${Y(A[n-1])}" r="5.5" style="fill:var(--amber)"/></svg>
   <div class="lg"><span><i></i>Agent</span><span><i class="d"></i>Pembanding tuan rumah</span></div>`;
 }
 
+const MK={over15:'Over 1.5',over25:'Over 2.5',under25:'Under 2.5',under35:'Under 3.5',btts:'Kedua tim cetak gol'},
+legText=l=>l.market&&l.market!='1x2'?MK[l.market]+(l.market=='btts'?'':' gol'):l.pick=='home'?l.home_s+' menang':l.pick=='away'?l.away_s+' menang':'Seri';
+
+function noteHTML(n,l){
+  if(!n)return '<p class="sub">Detail belum tersimpan untuk kombinasi ini.</p>';
+  const P=(lab,v)=>v&&v.length?`<div class="pv"><span>${lab}</span><b>${v.map(x=>Math.round(N(x))).join(' / ')}</b></div>`:'',
+  tm=(name,rank,f)=>`<p><b>${esc(name)}</b> ${esc(rank||'')}${f&&f.length?`<br><span class="sub">Form 5 laga: ${f.map(x=>esc(x)).join('; ')}</span>`:''}</p>`,
+  g=n.goals?`<p class="sub">Perkiraan gol ${F2(N(n.goals.lam_h),1)} lawan ${F2(N(n.goals.lam_a),1)}. Over 1.5: ${Math.round(n.goals.o15)}%, Over 2.5: ${Math.round(n.goals.o25)}%, Over 3.5: ${Math.round(n.goals.o35)}%, kedua tim cetak gol: ${Math.round(n.goals.btts)}%.${n.top?` Skor paling mungkin: ${n.top.map(t=>t[0]+' ('+Math.round(t[1])+'%)').join(', ')}.`:''}</p>`:'',
+  L=(t,x)=>x&&x.length?`<h3>${t}</h3><ul>${x.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`:'';
+  return `<div class="pvs">${P('Gabungan',n.p)}${P('AI',n.g)}${P('Elo',n.e)}</div>${n.p||n.e?'<p class="sub" style="margin-bottom:8px">Peluang tuan rumah, seri, tamu (dalam persen).</p>':''}${tm(l.home_s,n.home_rank,n.home_form)}${tm(l.away_s,n.away_rank,n.away_form)}${g}${n.summary?`<p style="margin-top:10px">${esc(n.summary)}</p>`:'<p class="sub" style="margin-top:10px">Analisa AI tidak dijalankan untuk laga ini, pilihan berdasarkan model statistik.</p>'}${L('Faktor kunci',n.factors)}${L('Risiko',n.risks)}`}
+
+function legRow(x,l){
+  const key=x.id+'|'+l.match_id,n=(x.notes||{})[l.match_id],lr=(x.leg_results||{})[l.match_id],
+  rs=lr?`<span class="tag ${lr.hit?'ok':'no'}">${lr.hit?'Benar':'Meleset'}, ${esc(String(lr.score).replace('-',' - '))}</span>`:'';
+  return `<details data-k="${esc(key)}"${S.pop.has(key)?' open':''}><summary><span class="tmi">${logo(l.home,l.home_s)}<b>${esc(l.home_s)}</b></span><span class="sub">lawan</span><span class="tmi">${logo(l.away,l.away_s)}<b>${esc(l.away_s)}</b></span><span class="sub">${fmt(l.kickoff_utc)}</span><b class="pk">${esc(legText(l))}</b><small>${Math.round(l.p)}%</small>${rs}</summary><div class="dd">${noteHTML(n,l)}</div></details>`}
+
+function comboCard(x){
+  const lab={win:['ok','Menang'],lose:['no','Gagal'],void:['wait','Dibatalkan']}[x.outcome]||['wait','Berjalan'],
+  d=new Date(x.date+'T00:00:00+07:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'}),
+  legs=[...(x.legs||[])].sort((a,b)=>a.kickoff_utc<b.kickoff_utc?-1:1);
+  return `<div class="cb"><div class="ch"><b>${x.kind=='aman'?'Aman':'Mix'}</b><small>${d}</small><span class="tag ${lab[0]}">${lab[1]}</span><small>peluang semua benar ${Math.round(N(x.p_comb||0)*100)}%${x.legs_hit?', '+esc(x.legs_hit)+' benar':''}</small></div>${legs.map(l=>legRow(x,l)).join('')}</div>`}
+
+function runningCombos(){const r=VP().filter(x=>!x.outcome);return r.length?r.slice().reverse().map(comboCard).join(''):'<p class="empty" style="padding:10px 0">Tidak ada kombinasi yang sedang berjalan.</p>'}
+
 function parlays(){
-  if(!PAR.length)return '<p class="empty">Belum ada kombinasi tercatat. Kombinasi pertama dikirim sekitar jam 15:00 WIB.</p>';
-  const fin=PAR.filter(x=>x.outcome=='win'||x.outcome=='lose');
+  const set=VP().filter(x=>x.outcome);
+  if(!set.length)return '<p class="empty">Belum ada kombinasi yang selesai.</p>';
+  const fin=set.filter(x=>x.outcome=='win'||x.outcome=='lose');
   const sum=[['aman','Aman'],['mix','Mix']].map(([k,l])=>{const s=fin.filter(x=>x.kind==k);if(!s.length)return '';const w=s.filter(x=>x.outcome=='win').length,e=s.reduce((a,x)=>a+N(x.p_comb||0),0),ok=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[0]||0),0),tt=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[1]||0),0);return `<p>${l}: menang ${w} dari ${s.length} kombinasi (perkiraan ${F2(e,1)}), pilihan benar ${ok} dari ${tt}.</p>`}).join('');
-  const list=PAR.slice(-8).reverse().map(x=>{
-    const lab={win:['ok','Menang'],lose:['no','Gagal'],void:['wait','Dibatalkan']}[x.outcome]||['wait','Berjalan'];
-    const MK={over15:'Over 1.5',over25:'Over 2.5',under25:'Under 2.5',under35:'Under 3.5',btts:'Kedua tim cetak gol'},
-    legs=(x.legs||[]).map(l=>esc(l.market&&l.market!='1x2'?MK[l.market]+' ('+l.home_s+' lawan '+l.away_s+')':l.pick=='home'?l.home_s:l.pick=='away'?l.away_s:'Seri')).join(', ');
-    const d=new Date(x.date+'T00:00:00+07:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'});
-    return `<div class="pr"><div><b>${x.kind=='aman'?'Aman':'Mix'}</b><small> ${d}</small></div><div class="legs">${legs}</div><div><span class="tag ${lab[0]}">${lab[1]}</span> <small>peluang ${Math.round(N(x.p_comb||0)*100)}%${x.legs_hit?', '+esc(x.legs_hit)+' benar':''}</small></div></div>`}).join('');
-  return (sum?`<div class="sub" style="margin-bottom:8px">${sum}</div>`:'')+list;
+  return (sum?`<div class="sub" style="margin-bottom:8px">${sum}</div>`:'')+set.slice(-8).reverse().map(comboCard).join('');
 }
 
 function render(){
   if(!ROWS.length){$('#app').innerHTML='<p class="empty">Belum ada tebakan tercatat. Tebakan pertama muncul saat ada laga 25 sampai 75 menit sebelum kick-off.</p>';return}
-  const done=ROWS.filter(r=>r.outcome),n=done.length,pend=ROWS.length-n,
+  const RW=VR(),nu=ROWS.filter(isUCL).length;
+  $('#nu').textContent=nu?'('+nu+')':'';
+  if(!RW.length){$('#app').innerHTML='<p class="empty">Belum ada tebakan Liga Champions. Analisa muncul saat ada laga UCL, biasanya Selasa dan Rabu dini hari WIB.</p>';return}
+  const done=RW.filter(r=>r.outcome),n=done.length,pend=RW.length-n,
   hit=done.filter(r=>r.correct=='1').length,acc=n?hit/n*100:0,base=n?done.filter(r=>r.outcome=='home').length/n*100:0,
   strong=done.filter(r=>r.confidence!='rendah'),sh=strong.filter(r=>r.correct=='1').length,
   cmp=done.filter(r=>r.g_home&&r.e_home),d=acc-base,
-  pf=PAR.filter(x=>x.outcome=='win'||x.outcome=='lose'),pw=pf.filter(x=>x.outcome=='win').length;
+  pf=VP().filter(x=>x.outcome=='win'||x.outcome=='lose'),pw=pf.filter(x=>x.outcome=='win').length;
   const verdict=!n?'Belum ada laga selesai. Skor pertama muncul setelah laga yang dicatat berakhir.':n<30?`Agent ${d>=0?'unggul':'tertinggal'} ${Math.round(Math.abs(d))} poin dari pembanding, tapi sampel baru ${n} laga dan belum bisa disimpulkan.`:`Agent ${d>3?'unggul':d>=-3?'setara':'tertinggal'} ${Math.round(Math.abs(d))} poin dari pembanding tuan rumah.`;
   const bars=['tinggi','sedang','rendah'].map(c=>{const s=done.filter(r=>r.confidence==c);if(!s.length)return `<div class="br"><span><i class="sq" style="--c:${CF[c]}"></i>${c}</span><div class="bar"></div><em>belum ada laga</em></div>`;const a=s.filter(r=>r.correct=='1').length/s.length*100;return `<div class="br"><span><i class="sq" style="--c:${CF[c]}"></i>${c}</span><div class="bar"><i style="--w:${a}%;--c:${CF[c]}"></i></div><em>${Math.round(a)}% dari ${s.length}</em></div>`}).join('');
   let bri='<p class="empty" style="padding:14px 0">Perbandingan muncul setelah ada laga selesai yang punya probabilitas AI dan Elo.</p>';
   if(cmp.length){const sc=[['AI',br(cmp,'g')],['Elo',br(cmp,'e')],['Gabungan',br(cmp,'p')]],best=Math.min(...sc.map(x=>x[1]));
     bri=sc.map(([l,v])=>`<div class="br"><span class="${v==best?'best':''}">${l}</span><div class="bar"><i style="--w:${Math.min(100,v/.8*100)}%;--c:${v==best?'var(--amber)':'#7f9488'}"></i></div><em class="${v==best?'best':''}">${F2(v,3)}</em></div>`).join('')+`<p class="sub" style="margin-top:12px;font-size:14px">Skor Brier dari ${cmp.length} laga. Makin kecil makin baik, tebakan acak 0,667. Warna kuning menandai yang terbaik.</p>`}
-  const lgs=[...new Set(ROWS.map(r=>r.competition))].sort(),dmin=wd(ROWS[0]),dmax=wd(ROWS[ROWS.length-1]);
+  const lgs=[...new Set(RW.map(r=>r.competition))].sort(),dmin=wd(RW[0]),dmax=wd(RW[RW.length-1]);
   $('#app').innerHTML=`
   <div class="board obs">
     <div class="side"><span class="lb">Agent</span><b class="dg cu" data-to="${acc}" data-suf="%">0%</b><span class="ds">akurasi tebakan dari ${n} laga</span></div>
@@ -192,13 +241,17 @@ function render(){
     <div><b>${pend}</b><span>Laga menunggu hasil</span></div>
     <div><b>${pw}/${pf.length}</b><span>Kombinasi harian yang menang</span></div>
   </div>
+  <section><h2>Sedang berjalan</h2><p class="sub">Tebakan dan kombinasi yang belum selesai. Begitu laganya selesai, hasilnya pindah ke riwayat.</p>
+    <h3 class="sh">Tebakan per laga</h3>${pend?`<div class="tw"><table><thead><tr><th>Kick-off</th><th>Laga</th><th class="pc">Peluang tuan rumah, seri, tamu</th><th>Tebakan</th><th>Status</th><th>Analisa</th></tr></thead><tbody id="pt"></tbody></table></div>`:'<p class="empty" style="padding:10px 0">Tidak ada tebakan yang sedang berjalan.</p>'}
+    <h3 class="sh">Kombinasi harian</h3>${runningCombos()}
+  </section>
   ${n?`<section><h2>Hasil terakhir</h2><div class="trend" aria-label="Tren 10 laga terakhir">${done.slice(-10).map(r=>`<i class="${r.correct=='1'?'w':'l'}" title="${esc(nm(r,'home'))} ${esc(r.final_score)} ${esc(nm(r,'away'))}"></i>`).join('')}<span>10 laga terakhir, hijau benar, merah meleset</span></div>${done.slice(-5).reverse().map(r=>`<div class="lr"><div class="m">${logo(r.home,r.home_s)}<b>${esc(nm(r,'home'))}</b><span class="sc">${esc(r.final_score.replace('-',' - '))}</span>${logo(r.away,r.away_s)}<b>${esc(nm(r,'away'))}</b></div><div><span class="tag ${r.correct=='1'?'ok':'no'}">${r.correct=='1'?'Benar':'Meleset'}</span><small>tebakan: ${r.confidence=='rendah'&&r.pick!='draw'?'condong ':''}${esc(pick(r))}</small></div></div>`).join('')}</section>`:''}
   <section class="obs"><h2>Akurasi dari laga ke laga</h2><p class="sub">Setiap titik adalah akurasi kumulatif sampai laga itu.</p>${line(done)}</section>
   <section class="cols obs"><div><h2>Akurasi per tingkat keyakinan</h2><p class="sub">Sinyal yang diberi keyakinan tinggi seharusnya lebih sering benar.</p>${bars}</div><div><h2>Siapa yang paling jitu</h2><p class="sub">Kualitas probabilitas AI, model Elo, dan gabungan keduanya.</p>${bri}</div></section>
-  <section><h2>Kombinasi harian</h2><p class="sub" style="margin-bottom:10px">Gabungan pilihan terkuat dari semua liga. Satu laga meleset, seluruh kombinasi gagal.</p>${parlays()}</section>
-  <section><h2>Riwayat tebakan</h2>
+  <section><h2>Riwayat kombinasi</h2><p class="sub" style="margin-bottom:10px">Kombinasi yang sudah selesai. Satu laga meleset, seluruh kombinasi gagal. Klik sebuah laga untuk melihat detailnya.</p>${parlays()}</section>
+  <section><h2>Riwayat tebakan</h2><p class="sub">Hanya laga yang sudah selesai.</p>
     <div class="f"><select id="lg" aria-label="Filter liga"><option value="">Semua liga</option>${lgs.map(l=>`<option${S.lg==l?' selected':''}>${esc(l)}</option>`).join('')}</select>
-    <select id="rs" aria-label="Filter hasil">${[['','Semua hasil'],['ok','Benar'],['no','Meleset'],['wait','Menunggu']].map(([v,t])=>`<option value="${v}"${S.rs==v?' selected':''}>${t}</option>`).join('')}</select>
+    <select id="rs" aria-label="Filter hasil">${[['','Semua hasil'],['ok','Benar'],['no','Meleset']].map(([v,t])=>`<option value="${v}"${S.rs==v?' selected':''}>${t}</option>`).join('')}</select>
     <input id="q" type="search" placeholder="Cari tim" value="${esc(S.q)}" aria-label="Cari tim"><label>Dari <input id="d1" type="date" value="${S.d1}" min="${dmin}" max="${dmax}"></label><label>Sampai <input id="d2" type="date" value="${S.d2}" min="${dmin}" max="${dmax}"></label><button class="pill" id="rst">Atur ulang</button></div><p class="sub" id="cnt" aria-live="polite"></p>
     <div class="tw"><table><thead><tr><th>Kick-off</th><th>Laga</th><th class="pc">Peluang tuan rumah, seri, tamu</th><th>Tebakan</th><th>Hasil</th><th>Analisa</th></tr></thead><tbody id="tb"></tbody></table></div>
     <button class="pill more" id="more" style="display:none">Tampilkan lebih banyak</button>
@@ -210,8 +263,8 @@ function render(){
   $('#d2').onchange=e=>{S.d2=e.target.value;S.lim=40;table()};
   $('#rst').onclick=()=>{S.lg=S.rs=S.q=S.d1=S.d2='';S.lim=40;['lg','rs','q','d1','d2'].forEach(i=>$('#'+i).value='');table()};
   $('#more').onclick=()=>{S.lim+=40;table()};
-  $('#tb').onclick=e=>{const b=e.target.closest('button[data-id]');if(!b)return;const id=b.dataset.id;S.open.has(id)?S.open.delete(id):S.open.add(id);table()};
-  table();
+  $('#app').onclick=e=>{const b=e.target.closest('button[data-id]');if(!b)return;const id=b.dataset.id;S.open.has(id)?S.open.delete(id):S.open.add(id);table();pending()};
+  table();pending();
   document.querySelectorAll('.cu').forEach(cu);
   document.querySelectorAll('.obs').forEach(el=>io.observe(el));
 }
@@ -231,15 +284,22 @@ function detail(r){
   return `<div class="pvs">${fin}${ai}${el}</div><p class="sub" style="margin-bottom:6px">Peluang tuan rumah, seri, tamu (dalam persen).</p>${ls}${gl}${a?`<p>${esc(a.summary)}</p>${L('Faktor kunci',a.factors)}${L('Risiko',a.risks)}`:'<p class="sub">Teks analisa belum tersimpan untuk tebakan ini. Tebakan yang dicatat setelah pembaruan ini akan menampilkan ringkasan, faktor kunci, dan risikonya di sini.</p>'}`;
 }
 
+const mins=m=>m<60?Math.max(1,Math.round(m))+' menit lagi':Math.floor(m/60)+' jam '+Math.round(m%60)+' menit lagi';
+function stat(r){const d=(Date.now()-Date.parse(r.kickoff_utc))/6e4;return d<0?`<span class="tag wait">Mulai ${mins(-d)}</span>`:d<115?'<span class="tag ok"><i class="live" style="display:inline-block;margin-right:6px"></i>Berlangsung</span>':'<span class="tag wait">Menunggu hasil</span>'}
+
+function rowHTML(r){
+  const a=K.map(k=>N(r['p_'+k])||0),open=S.open.has(r.match_id);
+  const res=r.outcome?`<span class="sc">${esc(r.final_score.replace('-',' - '))}</span><span class="tag ${r.correct=='1'?'ok':'no'}">${r.correct=='1'?'Benar':'Meleset'}</span>`:stat(r);
+  return `<tr><td>${fmt(r.kickoff_utc)}</td><td><div class="tm">${logo(r.home,r.home_s)}<b>${esc(nm(r,'home'))}</b></div><div class="tm">${logo(r.away,r.away_s)}<b>${esc(nm(r,'away'))}</b></div><small>${esc(r.competition)}</small></td><td class="pc"><div class="pb"><i style="width:${a[0]}%;background:var(--ok)"></i><i style="width:${a[1]}%;background:#6f8478"></i><i style="width:${a[2]}%;background:var(--amber)"></i></div><small>${a.map(v=>Math.round(v)).join(' / ')}</small></td><td><i class="sq" style="--c:${CF[r.confidence]||CF.rendah}"></i>${r.confidence=='rendah'&&r.pick!='draw'?'Condong ':''}${esc(pick(r))}<small>keyakinan ${esc(r.confidence)}</small></td><td>${res}</td><td><button class="pill" data-id="${esc(r.match_id)}" aria-expanded="${open}">${open?'Tutup':'Lihat'}</button></td></tr>`+(open?`<tr class="det"><td colspan="6">${detail(r)}</td></tr>`:'')}
+
+function pending(){const el=$('#pt');if(!el)return;el.innerHTML=VR().filter(r=>!r.outcome).sort((a,b)=>a.kickoff_utc<b.kickoff_utc?-1:1).map(rowHTML).join('')}
+
 function table(){
-  const q=S.q.trim().toLowerCase();
-  const rows=ROWS.filter(r=>(!S.lg||r.competition==S.lg)&&(!S.d1||wd(r)>=S.d1)&&(!S.d2||wd(r)<=S.d2)&&(!S.rs||(S.rs=='wait'?!r.outcome:r.outcome&&(S.rs=='ok')==(r.correct=='1')))&&(!q||(r.home+' '+r.away+' '+nm(r,'home')+' '+nm(r,'away')).toLowerCase().includes(q))).reverse();
-  $('#tb').innerHTML=rows.slice(0,S.lim).map(r=>{
-    const a=K.map(k=>N(r['p_'+k])||0),open=S.open.has(r.match_id);
-    const res=r.outcome?`<span class="sc">${esc(r.final_score.replace('-',' - '))}</span><span class="tag ${r.correct=='1'?'ok':'no'}">${r.correct=='1'?'Benar':'Meleset'}</span>`:'<span class="tag wait">Menunggu</span>';
-    return `<tr><td>${fmt(r.kickoff_utc)}</td><td><div class="tm">${logo(r.home,r.home_s)}<b>${esc(nm(r,'home'))}</b></div><div class="tm">${logo(r.away,r.away_s)}<b>${esc(nm(r,'away'))}</b></div><small>${esc(r.competition)}</small></td><td class="pc"><div class="pb"><i style="width:${a[0]}%;background:var(--ok)"></i><i style="width:${a[1]}%;background:#6f8478"></i><i style="width:${a[2]}%;background:var(--amber)"></i></div><small>${a.map(v=>Math.round(v)).join(' / ')}</small></td><td><i class="sq" style="--c:${CF[r.confidence]||CF.rendah}"></i>${r.confidence=='rendah'&&r.pick!='draw'?'Condong ':''}${esc(pick(r))}<small>keyakinan ${esc(r.confidence)}</small></td><td>${res}</td><td><button class="pill" data-id="${esc(r.match_id)}" aria-expanded="${open}">${open?'Tutup':'Lihat'}</button></td></tr>`+(open?`<tr class="det"><td colspan="6">${detail(r)}</td></tr>`:'')}).join('')||'<tr><td colspan="6" class="empty">Tidak ada tebakan yang cocok dengan filter ini.</td></tr>';
+  const q=S.q.trim().toLowerCase(),DN=VR().filter(r=>r.outcome);
+  const rows=DN.filter(r=>(!S.lg||r.competition==S.lg)&&(!S.d1||wd(r)>=S.d1)&&(!S.d2||wd(r)<=S.d2)&&(!S.rs||(S.rs=='ok')==(r.correct=='1'))&&(!q||(r.home+' '+r.away+' '+nm(r,'home')+' '+nm(r,'away')).toLowerCase().includes(q))).reverse();
+  $('#tb').innerHTML=rows.slice(0,S.lim).map(rowHTML).join('')||'<tr><td colspan="6" class="empty">Tidak ada tebakan yang cocok dengan filter ini.</td></tr>';
   $('#more').style.display=rows.length>S.lim?'inline-flex':'none';
-  $('#cnt').textContent=`Menampilkan ${Math.min(rows.length,S.lim)} dari ${rows.length} tebakan${rows.length<ROWS.length?`, total ${ROWS.length}`:''}.`;
+  $('#cnt').textContent=`Menampilkan ${Math.min(rows.length,S.lim)} dari ${rows.length} tebakan selesai${rows.length<DN.length?`, total ${DN.length}`:''}.`;
 }
 
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
@@ -258,7 +318,23 @@ async function load(){
     render();ago();
   }catch(e){$('#app').innerHTML='<p class="err">Data belum bisa dimuat. Buka halaman ini lewat alamat GitHub Pages, bukan dengan klik dua kali pada file, dan pastikan predictions.csv ada di folder yang sama.</p>'}
 }
+const isUCL=r=>/champions/i.test(r.competition||''),
+VR=()=>S.cat=='ucl'?ROWS.filter(isUCL):ROWS,
+VP=()=>S.cat=='ucl'?PAR.filter(x=>(x.legs||[]).some(l=>/champions/i.test(l.competition||''))):PAR;
+function applyCat(){
+  const u=S.cat=='ucl';
+  document.body.classList.toggle('ucl',u);
+  document.querySelectorAll('.cat').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.c==S.cat)));
+  $('#ttl').textContent=u?'Champions League':'Football Agent';
+  $('#sb').textContent=u?'Analisa tebakan khusus pertandingan UEFA Champions League, diperbarui otomatis dari data di repo.':'Pantauan akurasi tebakan dari semua liga, diperbarui otomatis dari data di repo.';
+  document.title=u?'Champions League | Football Agent':'Football Agent';
+  const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',u?'#040c26':'#0a1812');
+}
+$('#cats').onclick=e=>{const b=e.target.closest('.cat');if(!b||b.dataset.c==S.cat)return;S.cat=b.dataset.c;S.lg=S.rs=S.q=S.d1=S.d2='';S.lim=40;history.replaceState(null,'',S.cat=='ucl'?'#ucl':location.pathname+location.search);applyCat();if(ROWS.length)render()};
+if(location.hash=='#ucl')S.cat='ucl';
+applyCat();
 $('#rf').onclick=load;
+document.addEventListener('toggle',e=>{const d=e.target;if(d.tagName=='DETAILS'&&d.dataset.k){d.open?S.pop.add(d.dataset.k):S.pop.delete(d.dataset.k)}},true);
 setInterval(load,3e5);setInterval(ago,3e4);
 load();
 </script>

@@ -865,8 +865,16 @@ def _combo(legs):
         prod *= l["p"] / 100
     return prod
 
+def _ctx_for(m):
+    comp = m["competition"]["code"]
+    table = standings(comp) if comp != "CL" else {}
+    hid, aid = m["homeTeam"]["id"], m["awayTeam"]["id"]
+    return {"home_rank": table.get(hid, "n/a"), "away_rank": table.get(aid, "n/a"),
+            "home_form": team_form(hid), "away_form": team_form(aid)}
+
 def build_parlay_legs(ratings):
-    """Kumpulkan pilihan per laga: hasil laga (untuk shortlist yang dianalisa AI) dan pasar gol (model Poisson)."""
+    """Kumpulkan pilihan per laga: hasil laga (untuk shortlist yang dianalisa AI) dan pasar gol (model Poisson).
+    Mengembalikan juga bundel data tiap laga (klasemen, form, analisa) untuk pesan detail."""
     info = []
     for m in matches_next_24h():
         hid, aid = m["homeTeam"]["id"], m["awayTeam"]["id"]
@@ -878,28 +886,101 @@ def build_parlay_legs(ratings):
     ranked = sorted([x for x in info if x[1]], key=lambda x: -max(x[1]))
     short_ids = {x[0]["id"] for x in ranked[:PARLAY_SHORTLIST]}
 
-    per_match = []
+    per_match, bundles = [], {}
     for m, elo, gp in info:
+        b = {"m": m, "elo": elo, "gp": gp, "res": None, "ctx": None}
         opts = []
         if m["id"] in short_ids:
-            comp = m["competition"]["code"]
-            table = standings(comp) if comp != "CL" else {}
-            hid, aid = m["homeTeam"]["id"], m["awayTeam"]["id"]
-            ctx = {"home_rank": table.get(hid, "n/a"), "away_rank": table.get(aid, "n/a"),
-                   "home_form": team_form(hid), "away_form": team_form(aid)}
+            ctx = _ctx_for(m)
             try:
                 res = combine(analyze(m, ctx), elo)
             except Exception as e:
                 print("[parlay] AI gagal, pakai Elo saja ->", e)
                 res = elo_only(elo)
+            b["ctx"], b["res"] = ctx, res
             leg = _leg_from(m, res)
             if leg["p"] >= PARLAY_MIN_PROB:
                 opts.append(leg)
         if gp:
             opts += _goal_legs(m, gp)
+        bundles[m["id"]] = b
         if opts:
             per_match.append(opts)
-    return per_match, n_scanned
+    return per_match, n_scanned, bundles
+
+def _leg_notes(b):
+    """Catatan detail satu laga untuk disimpan (dan ditampilkan di dashboard)."""
+    res, ctx, gp, elo = b["res"], b["ctx"] or {}, b["gp"], b["elo"]
+    note = {"home_rank": ctx.get("home_rank", ""), "away_rank": ctx.get("away_rank", ""),
+            "home_form": ctx.get("home_form") or [], "away_form": ctx.get("away_form") or []}
+    if res:
+        note["p"] = [res["home_win"], res["draw"], res["away_win"]]
+        if res.get("g"):
+            note["g"] = list(res["g"])
+        if not res.get("ai_failed"):
+            note.update(summary=res.get("summary", ""), factors=list(res.get("key_factors") or [])[:4],
+                        risks=list(res.get("risks") or [])[:3])
+    if elo:
+        note["e"] = [round(v, 1) for v in elo]
+    if gp:
+        note["goals"] = {k: round(gp[k], 1) for k in ("lam_h", "lam_a", "o15", "o25", "o35", "btts")}
+        note["top"] = [[sc, round(pp, 1)] for sc, pp in gp["top"]]
+    return note
+
+def format_leg_detail(i, n, b, uses):
+    """Pesan detail satu laga yang dipakai di kombinasi (dikirim sebagai balasan pesan kombinasi)."""
+    esc = lambda x: html.escape(str(x))
+    m, res, ctx, gp, elo = b["m"], b["res"], b["ctx"] or {}, b["gp"], b["elo"]
+    h_full, a_full = m["homeTeam"]["name"], m["awayTeam"]["name"]
+    h = (m["homeTeam"].get("shortName") or h_full)[:14]
+    a = (m["awayTeam"].get("shortName") or a_full)[:14]
+    ko = dt.datetime.fromisoformat(m["utcDate"].replace("Z", "+00:00")).astimezone(dt.timezone(dt.timedelta(hours=7)))
+    lines = [f"🔎 <b>DETAIL PILIHAN {i}/{n}</b>",
+             f"⚽ <b>{esc(h_full)} vs {esc(a_full)}</b>",
+             f"🏆 {esc(m['competition']['name'])}  •  🕐 {ko:%H:%M} WIB", LINE,
+             "📌 <b>Dipakai di kombinasi</b>"]
+    for kind, leg in uses:
+        lines.append(f"{'🛡️ Aman' if kind == 'aman' else '🎲 Mix'}: <b>{esc(_leg_pick_text(leg))}</b> ({leg['p']:.0f}%)")
+    lines += [LINE, "📋 <b>KONDISI TIM</b>"]
+    for name, rank, form in ((h, ctx.get("home_rank"), ctx.get("home_form")),
+                             (a, ctx.get("away_rank"), ctx.get("away_form"))):
+        lines.append(f"<b>{esc(name)}</b>: {esc(rank or 'n/a')}")
+        if form:
+            lines.append("   Form 5 laga: " + esc("; ".join(form)))
+
+    probs, title = None, "PROBABILITAS"
+    if res:
+        probs = (res["home_win"], res["draw"], res["away_win"])
+        title += " (Elo saja, AI gagal)" if res.get("ai_failed") else " (gabungan AI + Elo)"
+    elif elo:
+        probs, title = elo, "PROBABILITAS (Elo saja)"
+    if probs:
+        rows = [("🟢", h, probs[0]), ("⚪", "Seri", probs[1]), ("🔴", a, probs[2])]
+        w = max(len(r[1]) for r in rows)
+        lines += [LINE, f"📊 <b>{title}</b>"]
+        lines += [f"{ic} <code>{esc(nm_.ljust(w))} {bar(p)} {p:>3.0f}%</code>" for ic, nm_, p in rows]
+        if res and res.get("g") and res.get("e"):
+            g, e = res["g"], res["e"]
+            lines.append(f"<code>🤖 AI {g[0]:.0f}/{g[1]:.0f}/{g[2]:.0f}   📐 Elo {e[0]:.0f}/{e[1]:.0f}/{e[2]:.0f}</code>")
+    if gp:
+        lean_name, lean_p = goal_lean(gp)
+        lines += [LINE, "⚽ <b>GOL</b>  <i>(model statistik)</i>",
+                  f"Perkiraan gol: {esc(h)} <b>{gp['lam_h']:.1f}</b> – <b>{gp['lam_a']:.1f}</b> {esc(a)}",
+                  f"📈 Over 1.5: <b>{gp['o15']:.0f}%</b>   Over 2.5: <b>{gp['o25']:.0f}%</b>   Over 3.5: <b>{gp['o35']:.0f}%</b>",
+                  f"🤝 Kedua tim cetak gol: <b>{gp['btts']:.0f}%</b>",
+                  "🔢 Skor paling mungkin: " + ", ".join(f"{sc} ({pp:.0f}%)" for sc, pp in gp["top"]),
+                  f"🎯 Sinyal gol terkuat: <b>{lean_name}</b> ({lean_p:.0f}%)"]
+    if res and not res.get("ai_failed"):
+        factors = "\n".join(f"✅ {esc(x)}" for x in (res.get("key_factors") or [])[:4])
+        risks = "\n".join(f"⚠️ {esc(x)}" for x in (res.get("risks") or [])[:3])
+        lines += [LINE, f"💡 <b>FAKTOR KUNCI</b>\n{factors}", f"🚧 <b>RISIKO</b>\n{risks}",
+                  LINE, f"📝 <b>RINGKASAN</b>\n{esc(res.get('summary', ''))}"]
+    elif res:
+        lines += [LINE, "<i>Analisa AI gagal untuk laga ini (kuota atau gangguan), jadi pilihan memakai model statistik.</i>"]
+    else:
+        lines += [LINE, "<i>Analisa AI tidak dijalankan untuk laga ini (kuota dihemat untuk 5 laga dengan Elo terkuat), "
+                        "jadi pilihan ini berdasarkan model statistik.</i>"]
+    return "\n".join(lines)
 
 def _fmt_leg(i, leg):
     ko = dt.datetime.fromisoformat(leg["kickoff_utc"].replace("Z", "+00:00"))
@@ -925,7 +1006,7 @@ def format_parlay_msg(safe, mix, n_scanned):
         f"🎰 <b>KOMBINASI HARIAN</b>  •  {_tgl(wib)}",
         f"<i>Draft: lineup belum keluar, bisa berubah. {n_scanned} laga dipindai dari semua liga. "
         f"Pilihan mencakup hasil laga dan over/under gol. "
-        f"Analisa per laga tetap datang sekitar 1 jam sebelum kick-off.</i>",
+        f"Detail tiap laga ada di balasan pesan ini. Analisa per laga tetap datang sekitar 1 jam sebelum kick-off.</i>",
         LINE,
     ]
     if safe:
@@ -950,7 +1031,7 @@ def run_daily_parlay(manual=False):
     except Exception as e:
         print("[parlay] rating Elo gagal ->", e)
         return False
-    per_match, n_scanned = build_parlay_legs(ratings)
+    per_match, n_scanned, bundles = build_parlay_legs(ratings)
     # AMAN: satu pilihan terkuat per laga (pasar apa pun), ambil 3 teratas
     best = sorted((max(o, key=lambda l: l["p"]) for o in per_match), key=lambda l: -l["p"])
     safe = best[:3] if len(best) >= 2 else []
@@ -961,13 +1042,33 @@ def run_daily_parlay(manual=False):
         mixp.append(max(r1, key=lambda l: l["p"]) if r1 else max(o, key=lambda l: l["p"]))
     mixp.sort(key=lambda l: -l["p"])
     mix = mixp[:5] if len(mixp) > len(safe) and len(mixp) >= 4 else []
+
+    # laga yang dipakai di kombinasi, beserta pilihannya
+    used = {}
+    for kind, combo in (("aman", safe), ("mix", mix)):
+        for leg in combo:
+            used.setdefault(leg["match_id"], []).append((kind, leg))
+    for mid in used:
+        if bundles[mid]["ctx"] is None:
+            try:
+                bundles[mid]["ctx"] = _ctx_for(bundles[mid]["m"])
+            except Exception as e:
+                print("[parlay] kondisi tim gagal diambil ->", e)
+
     msg_id = send_telegram(format_parlay_msg(safe, mix, n_scanned))
+    ordered = sorted(used.items(), key=lambda kv: kv[1][0][1]["kickoff_utc"])
+    for i, (mid, uses) in enumerate(ordered, 1):
+        try:
+            send_telegram(format_leg_detail(i, len(ordered), bundles[mid], uses), reply_to=msg_id)
+        except Exception as e:
+            print("[parlay] detail laga gagal dikirim ->", e)
 
     today = dt.datetime.now(dt.timezone(dt.timedelta(hours=7))).date().isoformat()
     items = [x for x in _load_parlays() if not (x["date"] == today and not x["outcome"])]
     for kind, combo in (("aman", safe), ("mix", mix)):
         if combo:
             items.append({"id": f"{today}-{kind}", "date": today, "kind": kind, "legs": combo,
+                          "notes": {str(l["match_id"]): _leg_notes(bundles[l["match_id"]]) for l in combo},
                           "p_comb": round(_combo(combo), 4), "tg_msg_id": msg_id,
                           "outcome": "", "legs_hit": ""})
     _save_parlays(items)
@@ -1046,6 +1147,8 @@ def settle_parlays(notify=True):
                 continue
             hits = sum(1 for leg, w, sc in details if _leg_hit(leg, *map(int, sc.split("-"))))
             x["legs_hit"] = f"{hits}/{len(details)}"
+            x["leg_results"] = {str(leg["match_id"]): {"score": sc, "hit": _leg_hit(leg, *map(int, sc.split("-")))}
+                                for leg, w, sc in details}
             x["outcome"] = "win" if hits == len(details) else "lose"
             newly.append((x, details))
             changed = True
