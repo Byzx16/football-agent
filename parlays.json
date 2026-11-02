@@ -104,5 +104,586 @@
   "tg_msg_id": 53,
   "outcome": "win",
   "legs_hit": "4/4"
+ },
+ {
+  "id": "2026-11-02-aman",
+  "date": "2026-11-02",
+  "kind": "aman",
+  "legs": [
+   {
+    "match_id": 558545,
+    "kickoff_utc": "2026-11-02T19:45:00Z",
+    "competition": "Serie A",
+    "home": "Atalanta BC",
+    "away": "Parma Calcio 1913",
+    "home_s": "Atalanta",
+    "away_s": "Parma",
+    "market": "under35",
+    "pick": "under35",
+    "p": 82.54726108075982,
+    "ai": true
+   },
+   {
+    "match_id": 558541,
+    "kickoff_utc": "2026-11-02T17:30:00Z",
+    "competition": "Serie A",
+    "home": "US Sassuolo Calcio",
+    "away": "ACF Fiorentina",
+    "home_s": "Sassuolo",
+    "away_s": "Fiorentina",
+    "market": "over15",
+    "pick": "over15",
+    "p": 79.9267529079481,
+    "ai": true
+   },
+   {
+    "match_id": 560622,
+    "kickoff_utc": "2026-11-02T20:00:00Z",
+    "competition": "Premier League",
+    "home": "Newcastle United FC",
+    "away": "Everton FC",
+    "home_s": "Newcastle",
+    "away_s": "Everton",
+    "market": "over15",
+    "pick": "over15",
+    "p": 74.3646463494544,
+    "ai": true
+   }
+  ],
+  "notes": {
+   "558545": {
+    "home_rank": "#13 (11 poin, selisih gol -1)",
+    "away_rank": "#18 (5 poin, selisih gol -10)",
+    "home_form": [
+     "Juventus 2-0 Atalanta",
+     "Atalanta 3-1 Venezia FC",
+     "Milan 3-2 Atalanta",
+     "Atalanta 4-4 Frosinone",
+     "Fiorentina 2-2 Atalanta"
+    ],
+    "away_form": [
+     "Parma 2-1 Genoa",
+     "Inter 3-0 Parma",
+     "Parma 0-3 Torino",
+     "Lazio 2-1 Parma",
+     "Parma 0-0 Udinese"
+    ],
+    "p": [
+     62,
+     20,
+     18
+    ],
+    "e": [
+     61.7,
+     19.9,
+     18.4
+    ],
+    "goals": {
+     "lam_h": 1.4,
+     "lam_a": 0.7,
+     "o15": 63.8,
+     "o25": 36.9,
+     "o35": 17.5,
+     "btts": 39.5
+    },
+    "top": [
+     [
+      "1-0",
+      16.4
+     ],
+     [
+      "1-1",
+      12.0
+     ],
+     [
+      "2-0",
+      11.8
+     ]
+    ]
+   },
+   "558541": {
+    "home_rank": "#15 (8 poin, selisih gol -8)",
+    "away_rank": "#17 (5 poin, selisih gol -10)",
+    "home_form": [
+     "Monza 2-1 Sassuolo",
+     "Sassuolo 1-1 Milan",
+     "Frosinone 4-2 Sassuolo",
+     "Como 1907 2-0 Sassuolo",
+     "Sassuolo 2-6 Lazio"
+    ],
+    "away_form": [
+     "Fiorentina 1-1 Napoli",
+     "Genoa 2-1 Fiorentina",
+     "Fiorentina 1-3 Como 1907",
+     "Inter 2-1 Fiorentina",
+     "Fiorentina 2-2 Atalanta"
+    ],
+    "p": [
+     40,
+     27,
+     33
+    ],
+    "g": [
+     30,
+     30,
+     40
+    ],
+    "summary": "Pertandingan ini mempertemukan dua tim Serie A yang sedang berjuang di dasar klasemen dengan performa yang sangat buruk. Fiorentina sedikit diunggulkan karena menunjukkan sedikit perbaikan dalam laga terakhir dan memiliki rekor head-to-head yang sedikit lebih baik secara keseluruhan, meskipun Sassuolo memiliki keuntungan bermain di kandang. Namun, lini pertahanan kedua tim yang rapuh dan daftar cedera yang panjang membuat hasil pertandingan sulit diprediksi.",
+    "factors": [
+     "Kedua tim berada dalam performa yang sangat buruk dan terperosok di zona degradasi, menjadikan pertandingan ini krusial untuk motivasi bertahan di Serie A.",
+     "Sassuolo memiliki lini pertahanan yang sangat rapuh, kebobolan 22 gol dalam 9 pertandingan (rata-rata 2.44 per laga) dan 15 gol dalam 5 laga terakhir, termasuk kekalahan telak 2-6 dari Lazio di kandang.",
+     "Fiorentina juga memiliki rekor pertahanan yang buruk dengan 21 gol kebobolan dalam 9 pertandingan, namun menunjukkan sedikit peningkatan dengan hasil imbang 2-2 melawan Atalanta di laga terakhir.",
+     "Sassuolo akan kehilangan gelandang kunci Kristian Thorstvedt karena skorsing dan beberapa pemain cedera, sementara Fiorentina juga memiliki daftar cedera yang signifikan, termasuk Marin Pongracic dan Fabiano Parisi."
+    ],
+    "risks": [
+     "Meskipun Fiorentina diunggulkan, performa tandang mereka yang tidak konsisten dan banyaknya pemain cedera bisa menjadi penghalang.",
+     "Sassuolo memiliki rekor head-to-head yang cukup berimbang di kandang melawan Fiorentina, dengan 5 kemenangan, 3 seri, dan 4 kekalahan dalam 12 pertemuan terakhir di Mapei Stadium.",
+     "Tekanan tinggi untuk menghindari degradasi dapat membuat pertandingan ini menjadi sangat ketat dan minim gol, atau justru membuka peluang bagi kedua tim untuk menyerang secara agresif."
+    ],
+    "e": [
+     49.1,
+     24.1,
+     26.8
+    ],
+    "goals": {
+     "lam_h": 1.6,
+     "lam_a": 1.3,
+     "o15": 79.9,
+     "o25": 57.4,
+     "o35": 35.0,
+     "btts": 59.6
+    },
+    "top": [
+     [
+      "1-1",
+      11.1
+     ],
+     [
+      "2-1",
+      9.2
+     ],
+     [
+      "1-0",
+      8.3
+     ]
+    ]
+   },
+   "560622": {
+    "home_rank": "#12 (11 poin, selisih gol -2)",
+    "away_rank": "#14 (10 poin, selisih gol -1)",
+    "home_form": [
+     "Leeds United 4-1 Newcastle",
+     "Newcastle 2-1 Hull City",
+     "Coventry City 4-1 Newcastle",
+     "Newcastle 0-1 Aston Villa",
+     "Crystal Palace 0-2 Newcastle"
+    ],
+    "away_form": [
+     "Tottenham 0-0 Everton",
+     "Everton 1-0 Ipswich Town",
+     "Hull City 2-2 Everton",
+     "Everton 0-2 Chelsea",
+     "Arsenal 2-0 Everton"
+    ],
+    "p": [
+     50,
+     24,
+     26
+    ],
+    "e": [
+     50.6,
+     23.6,
+     25.8
+    ],
+    "goals": {
+     "lam_h": 1.5,
+     "lam_a": 1.1,
+     "o15": 74.4,
+     "o25": 49.6,
+     "o35": 27.7,
+     "btts": 52.8
+    },
+    "top": [
+     [
+      "1-1",
+      12.1
+     ],
+     [
+      "1-0",
+      10.8
+     ],
+     [
+      "2-1",
+      9.3
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.4906,
+  "tg_msg_id": 89,
+  "outcome": "",
+  "legs_hit": ""
+ },
+ {
+  "id": "2026-11-02-mix",
+  "date": "2026-11-02",
+  "kind": "mix",
+  "legs": [
+   {
+    "match_id": 558541,
+    "kickoff_utc": "2026-11-02T17:30:00Z",
+    "competition": "Serie A",
+    "home": "US Sassuolo Calcio",
+    "away": "ACF Fiorentina",
+    "home_s": "Sassuolo",
+    "away_s": "Fiorentina",
+    "market": "over15",
+    "pick": "over15",
+    "p": 79.9267529079481,
+    "ai": true
+   },
+   {
+    "match_id": 560622,
+    "kickoff_utc": "2026-11-02T20:00:00Z",
+    "competition": "Premier League",
+    "home": "Newcastle United FC",
+    "away": "Everton FC",
+    "home_s": "Newcastle",
+    "away_s": "Everton",
+    "market": "over15",
+    "pick": "over15",
+    "p": 74.3646463494544,
+    "ai": true
+   },
+   {
+    "match_id": 559641,
+    "kickoff_utc": "2026-11-02T19:45:00Z",
+    "competition": "Ligue 1",
+    "home": "FC Lorient",
+    "away": "Stade Brestois 29",
+    "home_s": "Lorient",
+    "away_s": "Brest",
+    "market": "over15",
+    "pick": "over15",
+    "p": 74.27840696384827,
+    "ai": true
+   },
+   {
+    "match_id": 564731,
+    "kickoff_utc": "2026-11-02T20:00:00Z",
+    "competition": "Primera Division",
+    "home": "RC Deportivo La Coruña",
+    "away": "CA Osasuna",
+    "home_s": "Deportivo",
+    "away_s": "Osasuna",
+    "market": "over15",
+    "pick": "over15",
+    "p": 73.42510782640981,
+    "ai": true
+   },
+   {
+    "match_id": 558545,
+    "kickoff_utc": "2026-11-02T19:45:00Z",
+    "competition": "Serie A",
+    "home": "Atalanta BC",
+    "away": "Parma Calcio 1913",
+    "home_s": "Atalanta",
+    "away_s": "Parma",
+    "market": "1x2",
+    "pick": "home",
+    "p": 62.0,
+    "ai": false
+   }
+  ],
+  "notes": {
+   "558541": {
+    "home_rank": "#15 (8 poin, selisih gol -8)",
+    "away_rank": "#17 (5 poin, selisih gol -10)",
+    "home_form": [
+     "Monza 2-1 Sassuolo",
+     "Sassuolo 1-1 Milan",
+     "Frosinone 4-2 Sassuolo",
+     "Como 1907 2-0 Sassuolo",
+     "Sassuolo 2-6 Lazio"
+    ],
+    "away_form": [
+     "Fiorentina 1-1 Napoli",
+     "Genoa 2-1 Fiorentina",
+     "Fiorentina 1-3 Como 1907",
+     "Inter 2-1 Fiorentina",
+     "Fiorentina 2-2 Atalanta"
+    ],
+    "p": [
+     40,
+     27,
+     33
+    ],
+    "g": [
+     30,
+     30,
+     40
+    ],
+    "summary": "Pertandingan ini mempertemukan dua tim Serie A yang sedang berjuang di dasar klasemen dengan performa yang sangat buruk. Fiorentina sedikit diunggulkan karena menunjukkan sedikit perbaikan dalam laga terakhir dan memiliki rekor head-to-head yang sedikit lebih baik secara keseluruhan, meskipun Sassuolo memiliki keuntungan bermain di kandang. Namun, lini pertahanan kedua tim yang rapuh dan daftar cedera yang panjang membuat hasil pertandingan sulit diprediksi.",
+    "factors": [
+     "Kedua tim berada dalam performa yang sangat buruk dan terperosok di zona degradasi, menjadikan pertandingan ini krusial untuk motivasi bertahan di Serie A.",
+     "Sassuolo memiliki lini pertahanan yang sangat rapuh, kebobolan 22 gol dalam 9 pertandingan (rata-rata 2.44 per laga) dan 15 gol dalam 5 laga terakhir, termasuk kekalahan telak 2-6 dari Lazio di kandang.",
+     "Fiorentina juga memiliki rekor pertahanan yang buruk dengan 21 gol kebobolan dalam 9 pertandingan, namun menunjukkan sedikit peningkatan dengan hasil imbang 2-2 melawan Atalanta di laga terakhir.",
+     "Sassuolo akan kehilangan gelandang kunci Kristian Thorstvedt karena skorsing dan beberapa pemain cedera, sementara Fiorentina juga memiliki daftar cedera yang signifikan, termasuk Marin Pongracic dan Fabiano Parisi."
+    ],
+    "risks": [
+     "Meskipun Fiorentina diunggulkan, performa tandang mereka yang tidak konsisten dan banyaknya pemain cedera bisa menjadi penghalang.",
+     "Sassuolo memiliki rekor head-to-head yang cukup berimbang di kandang melawan Fiorentina, dengan 5 kemenangan, 3 seri, dan 4 kekalahan dalam 12 pertemuan terakhir di Mapei Stadium.",
+     "Tekanan tinggi untuk menghindari degradasi dapat membuat pertandingan ini menjadi sangat ketat dan minim gol, atau justru membuka peluang bagi kedua tim untuk menyerang secara agresif."
+    ],
+    "e": [
+     49.1,
+     24.1,
+     26.8
+    ],
+    "goals": {
+     "lam_h": 1.6,
+     "lam_a": 1.3,
+     "o15": 79.9,
+     "o25": 57.4,
+     "o35": 35.0,
+     "btts": 59.6
+    },
+    "top": [
+     [
+      "1-1",
+      11.1
+     ],
+     [
+      "2-1",
+      9.2
+     ],
+     [
+      "1-0",
+      8.3
+     ]
+    ]
+   },
+   "560622": {
+    "home_rank": "#12 (11 poin, selisih gol -2)",
+    "away_rank": "#14 (10 poin, selisih gol -1)",
+    "home_form": [
+     "Leeds United 4-1 Newcastle",
+     "Newcastle 2-1 Hull City",
+     "Coventry City 4-1 Newcastle",
+     "Newcastle 0-1 Aston Villa",
+     "Crystal Palace 0-2 Newcastle"
+    ],
+    "away_form": [
+     "Tottenham 0-0 Everton",
+     "Everton 1-0 Ipswich Town",
+     "Hull City 2-2 Everton",
+     "Everton 0-2 Chelsea",
+     "Arsenal 2-0 Everton"
+    ],
+    "p": [
+     50,
+     24,
+     26
+    ],
+    "e": [
+     50.6,
+     23.6,
+     25.8
+    ],
+    "goals": {
+     "lam_h": 1.5,
+     "lam_a": 1.1,
+     "o15": 74.4,
+     "o25": 49.6,
+     "o35": 27.7,
+     "btts": 52.8
+    },
+    "top": [
+     [
+      "1-1",
+      12.1
+     ],
+     [
+      "1-0",
+      10.8
+     ],
+     [
+      "2-1",
+      9.3
+     ]
+    ]
+   },
+   "559641": {
+    "home_rank": "#10 (12 poin, selisih gol 1)",
+    "away_rank": "#14 (9 poin, selisih gol 2)",
+    "home_form": [
+     "Lorient 2-2 Toulouse",
+     "Le Mans 2-1 Lorient",
+     "Lorient 1-0 Paris FC",
+     "Lorient 1-0 Monaco",
+     "Angers SCO 0-0 Lorient"
+    ],
+    "away_form": [
+     "Brest 0-1 PSG",
+     "Auxerre 2-1 Brest",
+     "Brest 5-1 Angers SCO",
+     "Lille 1-1 Brest",
+     "Brest 1-2 Nice"
+    ],
+    "p": [
+     53,
+     23,
+     24
+    ],
+    "e": [
+     53.9,
+     22.5,
+     23.6
+    ],
+    "goals": {
+     "lam_h": 1.5,
+     "lam_a": 1.1,
+     "o15": 74.3,
+     "o25": 49.5,
+     "o35": 27.6,
+     "btts": 52.7
+    },
+    "top": [
+     [
+      "1-1",
+      12.1
+     ],
+     [
+      "1-0",
+      10.9
+     ],
+     [
+      "2-1",
+      9.3
+     ]
+    ]
+   },
+   "564731": {
+    "home_rank": "#13 (11 poin, selisih gol 0)",
+    "away_rank": "#15 (11 poin, selisih gol -10)",
+    "home_form": [
+     "Deportivo 0-1 Sevilla FC",
+     "Deportivo 1-1 Real Betis",
+     "Real Sociedad 3-2 Deportivo",
+     "Deportivo 1-1 Levante",
+     "Atleti 1-0 Deportivo"
+    ],
+    "away_form": [
+     "Atleti 4-0 Osasuna",
+     "Osasuna 1-1 Rayo Vallecano",
+     "Real Betis 5-2 Osasuna",
+     "Osasuna 2-0 Santander",
+     "Sevilla FC 2-0 Osasuna"
+    ],
+    "p": [
+     48,
+     26,
+     26
+    ],
+    "g": [
+     40,
+     30,
+     30
+    ],
+    "summary": "RC Deportivo La Coruña menjamu CA Osasuna dalam laga krusial di Primera Division. Kedua tim memiliki poin yang sama di klasemen, namun Deportivo memiliki keunggulan kandang dan selisih gol yang lebih baik. Osasuna menunjukkan pertahanan yang sangat lemah dalam laga tandang terakhir, sementara Deportivo kesulitan meraih kemenangan namun tidak terlalu sering kalah telak.",
+    "factors": [
+     "Deportivo memiliki keunggulan kandang dan selisih gol yang lebih baik dibandingkan Osasuna.",
+     "Kedua tim sama-sama kesulitan meraih kemenangan konsisten, dengan Deportivo tanpa kemenangan dalam lima laga terakhir dan Osasuna hanya satu kemenangan.",
+     "Pertahanan Osasuna sangat rapuh dalam laga tandang terakhir, kebobolan banyak gol.",
+     "Pertandingan ini krusial bagi kedua tim yang memiliki poin sama dan berada di dekat zona degradasi, meningkatkan motivasi untuk meraih poin penuh."
+    ],
+    "risks": [
+     "Informasi mengenai cedera, skorsing, dan susunan pemain belum tersedia, yang dapat sangat mempengaruhi hasil pertandingan.",
+     "Kedua tim memiliki rekor serangan yang kurang produktif, berpotensi menghasilkan pertandingan dengan sedikit gol.",
+     "Tekanan tinggi karena posisi di klasemen bisa membuat pertandingan berjalan hati-hati dan cenderung berakhir imbang."
+    ],
+    "e": [
+     56.2,
+     21.8,
+     22.0
+    ],
+    "goals": {
+     "lam_h": 1.7,
+     "lam_a": 0.9,
+     "o15": 73.4,
+     "o25": 48.4,
+     "o35": 26.6,
+     "btts": 49.2
+    },
+    "top": [
+     [
+      "1-0",
+      12.4
+     ],
+     [
+      "1-1",
+      11.5
+     ],
+     [
+      "2-0",
+      10.4
+     ]
+    ]
+   },
+   "558545": {
+    "home_rank": "#13 (11 poin, selisih gol -1)",
+    "away_rank": "#18 (5 poin, selisih gol -10)",
+    "home_form": [
+     "Juventus 2-0 Atalanta",
+     "Atalanta 3-1 Venezia FC",
+     "Milan 3-2 Atalanta",
+     "Atalanta 4-4 Frosinone",
+     "Fiorentina 2-2 Atalanta"
+    ],
+    "away_form": [
+     "Parma 2-1 Genoa",
+     "Inter 3-0 Parma",
+     "Parma 0-3 Torino",
+     "Lazio 2-1 Parma",
+     "Parma 0-0 Udinese"
+    ],
+    "p": [
+     62,
+     20,
+     18
+    ],
+    "e": [
+     61.7,
+     19.9,
+     18.4
+    ],
+    "goals": {
+     "lam_h": 1.4,
+     "lam_a": 0.7,
+     "o15": 63.8,
+     "o25": 36.9,
+     "o35": 17.5,
+     "btts": 39.5
+    },
+    "top": [
+     [
+      "1-0",
+      16.4
+     ],
+     [
+      "1-1",
+      12.0
+     ],
+     [
+      "2-0",
+      11.8
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.201,
+  "tg_msg_id": 89,
+  "outcome": "",
+  "legs_hit": ""
  }
 ]
