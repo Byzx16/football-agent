@@ -8,8 +8,9 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚽%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Barlow+Condensed:wght@600;700&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Barlow+Condensed:wght@600;700&family=Montserrat:wght@500;700;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
 <style>
+@font-face{font-family:"ITC Novarese";font-weight:700;font-style:normal;font-display:swap;src:local("ITC Novarese Bold"),local("ITCNovarese-Bold"),url("fonts/ITCNovarese-Bold.woff2") format("woff2"),url("fonts/ITCNovarese-Bold.otf") format("opentype"),url("fonts/ITCNovarese-Bold.ttf") format("truetype")}
 :root{--pitch:#0a1812;--turf:#10241b;--chalk:#e8efe4;--mute:#8fa598;--amber:#ffc94a;--ok:#5ee08a;--no:#ff6b6b;--line:rgba(232,239,228,.14);--dg:"Barlow Condensed","Arial Narrow",sans-serif}
 *{box-sizing:border-box;margin:0}
 html{color-scheme:dark}
@@ -81,17 +82,22 @@ section{border-top:1px solid var(--line);padding:30px 0}
 .cat{background:transparent;color:var(--mute);border:1px solid var(--line);border-radius:99px;padding:8px 18px;font:inherit;font-size:15px;cursor:pointer;transition:color .2s,border-color .2s,background .2s}
 .cat:hover{color:var(--chalk);border-color:var(--chalk)}
 .cat[aria-pressed=true]{color:#fff;background:var(--abg,rgba(255,201,74,.14));border-color:var(--amber)}
-body.ucl{--pitch:#040c26;--turf:#0a1b49;--chalk:#eef4ff;--mute:#93a6d1;--amber:#7fd1ff;--abg:rgba(127,209,255,.16);--line:rgba(160,190,255,.2);--dg:"Montserrat","Arial Black",sans-serif;font-family:"Montserrat",system-ui,sans-serif;font-size:15px;background:radial-gradient(900px 520px at 50% -140px,#14337f 0,transparent 70%),radial-gradient(1px 1px at 18px 24px,rgba(255,255,255,.55),transparent),radial-gradient(1px 1px at 92px 82px,rgba(255,255,255,.35),transparent),radial-gradient(1.5px 1.5px at 150px 32px,rgba(255,255,255,.5),transparent),var(--pitch);background-size:auto,170px 130px,170px 130px,170px 130px,auto}
-body.ucl h1,body.ucl h2{text-transform:uppercase;letter-spacing:.02em;font-weight:800}
-body.ucl h1{font-size:clamp(30px,6.4vw,54px);line-height:1.05}
-body.ucl h2{font-size:22px}
-body.ucl .dg{font-weight:800;font-size:clamp(46px,11vw,104px);letter-spacing:-.03em;text-shadow:0 0 30px rgba(127,209,255,.5)}
+body.ucl{--pitch:#040c26;--turf:#0a1b49;--chalk:#eef4ff;--mute:#a3b3da;--amber:#8fd6ff;--abg:rgba(143,214,255,.16);--line:rgba(160,190,255,.22);--dg:"ITC Novarese","Cinzel","Times New Roman",serif;font-family:"Montserrat",system-ui,sans-serif;font-size:15px;background:linear-gradient(180deg,rgba(3,10,32,.4) 0,rgba(3,10,32,.8) 480px,rgba(3,10,32,.9) 100%),url(ucl-bg.webp) center top/cover fixed,#040c26}
+body.ucl h1,body.ucl h2{text-transform:uppercase;letter-spacing:.03em;font-weight:700}
+body.ucl h1{font-size:clamp(26px,5.2vw,46px);line-height:1.1}
+body.ucl h2{font-size:24px}
+body.ucl .dg{font-weight:700;font-size:clamp(46px,11vw,104px);letter-spacing:0;text-shadow:0 0 30px rgba(143,214,255,.55)}
 body.ucl .side.b .dg{text-shadow:0 0 22px rgba(238,244,255,.25)}
-body.ucl .lb{font-weight:700;font-size:20px}
-body.ucl .strip b{font-weight:800;font-size:34px}
-body.ucl .sc,body.ucl .ch b,body.ucl .pv b{font-weight:800}
-body.ucl .board{background:#030a20;box-shadow:inset 0 0 0 6px #08163c,inset 0 0 0 7px var(--line)}
-body.ucl .board:before,body.ucl .board:after{border-color:rgba(160,190,255,.12)}
+body.ucl .lb{font-weight:700;font-size:22px;letter-spacing:.02em}
+body.ucl .strip b{font-weight:700;font-size:36px}
+body.ucl .sc,body.ucl .ch b,body.ucl .pv b,body.ucl .sh{font-weight:700}
+body.ucl .board{background:rgba(3,10,32,.72);backdrop-filter:blur(6px);box-shadow:inset 0 0 0 6px rgba(8,22,60,.8),inset 0 0 0 7px var(--line)}
+body.ucl .board:before,body.ucl .board:after{border-color:rgba(160,190,255,.14)}
+.hd{display:flex;align-items:center;gap:22px;min-width:0}
+.uclogo{display:none}
+body.ucl .uclogo{display:block;height:clamp(96px,17vw,156px);width:auto;max-width:40vw;object-fit:contain;filter:brightness(0) invert(1)}
+.ucd{display:none;margin-top:6px}
+body.ucl .ucd{display:block}
 .trend{display:flex;align-items:center;gap:6px;margin:12px 0 6px}
 .trend i{width:22px;height:22px;border-radius:4px;background:var(--ok)}
 .trend i.l{background:var(--no)}
@@ -136,12 +142,12 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--mute);font-
 <body>
 <div class="wrap">
 <header>
-  <div><h1 id="ttl">Football Agent</h1><p class="sub" id="sb">Pantauan akurasi tebakan dari semua liga, diperbarui otomatis dari data di repo.</p></div>
+  <div class="hd"><img class="uclogo" src="ucl-logo.png" alt="UEFA Champions League" onerror="if(!this.dataset.t){this.dataset.t=1;this.src='ucl-logo.svg'}else{this.style.display='none'}"><div><h1 id="ttl">Football Agent</h1><p class="sub" id="sb">Pantauan akurasi tebakan dari semua liga, diperbarui otomatis dari data di repo.</p></div></div>
   <button class="pill" id="rf" title="Muat ulang data"><i class="live"></i>Data terbaru: <span id="up">memuat</span></button>
 </header>
-<nav class="cats" id="cats" aria-label="Kategori"><button class="cat" data-c="all" aria-pressed="true">Semua liga</button><button class="cat" data-c="ucl" aria-pressed="false">★ Liga Champions <span id="nu"></span></button></nav>
+<nav class="cats" id="cats" aria-label="Kategori"><button class="cat" data-c="all" aria-pressed="true">Semua liga</button><button class="cat" data-c="ucl" aria-pressed="false">★ UEFA Champions League <span id="nu"></span></button></nav>
 <main id="app"><p class="empty">Memuat data…</p></main>
-<footer>Ini analisa probabilitas, bukan jaminan hasil dan bukan saran taruhan. Waktu ditampilkan dalam WIB.</footer>
+<footer>Ini analisa probabilitas, bukan jaminan hasil dan bukan saran taruhan. Waktu ditampilkan dalam WIB.<p class="ucd">Tampilan UCL ini hanya terinspirasi UEFA Champions League dan tidak berafiliasi dengan UEFA. Nama dan logo adalah merek dagang pemiliknya.</p></footer>
 </div>
 <script>
 const $=s=>document.querySelector(s),N=parseFloat,K=['home','draw','away'],
@@ -325,9 +331,9 @@ function applyCat(){
   const u=S.cat=='ucl';
   document.body.classList.toggle('ucl',u);
   document.querySelectorAll('.cat').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.c==S.cat)));
-  $('#ttl').textContent=u?'Champions League':'Football Agent';
+  $('#ttl').textContent=u?'UEFA Champions League':'Football Agent';
   $('#sb').textContent=u?'Analisa tebakan khusus pertandingan UEFA Champions League, diperbarui otomatis dari data di repo.':'Pantauan akurasi tebakan dari semua liga, diperbarui otomatis dari data di repo.';
-  document.title=u?'Champions League | Football Agent':'Football Agent';
+  document.title=u?'UEFA Champions League | Football Agent':'Football Agent';
   const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',u?'#040c26':'#0a1812');
 }
 $('#cats').onclick=e=>{const b=e.target.closest('.cat');if(!b||b.dataset.c==S.cat)return;S.cat=b.dataset.c;S.lg=S.rs=S.q=S.d1=S.d2='';S.lim=40;history.replaceState(null,'',S.cat=='ucl'?'#ucl':location.pathname+location.search);applyCat();if(ROWS.length)render()};
