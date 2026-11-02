@@ -30,6 +30,10 @@ SENT_FILE = "sent.json"
 PRED_FILE = "predictions.csv"
 PARLAY_HOUR_WIB = int(os.getenv("PARLAY_HOUR_WIB", 6))   # jam kombinasi harian dikirim (WIB)
 PARLAY_FILE = "parlays.json"
+UCL_PARLAY_HOUR_WIB = int(os.getenv("UCL_PARLAY_HOUR_WIB", 21))   # jam kombinasi khusus UCL dikirim (WIB)
+UCL_PARLAY_LAST_FILE = "last_parlay_ucl.txt"
+UCL_SHORTLIST = 8            # laga UCL yang dianalisa AI untuk kombinasi UCL
+UCL_WINDOW_H = 12            # laga UCL yang kick-off-nya dalam sekian jam ke depan ikut dipindai
 PARLAY_LAST_FILE = "last_parlay.txt"
 PARLAY_SHORTLIST = 5         # jumlah laga yang dianalisa AI untuk kombinasi (hemat kuota Gemini)
 PARLAY_MIN_PROB = 55         # peluang minimal sebuah pilihan supaya boleh masuk kombinasi (%)
@@ -110,10 +114,13 @@ def standings(comp_code):
     data = fd_get(f"/competitions/{comp_code}/standings")
     result = {}
     if data and data.get("standings"):
-        for t in data["standings"][0]["table"]:
-            result[t["team"]["id"]] = (
-                f'#{t["position"]} ({t["points"]} poin, selisih gol {t["goalDifference"]})'
-            )
+        for grp in data["standings"]:
+            if grp.get("type", "TOTAL") != "TOTAL":
+                continue
+            for t in grp.get("table", []):
+                result.setdefault(t["team"]["id"], (
+                    f'#{t["position"]} ({t["points"]} poin, selisih gol {t["goalDifference"]})'
+                ))
     _standings_cache[comp_code] = result
     return result
 
@@ -792,23 +799,29 @@ def _save_parlays(items):
     with open(PARLAY_FILE, "w", encoding="utf-8") as f:
         json.dump(items, f, ensure_ascii=False, indent=1)
 
-def matches_next_24h():
+def matches_in_window(min_min=20, max_min=24 * 60, comp=None):
+    """Laga terjadwal yang kick-off-nya antara min_min dan max_min menit dari sekarang.
+    Mengembalikan None kalau pengambilan data gagal (beda dengan daftar kosong)."""
     now = dt.datetime.now(dt.timezone.utc)
     data = fd_get("/matches", {
         "dateFrom": now.date().isoformat(),
         "dateTo": (now + dt.timedelta(days=2)).date().isoformat(),
-        "competitions": LEAGUES,
+        "competitions": comp or LEAGUES,
     })
+    if data is None:
+        return None
     out = []
-    for m in (data or {}).get("matches", []):
+    for m in data.get("matches", []):
         if m["status"] not in ("TIMED", "SCHEDULED"):
             continue
         ko = dt.datetime.fromisoformat(m["utcDate"].replace("Z", "+00:00"))
-        mins = (ko - now).total_seconds() / 60
-        if 20 <= mins <= 24 * 60:
+        if min_min <= (ko - now).total_seconds() / 60 <= max_min:
             out.append(m)
     out.sort(key=lambda m: m["utcDate"])
     return out
+
+def matches_next_24h():
+    return matches_in_window() or []
 
 GOAL_LABEL = {"over15": "Over 1.5 gol", "over25": "Over 2.5 gol", "under25": "Under 2.5 gol",
               "under35": "Under 3.5 gol", "btts": "Kedua tim cetak gol"}
@@ -867,16 +880,16 @@ def _combo(legs):
 
 def _ctx_for(m):
     comp = m["competition"]["code"]
-    table = standings(comp) if comp != "CL" else {}
+    table = standings(comp)
     hid, aid = m["homeTeam"]["id"], m["awayTeam"]["id"]
     return {"home_rank": table.get(hid, "n/a"), "away_rank": table.get(aid, "n/a"),
             "home_form": team_form(hid), "away_form": team_form(aid)}
 
-def build_parlay_legs(ratings):
+def build_parlay_legs(ratings, ms=None, shortlist=None):
     """Kumpulkan pilihan per laga: hasil laga (untuk shortlist yang dianalisa AI) dan pasar gol (model Poisson).
     Mengembalikan juga bundel data tiap laga (klasemen, form, analisa) untuk pesan detail."""
     info = []
-    for m in matches_next_24h():
+    for m in (ms if ms is not None else matches_next_24h()):
         hid, aid = m["homeTeam"]["id"], m["awayTeam"]["id"]
         elo = elo_predict(ratings, hid, aid)
         gp = goal_probs(hid, aid, m["competition"]["code"])
@@ -884,7 +897,7 @@ def build_parlay_legs(ratings):
             info.append((m, elo, gp))
     n_scanned = len(info)
     ranked = sorted([x for x in info if x[1]], key=lambda x: -max(x[1]))
-    short_ids = {x[0]["id"] for x in ranked[:PARLAY_SHORTLIST]}
+    short_ids = {x[0]["id"] for x in ranked[:(shortlist or PARLAY_SHORTLIST)]}
 
     per_match, bundles = [], {}
     for m, elo, gp in info:
@@ -1000,12 +1013,14 @@ def _fmt_combo(title, legs):
     return (f"{title} — {len(legs)} pilihan\n{rows}\n"
             f"📊 Peluang SEMUA benar: <b>{prod * 100:.0f}%</b>  <i>(odds adil ≈ {odds:.1f})</i>")
 
-def format_parlay_msg(safe, mix, n_scanned):
+def format_parlay_msg(safe, mix, n_scanned, scope="all"):
     wib = dt.datetime.now(dt.timezone(dt.timedelta(hours=7)))
+    ucl = scope == "ucl"
+    intro = (f"Draft malam sebelum kick-off: lineup belum keluar, bisa berubah. {n_scanned} laga UCL dipindai dan dianalisa. "
+             if ucl else f"Draft: lineup belum keluar, bisa berubah. {n_scanned} laga dipindai dari semua liga. ")
     lines = [
-        f"🎰 <b>KOMBINASI HARIAN</b>  •  {_tgl(wib)}",
-        f"<i>Draft: lineup belum keluar, bisa berubah. {n_scanned} laga dipindai dari semua liga. "
-        f"Pilihan mencakup hasil laga dan over/under gol. "
+        f"{'🏆 <b>KOMBINASI UCL</b>' if ucl else '🎰 <b>KOMBINASI HARIAN</b>'}  •  {_tgl(wib)}",
+        f"<i>{intro}Pilihan mencakup hasil laga dan over/under gol. "
         f"Detail tiap laga ada di balasan pesan ini. Analisa per laga tetap datang sekitar 1 jam sebelum kick-off.</i>",
         LINE,
     ]
@@ -1025,13 +1040,21 @@ def format_parlay_msg(safe, mix, n_scanned):
     ]
     return "\n".join(lines)
 
-def run_daily_parlay(manual=False):
+def run_daily_parlay(manual=False, scope="all"):
     try:
         ratings = build_ratings()
     except Exception as e:
         print("[parlay] rating Elo gagal ->", e)
         return False
-    per_match, n_scanned, bundles = build_parlay_legs(ratings)
+    ucl = scope == "ucl"
+    ms = None
+    if ucl:
+        ms = matches_in_window(20, UCL_WINDOW_H * 60, "CL")
+        if ms is None:
+            return False
+        if not ms:
+            return "none"
+    per_match, n_scanned, bundles = build_parlay_legs(ratings, ms, UCL_SHORTLIST if ucl else None)
     # AMAN: satu pilihan terkuat per laga (pasar apa pun), ambil 3 teratas
     best = sorted((max(o, key=lambda l: l["p"]) for o in per_match), key=lambda l: -l["p"])
     safe = best[:3] if len(best) >= 2 else []
@@ -1055,7 +1078,7 @@ def run_daily_parlay(manual=False):
             except Exception as e:
                 print("[parlay] kondisi tim gagal diambil ->", e)
 
-    msg_id = send_telegram(format_parlay_msg(safe, mix, n_scanned))
+    msg_id = send_telegram(format_parlay_msg(safe, mix, n_scanned, scope))
     ordered = sorted(used.items(), key=lambda kv: kv[1][0][1]["kickoff_utc"])
     for i, (mid, uses) in enumerate(ordered, 1):
         try:
@@ -1064,10 +1087,10 @@ def run_daily_parlay(manual=False):
             print("[parlay] detail laga gagal dikirim ->", e)
 
     today = dt.datetime.now(dt.timezone(dt.timedelta(hours=7))).date().isoformat()
-    items = [x for x in _load_parlays() if not (x["date"] == today and not x["outcome"])]
+    items = [x for x in _load_parlays() if not (x["date"] == today and not x["outcome"] and x.get("scope", "all") == scope)]
     for kind, combo in (("aman", safe), ("mix", mix)):
         if combo:
-            items.append({"id": f"{today}-{kind}", "date": today, "kind": kind, "legs": combo,
+            items.append({"id": f"{today}-{'ucl-' if ucl else ''}{kind}", "date": today, "kind": kind, "scope": scope, "legs": combo,
                           "notes": {str(l["match_id"]): _leg_notes(bundles[l["match_id"]]) for l in combo},
                           "p_comb": round(_combo(combo), 4), "tg_msg_id": msg_id,
                           "outcome": "", "legs_hit": ""})
@@ -1094,6 +1117,29 @@ def maybe_send_daily_parlay():
     except Exception as e:
         print("Kombinasi harian gagal ->", e)
 
+def maybe_send_ucl_parlay():
+    """Kombinasi khusus UCL: sekali per hari, di run pertama setelah UCL_PARLAY_HOUR_WIB,
+    hanya kalau ada laga UCL yang kick-off-nya dalam UCL_WINDOW_H jam ke depan."""
+    wib = dt.datetime.now(dt.timezone(dt.timedelta(hours=7)))
+    if wib.hour < UCL_PARLAY_HOUR_WIB:
+        return
+    today = wib.date().isoformat()
+    try:
+        last = open(UCL_PARLAY_LAST_FILE).read().strip()
+    except Exception:
+        last = ""
+    if last == today:
+        return
+    try:
+        r = run_daily_parlay(scope="ucl")
+        if r:                                  # True (terkirim) atau "none" (tidak ada laga UCL)
+            with open(UCL_PARLAY_LAST_FILE, "w") as f:
+                f.write(today)
+            if r is True:
+                print("Kombinasi UCL terkirim.")
+    except Exception as e:
+        print("Kombinasi UCL gagal ->", e)
+
 def format_parlay_result(x, details):
     esc = lambda ee: html.escape(str(ee))
     names = {"aman": "🛡️ AMAN", "mix": "🎲 MIX"}
@@ -1104,7 +1150,7 @@ def format_parlay_result(x, details):
                     f"      <i>pilihan: {esc(_leg_pick_text(leg))}</i>")
     win = x["outcome"] == "win"
     return "\n".join([
-        f"🏁 <b>HASIL KOMBINASI {names.get(x['kind'], x['kind'].upper())}</b>",
+        f"🏁 <b>HASIL KOMBINASI {'UCL ' if x.get('scope') == 'ucl' else ''}{names.get(x['kind'], x['kind'].upper())}</b>",
         LINE, *rows, LINE,
         f"{'✅ <b>KOMBINASI MENANG</b>' if win else '❌ <b>KOMBINASI GAGAL</b>'}  ({x['legs_hit']} pilihan benar)",
         f"📊 Peluang awal semua benar: {x['p_comb'] * 100:.0f}%",
@@ -1216,6 +1262,10 @@ def maybe_send_daily_report():
 def main():
     args = sys.argv[1:]
 
+    if "--parlay-ucl" in args:
+        run_daily_parlay(manual=True, scope="ucl")
+        return
+
     if "--parlay" in args:
         run_daily_parlay(manual=True)
         return
@@ -1235,6 +1285,7 @@ def main():
         settle_parlays()
         maybe_send_daily_report()
         maybe_send_daily_parlay()
+        maybe_send_ucl_parlay()
         try:
             update_crests()
         except Exception as e:
@@ -1262,7 +1313,7 @@ def main():
         if done >= MAX_MATCHES_PER_RUN:
             break
         comp = m["competition"]["code"]
-        table = standings(comp) if comp != "CL" else {}
+        table = standings(comp)
         hid, aid = m["homeTeam"]["id"], m["awayTeam"]["id"]
         ctx = {
             "home_rank": table.get(hid, "n/a"),

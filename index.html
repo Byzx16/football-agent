@@ -198,7 +198,7 @@ function comboCard(x){
   const lab={win:['ok','Menang'],lose:['no','Gagal'],void:['wait','Dibatalkan']}[x.outcome]||['wait','Berjalan'],
   d=new Date(x.date+'T00:00:00+07:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'}),
   legs=[...(x.legs||[])].sort((a,b)=>a.kickoff_utc<b.kickoff_utc?-1:1);
-  return `<div class="cb"><div class="ch"><b>${x.kind=='aman'?'Aman':'Mix'}</b><small>${d}</small><span class="tag ${lab[0]}">${lab[1]}</span><small>peluang semua benar ${Math.round(N(x.p_comb||0)*100)}%${x.legs_hit?', '+esc(x.legs_hit)+' benar':''}</small></div>${legs.map(l=>legRow(x,l)).join('')}</div>`}
+  return `<div class="cb"><div class="ch"><b>${(x.scope=='ucl'?'UCL ':'')+(x.kind=='aman'?'Aman':'Mix')}</b><small>${d}</small><span class="tag ${lab[0]}">${lab[1]}</span><small>peluang semua benar ${Math.round(N(x.p_comb||0)*100)}%${x.legs_hit?', '+esc(x.legs_hit)+' benar':''}</small></div>${legs.map(l=>legRow(x,l)).join('')}</div>`}
 
 function runningCombos(){const r=VP().filter(x=>!x.outcome);return r.length?r.slice().reverse().map(comboCard).join(''):'<p class="empty" style="padding:10px 0">Tidak ada kombinasi yang sedang berjalan.</p>'}
 
@@ -206,7 +206,7 @@ function parlays(){
   const set=VP().filter(x=>x.outcome);
   if(!set.length)return '<p class="empty">Belum ada kombinasi yang selesai.</p>';
   const fin=set.filter(x=>x.outcome=='win'||x.outcome=='lose');
-  const sum=[['aman','Aman'],['mix','Mix']].map(([k,l])=>{const s=fin.filter(x=>x.kind==k);if(!s.length)return '';const w=s.filter(x=>x.outcome=='win').length,e=s.reduce((a,x)=>a+N(x.p_comb||0),0),ok=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[0]||0),0),tt=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[1]||0),0);return `<p>${l}: menang ${w} dari ${s.length} kombinasi (perkiraan ${F2(e,1)}), pilihan benar ${ok} dari ${tt}.</p>`}).join('');
+  const sum=[['aman','Aman'],['mix','Mix'],['ucl-aman','UCL Aman'],['ucl-mix','UCL Mix']].map(([k,l])=>{const s=fin.filter(x=>((x.scope=='ucl'?'ucl-':'')+x.kind)==k);if(!s.length)return '';const w=s.filter(x=>x.outcome=='win').length,e=s.reduce((a,x)=>a+N(x.p_comb||0),0),ok=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[0]||0),0),tt=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[1]||0),0);return `<p>${l}: menang ${w} dari ${s.length} kombinasi (perkiraan ${F2(e,1)}), pilihan benar ${ok} dari ${tt}.</p>`}).join('');
   return (sum?`<div class="sub" style="margin-bottom:8px">${sum}</div>`:'')+set.slice(-8).reverse().map(comboCard).join('');
 }
 

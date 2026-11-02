@@ -8,7 +8,7 @@ on:
       mode:
         description: "Mode jalan manual"
         type: choice
-        options: [normal, test, report, parlay]
+        options: [normal, test, report, parlay, ucl_parlay]
         default: normal
 
 # satu run pada satu waktu, supaya file data tidak bentrok
@@ -43,6 +43,7 @@ jobs:
           NOTIFY_MIN_MINUTES: "25"
           NOTIFY_MAX_MINUTES: "75"
           PARLAY_HOUR_WIB: "15"     # jam kombinasi harian dikirim (WIB)
+          UCL_PARLAY_HOUR_WIB: "21"   # jam kombinasi khusus UCL dikirim (WIB)
           MODE_INPUT: ${{ inputs.mode }}
         run: |
           MODE="$MODE_INPUT"
@@ -50,6 +51,7 @@ jobs:
             test)   python agent_free.py --test ;;
             report) python agent_free.py --report ;;
             parlay) python agent_free.py --parlay ;;
+            ucl_parlay) python agent_free.py --parlay-ucl ;;
             *)      python agent_free.py ;;
           esac
 
@@ -57,7 +59,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for f in sent.json predictions.csv elo_cache.json last_report.txt parlays.json last_parlay.txt crests.json analyses.json goals_cache.json; do
+          for f in sent.json predictions.csv elo_cache.json last_report.txt parlays.json last_parlay.txt crests.json analyses.json goals_cache.json last_parlay_ucl.txt; do
             [ -f "$f" ] && git add "$f"
           done
           if ! git diff --cached --quiet; then
