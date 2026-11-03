@@ -45,7 +45,7 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 564731,2026-11-02T20:00:00Z,Primera Division,RC Deportivo La Coruña,CA Osasuna,51,26,23,home,tinggi,1-0,home,2-1,1,45,30,25,56.2,21.8,22.0,99,Deportivo,Osasuna,1.7,0.9,73.4,48.4,26.6,49.2,,,
 560622,2026-11-02T20:00:00Z,Premier League,Newcastle United FC,Everton FC,45,27,28,home,sedang,1-1,away,0-1,0,40,30,30,50.6,23.6,25.8,100,Newcastle,Everton,1.5,1.1,74.4,49.6,27.7,52.8,,,
 575377,2026-11-03T17:45:00Z,UEFA Champions League,FK Shakhtar Donetsk,Sporting Clube de Portugal,36,28,36,home,rendah,1-1,away,0-1,0,30,30,40,40.2,26.8,33.0,125,Shaktar,Sporting CP,1.6,1.3,77.6,54.0,31.7,56.8,45.1,24.7,30.2
-575378,2026-11-03T17:45:00Z,UEFA Champions League,Galatasaray SK,VfB Stuttgart,36,25,39,away,rendah,1-1,,,,,,,35.0,27.6,37.4,126,Galatasaray,Stuttgart,1.8,1.9,88.8,72.2,51.5,71.5,36.8,21.4,41.7
+575378,2026-11-03T17:45:00Z,UEFA Champions League,Galatasaray SK,VfB Stuttgart,36,25,39,away,rendah,1-1,home,2-0,0,,,,35.0,27.6,37.4,126,Galatasaray,Stuttgart,1.8,1.9,88.8,72.2,51.5,71.5,36.8,21.4,41.7
 575381,2026-11-03T20:00:00Z,UEFA Champions League,Club Atlético de Madrid,FC Bayern München,35,28,37,away,rendah,1-2,,,,38,32,30,32.4,26.5,41.1,127,Atleti,Bayern,1.9,2.2,91.3,77.2,58.0,75.2,33.4,20.3,46.3
 575383,2026-11-03T20:00:00Z,UEFA Champions League,Manchester United FC,AS Roma,25,24,51,away,sedang,1-2,,,,20,25,55,28.6,24.9,46.6,128,Man United,Roma,1.8,2.2,90.8,76.2,56.7,74.3,32.4,20.4,47.2
 575379,2026-11-03T20:00:00Z,UEFA Champions League,Feyenoord Rotterdam,FC Internazionale Milano,25,21,54,away,sedang,1-2,,,,,,,26.3,23.8,49.9,129,Feyenoord,Inter,1.6,2.6,92.4,79.4,61.0,74.4,23.1,18.2,58.7
