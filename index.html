@@ -206,7 +206,7 @@ function noteHTML(n,l){
   tm=(name,rank,f)=>`<p><b>${esc(name)}</b> ${esc(rank||'')}${f&&f.length?`<br><span class="sub">Form 5 laga: ${f.map(x=>esc(x)).join('; ')}</span>`:''}</p>`,
   g=n.goals?`<p class="sub">Perkiraan gol ${F2(N(n.goals.lam_h),1)} lawan ${F2(N(n.goals.lam_a),1)}. Over 1.5: ${Math.round(n.goals.o15)}%, Over 2.5: ${Math.round(n.goals.o25)}%, Over 3.5: ${Math.round(n.goals.o35)}%, kedua tim cetak gol: ${Math.round(n.goals.btts)}%.${n.top?` Skor paling mungkin: ${n.top.map(t=>t[0]+' ('+Math.round(t[1])+'%)').join(', ')}.`:''}</p>`:'',
   L=(t,x)=>x&&x.length?`<h3>${t}</h3><ul>${x.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`:'';
-  return `<div class="pvs">${P('Gabungan',n.p)}${P('AI',n.g)}${P('Elo',n.e)}</div>${n.p||n.e?'<p class="sub" style="margin-bottom:8px">Peluang tuan rumah, seri, tamu (dalam persen).</p>':''}${tm(l.home_s,n.home_rank,n.home_form)}${tm(l.away_s,n.away_rank,n.away_form)}${g}${n.summary?`<p style="margin-top:10px">${esc(n.summary)}</p>`:'<p class="sub" style="margin-top:10px">Analisa AI tidak dijalankan untuk laga ini, pilihan berdasarkan model statistik.</p>'}${L('Faktor kunci',n.factors)}${L('Risiko',n.risks)}`}
+  return `<div class="pvs">${P('Gabungan',n.p)}${P('AI',n.g)}${P('Elo',n.e)}${P('Poisson',n.x)}</div>${n.p||n.e?'<p class="sub" style="margin-bottom:8px">Peluang tuan rumah, seri, tamu (dalam persen).</p>':''}${tm(l.home_s,n.home_rank,n.home_form)}${tm(l.away_s,n.away_rank,n.away_form)}${g}${n.summary?`<p style="margin-top:10px">${esc(n.summary)}</p>`:'<p class="sub" style="margin-top:10px">Analisa AI tidak dijalankan untuk laga ini, pilihan berdasarkan model statistik.</p>'}${L('Faktor kunci',n.factors)}${L('Risiko',n.risks)}`}
 
 function legRow(x,l){
   const key=x.id+'|'+l.match_id,n=(x.notes||{})[l.match_id],lr=(x.leg_results||{})[l.match_id],
@@ -242,8 +242,8 @@ function render(){
   const verdict=!n?'Belum ada laga selesai. Skor pertama muncul setelah laga yang dicatat berakhir.':n<30?`Agent ${d>=0?'unggul':'tertinggal'} ${Math.round(Math.abs(d))} poin dari pembanding, tapi sampel baru ${n} laga dan belum bisa disimpulkan.`:`Agent ${d>3?'unggul':d>=-3?'setara':'tertinggal'} ${Math.round(Math.abs(d))} poin dari pembanding tuan rumah.`;
   const bars=['tinggi','sedang','rendah'].map(c=>{const s=done.filter(r=>cf(r)==c);if(!s.length)return `<div class="br"><span><i class="sq" style="--c:${CF[c]}"></i>${c}</span><div class="bar"></div><em>belum ada laga</em></div>`;const a=s.filter(r=>r.correct=='1').length/s.length*100;return `<div class="br"><span><i class="sq" style="--c:${CF[c]}"></i>${c}</span><div class="bar"><i style="--w:${a}%;--c:${CF[c]}"></i></div><em>${Math.round(a)}% dari ${s.length}</em></div>`}).join('');
   let bri='<p class="empty" style="padding:14px 0">Perbandingan muncul setelah ada laga selesai yang punya probabilitas AI dan Elo.</p>';
-  if(cmp.length){const sc=[['AI',br(cmp,'g')],['Elo',br(cmp,'e')],['Gabungan',br(cmp,'p')]],best=Math.min(...sc.map(x=>x[1]));
-    bri=sc.map(([l,v])=>`<div class="br"><span class="${v==best?'best':''}">${l}</span><div class="bar"><i style="--w:${Math.min(100,v/.8*100)}%;--c:${v==best?'var(--amber)':'#7f9488'}"></i></div><em class="${v==best?'best':''}">${F2(v,3)}</em></div>`).join('')+`<p class="sub" style="margin-top:12px;font-size:14px">Skor Brier dari ${cmp.length} laga. Makin kecil makin baik, tebakan acak 0,667. Warna kuning menandai yang terbaik.</p>`}
+  if(cmp.length){const cx=cmp.filter(r=>r.x_home),use=cx.length>=10?cx:cmp,sc=[['AI',br(use,'g')],['Elo',br(use,'e')],['Gabungan',br(use,'p')]];if(use===cx)sc.splice(2,0,['Poisson',br(use,'x')]);const best=Math.min(...sc.map(x=>x[1]));
+    bri=sc.map(([l,v])=>`<div class="br"><span class="${v==best?'best':''}">${l}</span><div class="bar"><i style="--w:${Math.min(100,v/.8*100)}%;--c:${v==best?'var(--amber)':'#7f9488'}"></i></div><em class="${v==best?'best':''}">${F2(v,3)}</em></div>`).join('')+`<p class="sub" style="margin-top:12px;font-size:14px">Skor Brier dari ${use.length} laga. Makin kecil makin baik, tebakan acak 0,667. Warna kuning menandai yang terbaik.</p>`}
   const lgs=[...new Set(RW.map(r=>r.competition))].sort(),dmin=wd(RW[0]),dmax=wd(RW[RW.length-1]);
   $('#app').innerHTML=`
   <div class="board obs">
@@ -298,10 +298,11 @@ function detail(r){
   fin=P('Gabungan',K.map(k=>Math.round(N(r['p_'+k])))),
   ai=pr('g_home')?P('AI',K.map(k=>Math.round(N(r['g_'+k])))):'',
   el=pr('e_home')?P('Elo',K.map(k=>Math.round(N(r['e_'+k])))):'',
+  px=pr('x_home')?P('Poisson',K.map(k=>Math.round(N(r['x_'+k])))):'',
   ls=r.likely_score&&r.likely_score!='-'?`<p class="sub">Skor tebakan ${esc(r.likely_score)}${r.outcome?`, skor akhir ${esc(r.final_score)}`:''}</p>`:'',
   gl=pr('o25')?`<p class="sub">Perkiraan gol ${F2(N(r.lam_h),1)} lawan ${F2(N(r.lam_a),1)}. Over 1.5: ${Math.round(N(r.o15))}%, Over 2.5: ${Math.round(N(r.o25))}%, Over 3.5: ${Math.round(N(r.o35))}%, kedua tim cetak gol: ${Math.round(N(r.btts))}%.</p>`:'',
   L=(t,x)=>x&&x.length?`<h3>${t}</h3><ul>${x.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`:'';
-  return `<div class="pvs">${fin}${ai}${el}</div><p class="sub" style="margin-bottom:6px">Peluang tuan rumah, seri, tamu (dalam persen).</p>${ls}${gl}${a?`<p>${esc(a.summary)}</p>${L('Faktor kunci',a.factors)}${L('Risiko',a.risks)}`:'<p class="sub">Teks analisa belum tersimpan untuk tebakan ini. Tebakan yang dicatat setelah pembaruan ini akan menampilkan ringkasan, faktor kunci, dan risikonya di sini.</p>'}`;
+  return `<div class="pvs">${fin}${ai}${el}${px}</div><p class="sub" style="margin-bottom:6px">Peluang tuan rumah, seri, tamu (dalam persen).</p>${ls}${gl}${a?`<p>${esc(a.summary)}</p>${L('Faktor kunci',a.factors)}${L('Risiko',a.risks)}`:'<p class="sub">Teks analisa belum tersimpan untuk tebakan ini. Tebakan yang dicatat setelah pembaruan ini akan menampilkan ringkasan, faktor kunci, dan risikonya di sini.</p>'}`;
 }
 
 const mins=m=>m<60?Math.max(1,Math.round(m))+' menit lagi':Math.floor(m/60)+' jam '+Math.round(m%60)+' menit lagi';
