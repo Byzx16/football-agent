@@ -721,5 +721,615 @@
     "hit": false
    }
   }
+ },
+ {
+  "id": "2026-11-03-aman",
+  "date": "2026-11-03",
+  "kind": "aman",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 575380,
+    "kickoff_utc": "2026-11-03T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "FC Barcelona",
+    "away": "Aston Villa FC",
+    "home_s": "Barça",
+    "away_s": "Aston Villa",
+    "market": "over15",
+    "pick": "over15",
+    "p": 96.95971538353734,
+    "ai": true,
+    "base": 85.5
+   },
+   {
+    "match_id": 575385,
+    "kickoff_utc": "2026-11-03T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "LASK Linz",
+    "away": "ŠK Slovan Bratislava",
+    "home_s": "LASK",
+    "away_s": "Sl. Bratislava",
+    "market": "over15",
+    "pick": "over15",
+    "p": 95.07359258308729,
+    "ai": true,
+    "base": 85.5
+   },
+   {
+    "match_id": 575379,
+    "kickoff_utc": "2026-11-03T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Feyenoord Rotterdam",
+    "away": "FC Internazionale Milano",
+    "home_s": "Feyenoord",
+    "away_s": "Inter",
+    "market": "over15",
+    "pick": "over15",
+    "p": 92.40089298989724,
+    "ai": true,
+    "base": 85.5
+   }
+  ],
+  "notes": {
+   "575380": {
+    "home_rank": "#8 (6 poin, selisih gol 5)",
+    "away_rank": "#2 (9 poin, selisih gol 9)",
+    "home_form": [
+     "Galatasaray 1-4 Barça",
+     "Real Betis 2-5 Barça",
+     "PSG 4-2 Barça",
+     "Barça 1-2 Real Madrid",
+     "Barça 6-1 Alavés"
+    ],
+    "away_form": [
+     "Aston Villa 6-0 Fenerbahçe",
+     "Newcastle 0-1 Aston Villa",
+     "Aston Villa 3-1 Viking",
+     "Aston Villa 2-1 Man City",
+     "Aston Villa 1-1 Fulham"
+    ],
+    "p": [
+     66,
+     19,
+     15
+    ],
+    "g": [
+     55,
+     25,
+     20
+    ],
+    "summary": "Barcelona, meskipun dilanda cedera di lini belakang, akan mengandalkan kekuatan serang mereka yang dipimpin Raphinha dan Lamine Yamal di kandang. Aston Villa datang dengan rekor sempurna di Liga Champions dan performa solid di bawah Unai Emery, tetapi rekor buruk Emery di Camp Nou dan jadwal padat bisa menjadi tantangan. Pertandingan ini diprediksi akan ketat dengan banyak gol.",
+    "factors": [
+     "Barcelona memiliki rekor kandang yang kuat di Liga Champions, tidak terkalahkan dalam 15 pertandingan terakhir melawan tim Inggris (10W, 5D) dan memenangkan 6 dari 7 laga kompetitif terakhir di Camp Nou musim ini.",
+     "Aston Villa dalam performa sangat baik di Liga Champions, memenangkan semua tiga pertandingan grup mereka dengan mencetak 12 gol dan belum pernah tertinggal di kompetisi ini.",
+     "Barcelona memiliki banyak pemain kunci yang cedera di lini belakang (Christensen, Eric García, Koundé, Espart) dan lini tengah/serang (Dani Olmo, Bardghji), memaksa Frenkie de Jong bermain sebagai bek tengah.",
+     "Unai Emery memiliki rekor buruk melawan Barcelona (3 kemenangan dari 30 pertemuan), namun timnya memiliki kemampuan untuk mengeksploitasi lini pertahanan Barcelona yang agresif dan rentan kebobolan."
+    ],
+    "risks": [
+     "Pertahanan Barcelona belum mencatatkan clean sheet dalam 18 pertandingan Liga Champions terakhir, yang merupakan rekor terpanjang di antara tim-tim peserta musim ini.",
+     "Aston Villa akan menghadapi jadwal padat dengan pertandingan tandang melawan Manchester United di Premier League hanya empat hari setelah laga ini.",
+     "Meskipun Villa dalam performa bagus, mereka belum menghadapi serangan sekaliber Barcelona di Liga Champions musim ini, dan Camp Nou adalah tempat yang sulit bagi tim tamu."
+    ],
+    "e": [
+     69.9,
+     17.0,
+     13.2
+    ],
+    "x": [
+     82.3,
+     9.7,
+     8.0
+    ],
+    "goals": {
+     "lam_h": 4.0,
+     "lam_a": 1.4,
+     "o15": 97.0,
+     "o25": 90.1,
+     "o35": 77.9,
+     "btts": 73.1
+    },
+    "top": [
+     [
+      "3-1",
+      6.9
+     ],
+     [
+      "4-1",
+      6.8
+     ],
+     [
+      "5-1",
+      5.4
+     ]
+    ]
+   },
+   "575385": {
+    "home_rank": "#24 (3 poin, selisih gol -3)",
+    "away_rank": "#36 (0 poin, selisih gol -12)",
+    "home_form": [
+     "PAE AEK 1-0 LASK",
+     "LASK 3-6 Liverpool",
+     "Sporting CP 2-3 LASK"
+    ],
+    "away_form": [
+     "PSG 6-1 Sl. Bratislava",
+     "Sl. Bratislava 0-3 Stuttgart",
+     "Roma 4-0 Sl. Bratislava"
+    ],
+    "p": [
+     65,
+     19,
+     16
+    ],
+    "g": [
+     65,
+     20,
+     15
+    ],
+    "summary": "LASK Linz terlihat jauh lebih unggul berdasarkan performa dan posisi klasemen di Liga Champions. Mereka mampu mencetak gol melawan lawan yang kuat, sementara ŠK Slovan Bratislava kesulitan di semua lini. Bermain di kandang akan menjadi keuntungan tambahan bagi LASK Linz, menjadikan mereka favorit kuat untuk memenangkan pertandingan ini.",
+    "factors": [
+     "LASK Linz menunjukkan performa menyerang yang lebih baik di UCL, mencetak gol ke gawang tim kuat seperti Liverpool dan Sporting CP.",
+     "ŠK Slovan Bratislava memiliki rekor yang sangat buruk di UCL, kalah di semua pertandingan dengan selisih gol -12 dan hanya mencetak 1 gol.",
+     "LASK Linz akan bermain di kandang, yang dapat memberikan keuntungan moral dan dukungan suporter.",
+     "Perbedaan kualitas dan performa yang signifikan antara kedua tim di kompetisi ini sangat mencolok."
+    ],
+    "risks": [
+     "LASK Linz juga menunjukkan kerapuhan di lini pertahanan, kebobolan banyak gol dalam pertandingan UCL mereka.",
+     "Meskipun Slovan Bratislava memiliki performa buruk, mereka mungkin bermain tanpa tekanan dan bisa mengejutkan.",
+     "Informasi spesifik mengenai cedera atau skorsing untuk pertandingan di masa depan ini belum tersedia."
+    ],
+    "e": [
+     50.6,
+     23.6,
+     25.8
+    ],
+    "x": [
+     78.7,
+     11.6,
+     9.6
+    ],
+    "goals": {
+     "lam_h": 3.5,
+     "lam_a": 1.3,
+     "o15": 95.1,
+     "o25": 85.4,
+     "o35": 70.0,
+     "btts": 69.7
+    },
+    "top": [
+     [
+      "3-1",
+      7.7
+     ],
+     [
+      "4-1",
+      6.7
+     ],
+     [
+      "2-1",
+      6.6
+     ]
+    ]
+   },
+   "575379": {
+    "home_rank": "#26 (3 poin, selisih gol -4)",
+    "away_rank": "#20 (3 poin, selisih gol -1)",
+    "home_form": [
+     "Feyenoord 3-2 Como 1907",
+     "Telstar 3-4 Feyenoord",
+     "Real Betis 1-0 Feyenoord",
+     "PSV 1-1 Feyenoord",
+     "Feyenoord 1-1 Sittard"
+    ],
+    "away_form": [
+     "Bologna 1-3 Inter",
+     "Inter 1-0 Shaktar",
+     "Inter 2-1 Fiorentina",
+     "Venezia FC 0-2 Inter",
+     "Milan 3-1 Inter"
+    ],
+    "p": [
+     25,
+     25,
+     50
+    ],
+    "g": [
+     25,
+     30,
+     45
+    ],
+    "summary": "FC Internazionale Milano diunggulkan berkat performa superior dan konsisten mereka, meskipun Feyenoord akan bermain di kandang sendiri dalam laga krusial Liga Champions. Kedua tim memiliki poin yang sama, menjadikan pertandingan ini sangat penting untuk ambisi mereka di Eropa. Informasi mengenai cedera, skorsing, atau lineup belum tersedia karena tanggal pertandingan yang masih jauh di masa depan.",
+    "factors": [
+     "FC Internazionale Milano menunjukkan performa yang lebih konsisten dan kuat dengan 4 kemenangan dari 5 laga terakhir mereka.",
+     "Kedua tim memiliki poin yang sama di klasemen Liga Champions, menjadikan pertandingan ini sangat krusial untuk peluang lolos ke fase berikutnya.",
+     "Feyenoord akan bermain di kandang sendiri, yang dapat memberikan dorongan moral dan dukungan signifikan dari suporter.",
+     "Inter memiliki selisih gol yang lebih baik di Liga Champions, yang bisa menjadi faktor penentu jika poin akhir sama."
+    ],
+    "risks": [
+     "Feyenoord memiliki performa yang lebih tidak konsisten (2 menang, 2 seri, 1 kalah) yang bisa membuat hasil pertandingan sulit diprediksi.",
+     "Satu-satunya kekalahan Inter dalam lima laga terakhir adalah melawan rival kuat (Milan), menunjukkan bahwa mereka tidak sepenuhnya tak terkalahkan.",
+     "Tingginya taruhan di pertandingan Liga Champions dapat menyebabkan permainan yang lebih hati-hati dari kedua tim, berpotensi berakhir seri."
+    ],
+    "e": [
+     26.3,
+     23.8,
+     49.9
+    ],
+    "x": [
+     23.1,
+     18.2,
+     58.7
+    ],
+    "goals": {
+     "lam_h": 1.6,
+     "lam_a": 2.6,
+     "o15": 92.4,
+     "o25": 79.4,
+     "o35": 61.0,
+     "btts": 74.4
+    },
+    "top": [
+     [
+      "1-2",
+      8.0
+     ],
+     [
+      "1-3",
+      7.0
+     ],
+     [
+      "2-2",
+      6.5
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.8518,
+  "tg_msg_id": 109,
+  "outcome": "",
+  "legs_hit": ""
+ },
+ {
+  "id": "2026-11-03-mix",
+  "date": "2026-11-03",
+  "kind": "mix",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 575379,
+    "kickoff_utc": "2026-11-03T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Feyenoord Rotterdam",
+    "away": "FC Internazionale Milano",
+    "home_s": "Feyenoord",
+    "away_s": "Inter",
+    "market": "over15",
+    "pick": "over15",
+    "p": 92.40089298989724,
+    "ai": true,
+    "base": 85.5
+   },
+   {
+    "match_id": 575381,
+    "kickoff_utc": "2026-11-03T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Club Atlético de Madrid",
+    "away": "FC Bayern München",
+    "home_s": "Atleti",
+    "away_s": "Bayern",
+    "market": "over15",
+    "pick": "over15",
+    "p": 91.32084610237087,
+    "ai": true,
+    "base": 85.5
+   },
+   {
+    "match_id": 575383,
+    "kickoff_utc": "2026-11-03T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Manchester United FC",
+    "away": "AS Roma",
+    "home_s": "Man United",
+    "away_s": "Roma",
+    "market": "over15",
+    "pick": "over15",
+    "p": 90.84463064352192,
+    "ai": true,
+    "base": 85.5
+   },
+   {
+    "match_id": 575378,
+    "kickoff_utc": "2026-11-03T17:45:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Galatasaray SK",
+    "away": "VfB Stuttgart",
+    "home_s": "Galatasaray",
+    "away_s": "Stuttgart",
+    "market": "btts",
+    "pick": "btts",
+    "p": 71.53464110523124,
+    "ai": true,
+    "base": 60.3
+   },
+   {
+    "match_id": 575377,
+    "kickoff_utc": "2026-11-03T17:45:00Z",
+    "competition": "UEFA Champions League",
+    "home": "FK Shakhtar Donetsk",
+    "away": "Sporting Clube de Portugal",
+    "home_s": "Shaktar",
+    "away_s": "Sporting CP",
+    "market": "under35",
+    "pick": "under35",
+    "p": 68.31568014466752,
+    "ai": true,
+    "base": 48.1
+   }
+  ],
+  "notes": {
+   "575379": {
+    "home_rank": "#26 (3 poin, selisih gol -4)",
+    "away_rank": "#20 (3 poin, selisih gol -1)",
+    "home_form": [
+     "Feyenoord 3-2 Como 1907",
+     "Telstar 3-4 Feyenoord",
+     "Real Betis 1-0 Feyenoord",
+     "PSV 1-1 Feyenoord",
+     "Feyenoord 1-1 Sittard"
+    ],
+    "away_form": [
+     "Bologna 1-3 Inter",
+     "Inter 1-0 Shaktar",
+     "Inter 2-1 Fiorentina",
+     "Venezia FC 0-2 Inter",
+     "Milan 3-1 Inter"
+    ],
+    "p": [
+     25,
+     25,
+     50
+    ],
+    "g": [
+     25,
+     30,
+     45
+    ],
+    "summary": "FC Internazionale Milano diunggulkan berkat performa superior dan konsisten mereka, meskipun Feyenoord akan bermain di kandang sendiri dalam laga krusial Liga Champions. Kedua tim memiliki poin yang sama, menjadikan pertandingan ini sangat penting untuk ambisi mereka di Eropa. Informasi mengenai cedera, skorsing, atau lineup belum tersedia karena tanggal pertandingan yang masih jauh di masa depan.",
+    "factors": [
+     "FC Internazionale Milano menunjukkan performa yang lebih konsisten dan kuat dengan 4 kemenangan dari 5 laga terakhir mereka.",
+     "Kedua tim memiliki poin yang sama di klasemen Liga Champions, menjadikan pertandingan ini sangat krusial untuk peluang lolos ke fase berikutnya.",
+     "Feyenoord akan bermain di kandang sendiri, yang dapat memberikan dorongan moral dan dukungan signifikan dari suporter.",
+     "Inter memiliki selisih gol yang lebih baik di Liga Champions, yang bisa menjadi faktor penentu jika poin akhir sama."
+    ],
+    "risks": [
+     "Feyenoord memiliki performa yang lebih tidak konsisten (2 menang, 2 seri, 1 kalah) yang bisa membuat hasil pertandingan sulit diprediksi.",
+     "Satu-satunya kekalahan Inter dalam lima laga terakhir adalah melawan rival kuat (Milan), menunjukkan bahwa mereka tidak sepenuhnya tak terkalahkan.",
+     "Tingginya taruhan di pertandingan Liga Champions dapat menyebabkan permainan yang lebih hati-hati dari kedua tim, berpotensi berakhir seri."
+    ],
+    "e": [
+     26.3,
+     23.8,
+     49.9
+    ],
+    "x": [
+     23.1,
+     18.2,
+     58.7
+    ],
+    "goals": {
+     "lam_h": 1.6,
+     "lam_a": 2.6,
+     "o15": 92.4,
+     "o25": 79.4,
+     "o35": 61.0,
+     "btts": 74.4
+    },
+    "top": [
+     [
+      "1-2",
+      8.0
+     ],
+     [
+      "1-3",
+      7.0
+     ],
+     [
+      "2-2",
+      6.5
+     ]
+    ]
+   },
+   "575381": {
+    "home_rank": "#16 (4 poin, selisih gol 1)",
+    "away_rank": "#14 (5 poin, selisih gol 5)",
+    "home_form": [
+     "Atleti 2-0 Man United",
+     "Espanyol 0-1 Atleti",
+     "Stuttgart 1-1 Atleti",
+     "Atleti 1-0 Deportivo",
+     "Levante 0-2 Atleti"
+    ],
+    "away_form": [
+     "Viking 3-3 Bayern",
+     "Bayern 6-1 RB Leipzig",
+     "Bayern 2-2 Arsenal",
+     "Freiburg 1-3 Bayern",
+     "Bayern 2-2 Dortmund"
+    ],
+    "e": [
+     32.4,
+     26.5,
+     41.1
+    ],
+    "goals": {
+     "lam_h": 1.9,
+     "lam_a": 2.2,
+     "o15": 91.3,
+     "o25": 77.2,
+     "o35": 58.0,
+     "btts": 75.2
+    },
+    "top": [
+     [
+      "1-2",
+      7.7
+     ],
+     [
+      "2-2",
+      7.2
+     ],
+     [
+      "1-1",
+      7.0
+     ]
+    ]
+   },
+   "575383": {
+    "home_rank": "#20 (3 poin, selisih gol -1)",
+    "away_rank": "#15 (4 poin, selisih gol 3)",
+    "home_form": [
+     "Atleti 2-0 Man United",
+     "Leeds United 1-1 Man United",
+     "Como 1907 4-1 Man United",
+     "Man United 0-3 Bournemouth",
+     "Chelsea 2-0 Man United"
+    ],
+    "away_form": [
+     "Roma 2-0 Genoa",
+     "Roma 4-0 Sl. Bratislava",
+     "Napoli 3-3 Roma",
+     "Roma 4-2 Cagliari",
+     "Udinese 2-5 Roma"
+    ],
+    "p": [
+     30,
+     23,
+     47
+    ],
+    "e": [
+     28.6,
+     24.9,
+     46.6
+    ],
+    "x": [
+     32.4,
+     20.4,
+     47.2
+    ],
+    "goals": {
+     "lam_h": 1.8,
+     "lam_a": 2.2,
+     "o15": 90.8,
+     "o25": 76.2,
+     "o35": 56.7,
+     "btts": 74.3
+    },
+    "top": [
+     [
+      "1-2",
+      8.0
+     ],
+     [
+      "1-1",
+      7.3
+     ],
+     [
+      "2-2",
+      7.2
+     ]
+    ]
+   },
+   "575378": {
+    "home_rank": "#23 (3 poin, selisih gol -3)",
+    "away_rank": "#6 (7 poin, selisih gol 5)",
+    "home_form": [
+     "Sporting CP 3-1 Galatasaray",
+     "Galatasaray 1-4 Barça",
+     "Lille 2-4 Galatasaray"
+    ],
+    "away_form": [
+     "Sl. Bratislava 0-3 Stuttgart",
+     "HSV 1-0 Stuttgart",
+     "Stuttgart 1-1 Atleti",
+     "Stuttgart 2-3 M'gladbach",
+     "Leverkusen 2-4 Stuttgart"
+    ],
+    "e": [
+     35.0,
+     27.6,
+     37.4
+    ],
+    "goals": {
+     "lam_h": 1.8,
+     "lam_a": 1.9,
+     "o15": 88.8,
+     "o25": 72.2,
+     "o35": 51.5,
+     "btts": 71.5
+    },
+    "top": [
+     [
+      "1-1",
+      8.3
+     ],
+     [
+      "1-2",
+      8.0
+     ],
+     [
+      "2-1",
+      7.5
+     ]
+    ]
+   },
+   "575377": {
+    "home_rank": "#17 (4 poin, selisih gol 1)",
+    "away_rank": "#12 (6 poin, selisih gol 3)",
+    "home_form": [
+     "PSV 1-1 Shaktar",
+     "Shaktar 3-1 PAE AEK",
+     "Inter 1-0 Shaktar"
+    ],
+    "away_form": [
+     "Braga 1-3 Sporting CP",
+     "RC Lens 0-2 Sporting CP",
+     "Sporting CP 2-3 LASK",
+     "Sporting CP 1-2 Acad. Viseu",
+     "Casa Pia 0-2 Sporting CP"
+    ],
+    "e": [
+     40.2,
+     26.8,
+     33.0
+    ],
+    "goals": {
+     "lam_h": 1.6,
+     "lam_a": 1.3,
+     "o15": 77.6,
+     "o25": 54.0,
+     "o35": 31.7,
+     "btts": 56.8
+    },
+    "top": [
+     [
+      "1-1",
+      11.6
+     ],
+     [
+      "1-0",
+      9.3
+     ],
+     [
+      "2-1",
+      9.2
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.3746,
+  "tg_msg_id": 109,
+  "outcome": "",
+  "legs_hit": ""
  }
 ]
