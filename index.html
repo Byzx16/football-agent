@@ -98,6 +98,11 @@ body.ucl .board:before,body.ucl .board:after{border-color:rgba(160,190,255,.14)}
 body.ucl .uclogo{display:block;height:clamp(96px,17vw,156px);width:auto;max-width:40vw;object-fit:contain;filter:brightness(0) invert(1)}
 .ucd{display:none;margin-top:6px}
 body.ucl .ucd{display:block}
+.cal{display:grid;grid-template-columns:110px 1fr auto;gap:6px 14px;align-items:center;margin-top:12px;font-size:14px}
+.pair{display:grid;gap:4px}
+.pair .bar{height:7px}
+.cal em{font-style:normal;color:var(--mute);font-size:13px;text-align:right}
+@media(max-width:760px){.cal{grid-template-columns:90px 1fr}.cal em{grid-column:1/-1;text-align:left}}
 .trend{display:flex;align-items:center;gap:6px;margin:12px 0 6px}
 .trend i{width:22px;height:22px;border-radius:4px;background:var(--ok)}
 .trend i.l{background:var(--no)}
@@ -163,6 +168,14 @@ let ROWS=[],PAR=[],CR={},AN={},LM=null,S={lg:'',rs:'',q:'',lim:40,d1:'',d2:'',op
 function logo(full,short){const u=CR[full]||CR[short],ini=esc((short||full||'?').replace(/[^A-Za-z]/g,'').slice(0,3));
   return u?`<img class="cr" src="${esc(u)}" alt="" loading="lazy" onerror="this.outerHTML='&lt;span class=&quot;cr ini&quot;&gt;${ini}&lt;/span&gt;'">`:`<span class="cr ini">${ini}</span>`}
 
+function cf(r){const t=Math.max(N(r.p_home)||0,N(r.p_draw)||0,N(r.p_away)||0);return t>=60?'tinggi':t>=50?'sedang':'rendah'}
+
+function calib(done){
+  const B=[[0,40,'di bawah 40%'],[40,50,'40-50%'],[50,60,'50-60%'],[60,70,'60-70%'],[70,101,'70% ke atas']],T=r=>Math.max(N(r.p_home)||0,N(r.p_draw)||0,N(r.p_away)||0);
+  const rows=B.map(([lo,hi,lab])=>{const s=done.filter(r=>T(r)>=lo&&T(r)<hi);if(!s.length)return '';const pr=s.reduce((a,r)=>a+T(r),0)/s.length,ac=s.filter(r=>r.correct=='1').length/s.length*100;return `<div class="cal"><span>${lab}</span><div class="pair"><div class="bar"><i style="--w:${pr}%;--c:#7f9488"></i></div><div class="bar"><i style="--w:${ac}%;--c:var(--amber)"></i></div></div><em>diberi ${Math.round(pr)}%, benar ${Math.round(ac)}% dari ${s.length} laga${s.length<8?' (sampel kecil)':''}</em></div>`}).join('');
+  return rows||'<p class="empty" style="padding:14px 0">Belum ada laga selesai.</p>';
+}
+
 function csv(t){t=t.replace(/^\uFEFF/,'');const R=[];let r=[],f='',q=0;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=0}else f+=c}else if(c=='"')q=1;else if(c==','){r.push(f);f=''}else if(c=='\n'||c=='\r'){if(c=='\r'&&t[i+1]=='\n')i++;r.push(f);f='';if(r.length>1||r[0]!=='')R.push(r);r=[]}else f+=c}if(f!==''||r.length){r.push(f);R.push(r)}const h=R.shift()||[];return R.map(x=>Object.fromEntries(h.map((k,i)=>[k.trim(),x[i]==null?'':x[i]])))}
 
 function cu(el){const to=N(el.dataset.to)||0,dec=+(el.dataset.dec||0),suf=el.dataset.suf||'',d=RM?1:1400,t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,4);el.textContent=F2(to*e,dec)+suf;if(k<1)requestAnimationFrame(f)})(t0)}
@@ -223,11 +236,11 @@ function render(){
   if(!RW.length){$('#app').innerHTML='<p class="empty">Belum ada tebakan Liga Champions. Analisa muncul saat ada laga UCL, biasanya Selasa dan Rabu dini hari WIB.</p>';return}
   const done=RW.filter(r=>r.outcome),n=done.length,pend=RW.length-n,
   hit=done.filter(r=>r.correct=='1').length,acc=n?hit/n*100:0,base=n?done.filter(r=>r.outcome=='home').length/n*100:0,
-  strong=done.filter(r=>r.confidence!='rendah'),sh=strong.filter(r=>r.correct=='1').length,
+  strong=done.filter(r=>cf(r)!='rendah'),sh=strong.filter(r=>r.correct=='1').length,
   cmp=done.filter(r=>r.g_home&&r.e_home),d=acc-base,
   pf=VP().filter(x=>x.outcome=='win'||x.outcome=='lose'),pw=pf.filter(x=>x.outcome=='win').length;
   const verdict=!n?'Belum ada laga selesai. Skor pertama muncul setelah laga yang dicatat berakhir.':n<30?`Agent ${d>=0?'unggul':'tertinggal'} ${Math.round(Math.abs(d))} poin dari pembanding, tapi sampel baru ${n} laga dan belum bisa disimpulkan.`:`Agent ${d>3?'unggul':d>=-3?'setara':'tertinggal'} ${Math.round(Math.abs(d))} poin dari pembanding tuan rumah.`;
-  const bars=['tinggi','sedang','rendah'].map(c=>{const s=done.filter(r=>r.confidence==c);if(!s.length)return `<div class="br"><span><i class="sq" style="--c:${CF[c]}"></i>${c}</span><div class="bar"></div><em>belum ada laga</em></div>`;const a=s.filter(r=>r.correct=='1').length/s.length*100;return `<div class="br"><span><i class="sq" style="--c:${CF[c]}"></i>${c}</span><div class="bar"><i style="--w:${a}%;--c:${CF[c]}"></i></div><em>${Math.round(a)}% dari ${s.length}</em></div>`}).join('');
+  const bars=['tinggi','sedang','rendah'].map(c=>{const s=done.filter(r=>cf(r)==c);if(!s.length)return `<div class="br"><span><i class="sq" style="--c:${CF[c]}"></i>${c}</span><div class="bar"></div><em>belum ada laga</em></div>`;const a=s.filter(r=>r.correct=='1').length/s.length*100;return `<div class="br"><span><i class="sq" style="--c:${CF[c]}"></i>${c}</span><div class="bar"><i style="--w:${a}%;--c:${CF[c]}"></i></div><em>${Math.round(a)}% dari ${s.length}</em></div>`}).join('');
   let bri='<p class="empty" style="padding:14px 0">Perbandingan muncul setelah ada laga selesai yang punya probabilitas AI dan Elo.</p>';
   if(cmp.length){const sc=[['AI',br(cmp,'g')],['Elo',br(cmp,'e')],['Gabungan',br(cmp,'p')]],best=Math.min(...sc.map(x=>x[1]));
     bri=sc.map(([l,v])=>`<div class="br"><span class="${v==best?'best':''}">${l}</span><div class="bar"><i style="--w:${Math.min(100,v/.8*100)}%;--c:${v==best?'var(--amber)':'#7f9488'}"></i></div><em class="${v==best?'best':''}">${F2(v,3)}</em></div>`).join('')+`<p class="sub" style="margin-top:12px;font-size:14px">Skor Brier dari ${cmp.length} laga. Makin kecil makin baik, tebakan acak 0,667. Warna kuning menandai yang terbaik.</p>`}
@@ -251,9 +264,10 @@ function render(){
     <h3 class="sh">Tebakan per laga</h3>${pend?`<div class="tw"><table><thead><tr><th>Kick-off</th><th>Laga</th><th class="pc">Peluang tuan rumah, seri, tamu</th><th>Tebakan</th><th>Status</th><th>Analisa</th></tr></thead><tbody id="pt"></tbody></table></div>`:'<p class="empty" style="padding:10px 0">Tidak ada tebakan yang sedang berjalan.</p>'}
     <h3 class="sh">Kombinasi harian</h3>${runningCombos()}
   </section>
-  ${n?`<section><h2>Hasil terakhir</h2><div class="trend" aria-label="Tren 10 laga terakhir">${done.slice(-10).map(r=>`<i class="${r.correct=='1'?'w':'l'}" title="${esc(nm(r,'home'))} ${esc(r.final_score)} ${esc(nm(r,'away'))}"></i>`).join('')}<span>10 laga terakhir, hijau benar, merah meleset</span></div>${done.slice(-5).reverse().map(r=>`<div class="lr"><div class="m">${logo(r.home,r.home_s)}<b>${esc(nm(r,'home'))}</b><span class="sc">${esc(r.final_score.replace('-',' - '))}</span>${logo(r.away,r.away_s)}<b>${esc(nm(r,'away'))}</b></div><div><span class="tag ${r.correct=='1'?'ok':'no'}">${r.correct=='1'?'Benar':'Meleset'}</span><small>tebakan: ${r.confidence=='rendah'&&r.pick!='draw'?'condong ':''}${esc(pick(r))}</small></div></div>`).join('')}</section>`:''}
+  ${n?`<section><h2>Hasil terakhir</h2><div class="trend" aria-label="Tren 10 laga terakhir">${done.slice(-10).map(r=>`<i class="${r.correct=='1'?'w':'l'}" title="${esc(nm(r,'home'))} ${esc(r.final_score)} ${esc(nm(r,'away'))}"></i>`).join('')}<span>10 laga terakhir, hijau benar, merah meleset</span></div>${done.slice(-5).reverse().map(r=>`<div class="lr"><div class="m">${logo(r.home,r.home_s)}<b>${esc(nm(r,'home'))}</b><span class="sc">${esc(r.final_score.replace('-',' - '))}</span>${logo(r.away,r.away_s)}<b>${esc(nm(r,'away'))}</b></div><div><span class="tag ${r.correct=='1'?'ok':'no'}">${r.correct=='1'?'Benar':'Meleset'}</span><small>tebakan: ${cf(r)=='rendah'&&r.pick!='draw'?'condong ':''}${esc(pick(r))}</small></div></div>`).join('')}</section>`:''}
   <section class="obs"><h2>Akurasi dari laga ke laga</h2><p class="sub">Setiap titik adalah akurasi kumulatif sampai laga itu.</p>${line(done)}</section>
   <section class="cols obs"><div><h2>Akurasi per tingkat keyakinan</h2><p class="sub">Sinyal yang diberi keyakinan tinggi seharusnya lebih sering benar.</p>${bars}</div><div><h2>Siapa yang paling jitu</h2><p class="sub">Kualitas probabilitas AI, model Elo, dan gabungan keduanya.</p>${bri}</div></section>
+  <section class="obs"><h2>Seberapa bisa dipercaya peluang agent</h2><p class="sub">Kelompok laga menurut peluang tertinggi yang diberikan agent. Batang abu-abu adalah peluang yang diberikan, batang kuning adalah seberapa sering tebakannya benar. Kalau agent jujur, keduanya sama panjang.</p>${calib(done)}</section>
   <section><h2>Riwayat kombinasi</h2><p class="sub" style="margin-bottom:10px">Kombinasi yang sudah selesai. Satu laga meleset, seluruh kombinasi gagal. Klik sebuah laga untuk melihat detailnya.</p>${parlays()}</section>
   <section><h2>Riwayat tebakan</h2><p class="sub">Hanya laga yang sudah selesai.</p>
     <div class="f"><select id="lg" aria-label="Filter liga"><option value="">Semua liga</option>${lgs.map(l=>`<option${S.lg==l?' selected':''}>${esc(l)}</option>`).join('')}</select>
@@ -296,7 +310,7 @@ function stat(r){const d=(Date.now()-Date.parse(r.kickoff_utc))/6e4;return d<0?`
 function rowHTML(r){
   const a=K.map(k=>N(r['p_'+k])||0),open=S.open.has(r.match_id);
   const res=r.outcome?`<span class="sc">${esc(r.final_score.replace('-',' - '))}</span><span class="tag ${r.correct=='1'?'ok':'no'}">${r.correct=='1'?'Benar':'Meleset'}</span>`:stat(r);
-  return `<tr><td>${fmt(r.kickoff_utc)}</td><td><div class="tm">${logo(r.home,r.home_s)}<b>${esc(nm(r,'home'))}</b></div><div class="tm">${logo(r.away,r.away_s)}<b>${esc(nm(r,'away'))}</b></div><small>${esc(r.competition)}</small></td><td class="pc"><div class="pb"><i style="width:${a[0]}%;background:var(--ok)"></i><i style="width:${a[1]}%;background:#6f8478"></i><i style="width:${a[2]}%;background:var(--amber)"></i></div><small>${a.map(v=>Math.round(v)).join(' / ')}</small></td><td><i class="sq" style="--c:${CF[r.confidence]||CF.rendah}"></i>${r.confidence=='rendah'&&r.pick!='draw'?'Condong ':''}${esc(pick(r))}<small>keyakinan ${esc(r.confidence)}</small></td><td>${res}</td><td><button class="pill" data-id="${esc(r.match_id)}" aria-expanded="${open}">${open?'Tutup':'Lihat'}</button></td></tr>`+(open?`<tr class="det"><td colspan="6">${detail(r)}</td></tr>`:'')}
+  return `<tr><td>${fmt(r.kickoff_utc)}</td><td><div class="tm">${logo(r.home,r.home_s)}<b>${esc(nm(r,'home'))}</b></div><div class="tm">${logo(r.away,r.away_s)}<b>${esc(nm(r,'away'))}</b></div><small>${esc(r.competition)}</small></td><td class="pc"><div class="pb"><i style="width:${a[0]}%;background:var(--ok)"></i><i style="width:${a[1]}%;background:#6f8478"></i><i style="width:${a[2]}%;background:var(--amber)"></i></div><small>${a.map(v=>Math.round(v)).join(' / ')}</small></td><td><i class="sq" style="--c:${CF[cf(r)]||CF.rendah}"></i>${cf(r)=='rendah'&&r.pick!='draw'?'Condong ':''}${esc(pick(r))}<small>keyakinan ${esc(cf(r))}</small></td><td>${res}</td><td><button class="pill" data-id="${esc(r.match_id)}" aria-expanded="${open}">${open?'Tutup':'Lihat'}</button></td></tr>`+(open?`<tr class="det"><td colspan="6">${detail(r)}</td></tr>`:'')}
 
 function pending(){const el=$('#pt');if(!el)return;el.innerHTML=VR().filter(r=>!r.outcome).sort((a,b)=>a.kickoff_utc<b.kickoff_utc?-1:1).map(rowHTML).join('')}
 

@@ -8,7 +8,7 @@ on:
       mode:
         description: "Mode jalan manual"
         type: choice
-        options: [normal, test, report, parlay, ucl_parlay]
+        options: [normal, test, report, parlay, ucl_parlay, backtest]
         default: normal
 
 # satu run pada satu waktu, supaya file data tidak bentrok
@@ -52,6 +52,7 @@ jobs:
             report) python agent_free.py --report ;;
             parlay) python agent_free.py --parlay ;;
             ucl_parlay) python agent_free.py --parlay-ucl ;;
+            backtest) python backtest.py --telegram ;;
             *)      python agent_free.py ;;
           esac
 

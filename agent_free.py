@@ -401,7 +401,8 @@ def normalize(res):
     gap = vals[order[0]] - vals[order[1]]
     res["home_win"], res["draw"], res["away_win"] = vals
     res["pick"] = labels[order[0]]
-    res["confidence"] = "rendah" if gap < 8 else "sedang" if gap < 20 else "tinggi"
+    top = vals[order[0]]            # label dari peluang tertinggi: tinggi >= 60%, sedang 50-60%, rendah < 50%
+    res["confidence"] = "tinggi" if top >= 60 else "sedang" if top >= 50 else "rendah"
     return res
 
 
@@ -529,7 +530,7 @@ def track_record_line():
     n = len(done)
     ok = sum(r["correct"] == "1" for r in done)
     line = f"📈 <b>Rekor agent:</b> {ok}/{n} benar ({ok / n * 100:.0f}%)"
-    strong = [r for r in done if r["confidence"] in ("sedang", "tinggi")]
+    strong = [r for r in done if _conf(r) in ("sedang", "tinggi")]
     if strong:
         sok = sum(r["correct"] == "1" for r in strong)
         line += f"\n🎯 Sinyal kuat: {sok}/{len(strong)} ({sok / len(strong) * 100:.0f}%)"
@@ -581,6 +582,14 @@ def log_prediction(match, res, msg_id=None):
     })
     write_preds(rows)
 
+def _conf(r):
+    """Label keyakinan dari peluang tertinggi, sama untuk riwayat lama maupun baru."""
+    try:
+        top = max(float(r["p_home"]), float(r["p_draw"]), float(r["p_away"]))
+    except Exception:
+        return r.get("confidence") or "rendah"
+    return "tinggi" if top >= 60 else "sedang" if top >= 50 else "rendah"
+
 def _nm(r, side):
     """Nama tim singkat untuk tampilan (pakai nama pendek kalau ada)."""
     name = r.get(f"{side}_s") or r.get(side) or "?"
@@ -599,10 +608,10 @@ def format_result_msg(r):
         hs, as_ = "?", "?"
     ok = r["correct"] == "1"
     names = {"home": f"{h} menang", "away": f"{a} menang", "draw": "Seri"}
-    lean = "condong ke " if r["confidence"] == "rendah" and r["pick"] != "draw" else ""
+    lean = "condong ke " if _conf(r) == "rendah" and r["pick"] != "draw" else ""
     prob = {"home": r["p_home"], "draw": r["p_draw"], "away": r["p_away"]}[r["outcome"]]
     verdict = "✅ <b>TEBAKAN BENAR</b>" if ok else "❌ <b>TEBAKAN MELESET</b>"
-    if not ok and r["confidence"] == "rendah":
+    if not ok and _conf(r) == "rendah":
         verdict += "  <i>(sinyal lemah)</i>"
     lines = [
         f"🏁 <b>FULL TIME</b>  •  {esc(r['competition'])}",
@@ -610,7 +619,7 @@ def format_result_msg(r):
         f"⚽ <b>{h}</b>  <code>{esc(hs)} – {esc(as_)}</code>  <b>{a}</b>",
         LINE,
         verdict,
-        f"🎯 Prediksi: {lean}{names[r['pick']]} (keyakinan {esc(r['confidence'])})",
+        f"🎯 Prediksi: {lean}{names[r['pick']]} (keyakinan {esc(_conf(r))})",
         f"🏆 Hasil: {names[r['outcome']]}",
         f"📊 Peluang yang kami beri untuk hasil ini: {float(prob):.0f}%",
     ]
@@ -716,10 +725,10 @@ def build_report():
     recent = []
     for r in reversed(done[-5:]):
         icon = "✅" if r["correct"] == "1" else "❌"
-        lean = "condong " if r["confidence"] == "rendah" and r["pick"] != "draw" else ""
+        lean = "condong " if _conf(r) == "rendah" and r["pick"] != "draw" else ""
         recent.append(
             f"{icon} {esc(_nm(r, 'home'))} {esc(r['final_score'])} {esc(_nm(r, 'away'))}\n"
-            f"      <i>tebakan: {lean}{esc(_pick_label(r, r['pick']))} ({esc(r['confidence'])})</i>"
+            f"      <i>tebakan: {lean}{esc(_pick_label(r, r['pick']))} ({esc(_conf(r))})</i>"
         )
     last = done[-10:]
     streak = "".join("🟢" if r["correct"] == "1" else "🔴" for r in last)
@@ -734,7 +743,7 @@ def build_report():
         LINE, "🔒 <b>PER KEYAKINAN</b>",
     ]
     for c in ("tinggi", "sedang", "rendah"):
-        sub = [r for r in done if r["confidence"] == c]
+        sub = [r for r in done if _conf(r) == c]
         if sub:
             a = sum(r["correct"] == "1" for r in sub) / len(sub) * 100
             lines.append(f"{CONF_ICON[c]} <code>{c:<7} {bar(a)} {a:>3.0f}%</code>  ({len(sub)} laga)")
