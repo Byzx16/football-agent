@@ -59,6 +59,6 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 575393,2026-11-04T20:00:00Z,UEFA Champions League,Racing Club de Lens,Como 1907,30,25,45,away,rendah,1-1,,,,25,25,50,32.3,26.5,41.3,158,RC Lens,Como 1907,1.7,1.8,86.1,67.4,45.7,67.8,38.1,22.4,39.5,gemini
 575389,2026-11-04T20:00:00Z,UEFA Champions League,SK Slavia Praha,Arsenal FC,14,19,67,away,tinggi,0-2,,,,15,20,65,14.9,18.0,67.1,159,Slavia Praha,Arsenal,0.8,2.2,79.5,56.8,34.4,47.9,11.9,18.5,69.6,gemini
 575390,2026-11-04T20:00:00Z,UEFA Champions League,PSV,Club Brugge KV,44,26,30,home,rendah,2-1,,,,40,28,32,43.5,25.8,30.7,160,PSV,Club Brugge,2.2,1.5,88.2,71.1,50.2,68.9,53.1,20.5,26.4,gemini
-575392,2026-11-04T20:00:00Z,UEFA Champions League,FC Porto,SSC Napoli,39,28,33,home,rendah,1-1,,,,45,30,25,34.4,27.4,38.2,161,Porto,Napoli,1.4,1.7,81.7,60.1,37.7,61.6,31.2,23.5,45.3,gemini
+575392,2026-11-04T20:00:00Z,UEFA Champions League,FC Porto,SSC Napoli,39,28,33,home,rendah,1-1,home,4-1,1,45,30,25,34.4,27.4,38.2,161,Porto,Napoli,1.4,1.7,81.7,60.1,37.7,61.6,31.2,23.5,45.3,gemini
 575388,2026-11-04T20:00:00Z,UEFA Champions League,RB Leipzig,Manchester City FC,29,25,46,away,rendah,2-1,,,,20,25,55,34.9,27.5,37.6,162,RB Leipzig,Man City,2.0,1.9,90.3,75.1,55.2,73.8,42.0,20.9,37.1,gemini
-575394,2026-11-04T20:00:00Z,UEFA Champions League,Viking FK,Sabah FK,52,24,24,home,sedang,2-1,,,,55,25,20,45.9,25.1,29.0,163,Viking,Sabah FK,2.2,1.5,88.7,72.1,51.3,69.4,54.3,20.2,25.5,gemini
+575394,2026-11-04T20:00:00Z,UEFA Champions League,Viking FK,Sabah FK,52,24,24,home,sedang,2-1,home,4-1,1,55,25,20,45.9,25.1,29.0,163,Viking,Sabah FK,2.2,1.5,88.7,72.1,51.3,69.4,54.3,20.2,25.5,gemini
