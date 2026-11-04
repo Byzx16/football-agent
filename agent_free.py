@@ -846,9 +846,17 @@ WINNER_MAP = {"HOME_TEAM": "home", "AWAY_TEAM": "away", "DRAW": "draw"}
 def _load_parlays():
     try:
         with open(PARLAY_FILE, encoding="utf-8") as f:
-            return json.load(f)
+            items = json.load(f)
     except Exception:
         return []
+    # Kombinasi harian yang isinya SEMUA laga UCL dibuang kalau hari yang sama sudah punya kombinasi UCL
+    # sendiri (jenis sama), supaya tidak dihitung dobel.
+    ucl_keys = {(x.get("date"), x.get("kind")) for x in items if x.get("scope") == "ucl"}
+    def dup(x):
+        legs = x.get("legs") or []
+        return (x.get("scope", "all") == "all" and bool(legs) and (x.get("date"), x.get("kind")) in ucl_keys
+                and all("champions" in (l.get("competition") or "").lower() for l in legs))
+    return [x for x in items if not dup(x)]
 
 def _save_parlays(items):
     with open(PARLAY_FILE, "w", encoding="utf-8") as f:
@@ -1110,6 +1118,14 @@ def run_daily_parlay(manual=False, scope="all"):
         return False
     ucl = scope == "ucl"
     ms = None
+    if not ucl:
+        # UCL punya kombinasi sendiri (UCL Aman dan UCL Mix), jadi kombinasi harian hanya memuat liga domestik
+        allm = matches_in_window()
+        if allm is None:
+            return False
+        ms = [m for m in allm if m["competition"]["code"] != "CL"]
+        if not ms:
+            return "none"
     if ucl:
         ms = matches_in_window(20, UCL_WINDOW_H * 60, "CL")
         if ms is None:
@@ -1172,10 +1188,12 @@ def maybe_send_daily_parlay():
     if last == today:
         return
     try:
-        if run_daily_parlay():
+        r = run_daily_parlay()
+        if r:                                  # True (terkirim) atau "none" (tidak ada laga domestik)
             with open(PARLAY_LAST_FILE, "w") as f:
                 f.write(today)
-            print("Kombinasi harian terkirim.")
+            if r is True:
+                print("Kombinasi harian terkirim.")
     except Exception as e:
         print("Kombinasi harian gagal ->", e)
 

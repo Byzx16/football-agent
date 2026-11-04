@@ -230,10 +230,12 @@ function parlays(){
 }
 
 function render(){
-  if(!ROWS.length){$('#app').innerHTML='<p class="empty">Belum ada tebakan tercatat. Tebakan pertama muncul saat ada laga 25 sampai 75 menit sebelum kick-off.</p>';return}
   const RW=VR(),nu=ROWS.filter(isUCL).length;
   $('#nu').textContent=nu?'('+nu+')':'';
-  if(!RW.length){$('#app').innerHTML='<p class="empty">Belum ada tebakan Liga Champions. Analisa muncul saat ada laga UCL, biasanya Selasa dan Rabu dini hari WIB.</p>';return}
+  if(!RW.length){
+    const vp=VP();
+    $('#app').innerHTML=`<p class="empty">${S.cat=='ucl'?'Belum ada tebakan per laga untuk UEFA Champions League. Analisa per laga muncul sekitar 1 jam sebelum kick-off, biasanya Selasa dan Rabu dini hari WIB.':'Belum ada tebakan per laga. Tebakan pertama muncul saat ada laga 25 sampai 75 menit sebelum kick-off.'}</p>`+(vp.length?`<section><h2>Sedang berjalan</h2><h3 class="sh">Kombinasi harian</h3>${runningCombos()}</section><section><h2>Riwayat kombinasi</h2>${parlays()}</section>`:'');
+    return}
   const done=RW.filter(r=>r.outcome),n=done.length,pend=RW.length-n,
   hit=done.filter(r=>r.correct=='1').length,acc=n?hit/n*100:0,base=n?done.filter(r=>r.outcome=='home').length/n*100:0,
   strong=done.filter(r=>cf(r)!='rendah'),sh=strong.filter(r=>r.correct=='1').length,
@@ -334,6 +336,7 @@ async function load(){
     LM=r.headers.get('last-modified');
     ROWS=csv(await r.text()).filter(x=>x.match_id).sort((a,b)=>a.kickoff_utc<b.kickoff_utc?-1:1);
     try{const p=await fetch('parlays.json?t='+t,{cache:'no-store'});PAR=p.ok?await p.json():[]}catch(e){PAR=[]}
+    {const us=new Set(PAR.filter(x=>x.scope=='ucl').map(x=>x.date+'|'+x.kind));PAR=PAR.filter(x=>!((x.scope||'all')=='all'&&(x.legs||[]).length&&us.has(x.date+'|'+x.kind)&&x.legs.every(l=>/champions/i.test(l.competition||''))))}
     try{const c=await fetch('crests.json?t='+t);CR=c.ok?((await c.json()).crests||{}):{}}catch(e){CR={}}
     try{const c=await fetch('analyses.json?t='+t);AN=c.ok?await c.json():{}}catch(e){AN={}}
     render();ago();
