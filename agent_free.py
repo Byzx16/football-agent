@@ -17,7 +17,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 FOOTBALL_DATA_KEY = os.environ["FOOTBALL_DATA_KEY"]
-GEMINI_KEY        = os.environ["GEMINI_API_KEY"]
+GEMINI_KEY        = os.environ["GEMINI_API_KEY"]   # boleh beberapa kunci, dipisah koma (dipakai bergantian)
+GEMINI_KEYS       = [k.strip() for k in GEMINI_KEY.split(",") if k.strip()]
 TELEGRAM_TOKEN    = os.environ["TELEGRAM_BOT_TOKEN"]
 TELEGRAM_CHAT_ID  = os.environ["TELEGRAM_CHAT_ID"]
 
@@ -57,7 +58,7 @@ PRED_FIELDS = ["match_id", "kickoff_utc", "competition", "home", "away",
                "g_home", "g_draw", "g_away", "e_home", "e_draw", "e_away",
                "tg_msg_id", "home_s", "away_s",
                "lam_h", "lam_a", "o15", "o25", "o35", "btts",
-               "x_home", "x_draw", "x_away"]
+               "x_home", "x_draw", "x_away", "ai_src"]
 
 FD = "https://api.football-data.org/v4"
 FD_HEADERS = {"X-Auth-Token": FOOTBALL_DATA_KEY}
@@ -366,7 +367,26 @@ Balas HANYA JSON valid (tanpa markdown) dengan format:
  "key_factors": ["...", "..."], "risks": ["...", "..."],
  "likely_score": "x-y", "summary": "2-3 kalimat Bahasa Indonesia"}"""
 
-def gemini_call(prompt, use_search=True):
+NOSEARCH_NOTE = ("\n\nCATATAN: pencarian web TIDAK tersedia untukmu. Gunakan hanya data di atas dan pengetahuan umum; "
+                 "jangan mengarang berita, cedera, atau lineup. Tulis di risks bahwa info cedera dan lineup terbaru tidak diketahui.")
+
+# Penyedia cadangan (API kompatibel OpenAI), dicoba berurutan kalau semua kunci Gemini habis.
+# Isi kuncinya lewat environment variable; yang kosong dilewati. Nama model bisa diganti lewat env bila berubah.
+FALLBACKS = [
+    ("groq", "GROQ_API_KEY", "https://api.groq.com/openai/v1", os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")),
+    ("mistral", "MISTRAL_API_KEY", "https://api.mistral.ai/v1", os.getenv("MISTRAL_MODEL", "mistral-small-latest")),
+    ("openrouter", "OPENROUTER_API_KEY", "https://openrouter.ai/api/v1", os.getenv("OPENROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct:free")),
+    ("cerebras", "CEREBRAS_API_KEY", "https://api.cerebras.ai/v1", os.getenv("CEREBRAS_MODEL", "llama-3.3-70b")),
+]
+_DEAD = {}      # nama penyedia/kunci -> waktu sampai boleh dicoba lagi (batas per menit biasanya pulih sendiri)
+
+def _alive(name):
+    return time.time() >= _DEAD.get(name, 0)
+
+def _mark_dead(name, secs=90):
+    _DEAD[name] = time.time() + secs
+
+def gemini_call(prompt, use_search=True, key=None):
     body = {
         "systemInstruction": {"parts": [{"text": SYSTEM}]},
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
@@ -379,9 +399,59 @@ def gemini_call(prompt, use_search=True):
     if use_search:
         body["tools"] = [{"google_search": {}}]
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
-    return requests.post(url, headers={"x-goog-api-key": GEMINI_KEY,
+    return requests.post(url, headers={"x-goog-api-key": key or GEMINI_KEYS[0],
                                        "Content-Type": "application/json"},
                          json=body, timeout=120)
+
+def _gemini_text(r):
+    cands = r.json().get("candidates") or []
+    if not cands:
+        return ""
+    return "".join(p.get("text", "") for p in ((cands[0].get("content") or {}).get("parts") or []))
+
+def _compat_call(base, key, model, prompt):
+    return requests.post(f"{base}/chat/completions",
+                         headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+                         json={"model": model, "temperature": 0.4, "max_tokens": 2000,
+                               "messages": [{"role": "system", "content": SYSTEM},
+                                            {"role": "user", "content": prompt}]},
+                         timeout=120)
+
+def llm_generate(prompt):
+    """Minta analisa ke AI: semua kunci Gemini (dengan lalu tanpa pencarian), lalu penyedia cadangan.
+    Mengembalikan (teks, sumber, catatan untuk pembaca)."""
+    errs = []
+    for i, key in enumerate(GEMINI_KEYS):
+        name = f"gemini#{i + 1}"
+        if not _alive(name):
+            continue
+        for use_search in (True, False):
+            r = gemini_call(prompt if use_search else prompt + NOSEARCH_NOTE, use_search, key)
+            if r.status_code == 200:
+                text = _gemini_text(r)
+                if text.strip():
+                    return (text, "gemini", "") if use_search else (text, "gemini-nosearch", "AI tanpa pencarian berita (kuota pencarian habis)")
+                errs.append(f"{name}: balasan kosong")
+            else:
+                errs.append(f"{name} {'dengan' if use_search else 'tanpa'} search: {r.status_code}")
+        _mark_dead(name)
+    for prov, env, base, model in FALLBACKS:
+        for j, key in enumerate(k.strip() for k in os.getenv(env, "").split(",") if k.strip()):
+            name = f"{prov}#{j + 1}"
+            if not _alive(name):
+                continue
+            try:
+                r = _compat_call(base, key, model, prompt + NOSEARCH_NOTE)
+                text = r.json()["choices"][0]["message"]["content"] if r.status_code == 200 else ""
+            except Exception as e:
+                r, text = None, ""
+                errs.append(f"{name}: {type(e).__name__}")
+            if text and text.strip():
+                return text, prov, f"AI cadangan ({prov}), tanpa pencarian berita"
+            if r is not None:
+                errs.append(f"{name}: {r.status_code}")
+            _mark_dead(name)
+    raise RuntimeError("Semua penyedia AI gagal: " + "; ".join(errs[:8]))
 
 def analyze(match, ctx):
     h, a = match["homeTeam"]["name"], match["awayTeam"]["name"]
@@ -394,31 +464,13 @@ Form 5 laga terakhir {h}: {ctx['home_form']}
 Form 5 laga terakhir {a}: {ctx['away_form']}
 
 Berikan analisa dalam format JSON."""
-
-    r = gemini_call(prompt, use_search=True)
-    if r.status_code != 200:
-        print(f"[gemini] dengan search gagal ({r.status_code}): {r.text[:200]}")
-        r = gemini_call(prompt, use_search=False)
-    if r.status_code == 429:
-        print("[gemini] kena batas kuota, tunggu 45 detik lalu coba sekali lagi...")
-        time.sleep(45)
-        r = gemini_call(prompt, use_search=False)
-    if r.status_code != 200:
-        raise RuntimeError(f"Gemini error {r.status_code}: {r.text[:300]}")
-    data = r.json()
-    cands = data.get("candidates") or []
-    if not cands:
-        raise RuntimeError(f"Gemini tidak memberi kandidat jawaban: {json.dumps(data)[:500]}")
-    cand = cands[0]
-    parts = (cand.get("content") or {}).get("parts") or []
-    text = "".join(p.get("text", "") for p in parts)
+    text, src, note = llm_generate(prompt)
     m = re.search(r"\{.*\}", text, re.S)
     if not m:
-        raise RuntimeError(
-            f"Tidak ada JSON di balasan Gemini. finishReason={cand.get('finishReason')} "
-            f"balasan={text[:500]!r}"
-        )
-    return normalize(json.loads(m.group(0)))
+        raise RuntimeError(f"Tidak ada JSON di balasan AI ({src}). balasan={text[:500]!r}")
+    res = normalize(json.loads(m.group(0)))
+    res["ai_src"], res["ai_note"] = src, note
+    return res
 
 def normalize(res):
     """Rapikan probabilitas jadi total 100, lalu tentukan pick & keyakinan dari angkanya
@@ -523,6 +575,7 @@ def format_msg(match, res):
             f"🔢 Skor paling mungkin: " + ", ".join(f"{sc} ({pp:.0f}%)" for sc, pp in gp["top"]) + "\n"
             f"🎯 Sinyal gol terkuat: <b>{lean_name}</b> ({lean_p:.0f}%, rata-rata liga {lean_b:.0f}%)\n{LINE}\n"
         )
+    ai_line = f"<i>{esc(res['ai_note'])}</i>\n" if res.get("ai_note") else ""
     factors = "\n".join(f"✅ {esc(x)}" for x in res.get("key_factors", [])[:4])
     risks = "\n".join(f"⚠️ {esc(x)}" for x in res.get("risks", [])[:3])
 
@@ -530,7 +583,7 @@ def format_msg(match, res):
         f"⚽ <b>{esc(h_full)} vs {esc(a_full)}</b>\n"
         f"🏆 {esc(match['competition']['name'])}  •  🕐 {ko_wib.day} {BULAN[ko_wib.month - 1]}, {ko_wib:%H:%M} WIB\n"
         f"{LINE}\n"
-        f"📊 <b>{title}</b>\n{prob_lines}\n{models}"
+        f"📊 <b>{title}</b>\n{prob_lines}\n{models}{ai_line}"
         f"{LINE}\n"
         f"{signal}\n"
         f"{CONF_ICON[conf]} Keyakinan: <b>{conf}</b>   🔢 Skor mungkin: <b>{esc(res.get('likely_score', '-'))}</b>\n"
@@ -615,6 +668,7 @@ def log_prediction(match, res, msg_id=None):
         "p_home": res["home_win"], "p_draw": res["draw"], "p_away": res["away_win"],
         "pick": res["pick"], "confidence": res["confidence"],
         "likely_score": res.get("likely_score", ""),
+        "ai_src": res.get("ai_src", ""),
         "outcome": "", "final_score": "", "correct": "",
         **{k: round(v, 1) for k, v in zip(("g_home", "g_draw", "g_away"), res.get("g") or ())},
         **{k: round(v, 1) for k, v in zip(("e_home", "e_draw", "e_away"), res.get("e") or ())},
@@ -1054,6 +1108,8 @@ def format_leg_detail(i, n, b, uses):
                   "🔢 Skor paling mungkin: " + ", ".join(f"{sc} ({pp:.0f}%)" for sc, pp in gp["top"]),
                   f"🎯 Sinyal gol terkuat: <b>{lean_name}</b> ({lean_p:.0f}%, rata-rata liga {lean_b:.0f}%)"]
     if res and not res.get("ai_failed"):
+        if res.get("ai_note"):
+            lines.append(f"<i>{esc(res['ai_note'])}</i>")
         factors = "\n".join(f"✅ {esc(x)}" for x in (res.get("key_factors") or [])[:4])
         risks = "\n".join(f"⚠️ {esc(x)}" for x in (res.get("risks") or [])[:3])
         lines += [LINE, f"💡 <b>FAKTOR KUNCI</b>\n{factors}", f"🚧 <b>RISIKO</b>\n{risks}",
