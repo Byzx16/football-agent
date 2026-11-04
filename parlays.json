@@ -1626,8 +1626,22 @@
   },
   "p_comb": 0.6064,
   "tg_msg_id": 148,
-  "outcome": "",
-  "legs_hit": ""
+  "outcome": "win",
+  "legs_hit": "3/3",
+  "leg_results": {
+   "575386": {
+    "score": "2-3",
+    "hit": true
+   },
+   "575388": {
+    "score": "2-3",
+    "hit": true
+   },
+   "575387": {
+    "score": "3-2",
+    "hit": true
+   }
+  }
  },
  {
   "id": "2026-11-04-ucl-mix",
@@ -1964,7 +1978,29 @@
   },
   "p_comb": 0.2216,
   "tg_msg_id": 148,
-  "outcome": "",
-  "legs_hit": ""
+  "outcome": "win",
+  "legs_hit": "5/5",
+  "leg_results": {
+   "575388": {
+    "score": "2-3",
+    "hit": true
+   },
+   "575387": {
+    "score": "3-2",
+    "hit": true
+   },
+   "575394": {
+    "score": "4-1",
+    "hit": true
+   },
+   "575389": {
+    "score": "1-2",
+    "hit": true
+   },
+   "575390": {
+    "score": "1-2",
+    "hit": true
+   }
+  }
  }
 ]
