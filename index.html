@@ -97,7 +97,20 @@ body.ucl .board:before,body.ucl .board:after{border-color:rgba(160,190,255,.14)}
 .uclogo{display:none}
 body.ucl .uclogo{display:block;height:clamp(96px,17vw,156px);width:auto;max-width:40vw;object-fit:contain;filter:brightness(0) invert(1)}
 .ucd{display:none;margin-top:6px}
-body.ucl .ucd{display:block}
+body.ucl .ucd,body.uel .ucd{display:block}
+body.uel{--pitch:#050505;--turf:#1a0c05;--chalk:#fff3ea;--mute:#d2ad98;--amber:#ff6a00;--abg:rgba(255,106,0,.16);--line:rgba(255,170,120,.24);--no:#ff4f81;--dg:"Montserrat","Arial Black",sans-serif;font-family:"Montserrat",system-ui,sans-serif;font-size:15px;background:linear-gradient(180deg,rgba(0,0,0,.35) 0,rgba(0,0,0,.78) 480px,rgba(0,0,0,.92) 100%),url(uel-bg.jpg) center top/cover fixed,#050505}
+body.uel h1,body.uel h2{text-transform:uppercase;letter-spacing:.02em;font-weight:800}
+body.uel h1{font-size:clamp(26px,5.2vw,46px);line-height:1.08}
+body.uel h2{font-size:22px}
+body.uel .dg{font-weight:800;font-size:clamp(46px,11vw,104px);letter-spacing:-.02em;text-shadow:0 0 30px rgba(255,106,0,.55)}
+body.uel .side.b .dg{text-shadow:0 0 22px rgba(255,243,234,.25)}
+body.uel .lb{font-weight:800;font-size:19px}
+body.uel .strip b{font-weight:800;font-size:32px}
+body.uel .sc,body.uel .ch b,body.uel .pv b,body.uel .sh{font-weight:800}
+body.uel .board{background:rgba(0,0,0,.72);backdrop-filter:blur(6px);box-shadow:inset 0 0 0 6px rgba(40,18,6,.85),inset 0 0 0 7px var(--line)}
+body.uel .board:before,body.uel .board:after{border-color:rgba(255,170,120,.14)}
+.uelogo{display:none}
+body.uel .uelogo{display:block;height:clamp(96px,17vw,168px);width:auto;max-width:40vw;object-fit:contain}
 .cal{display:grid;grid-template-columns:110px 1fr auto;gap:6px 14px;align-items:center;margin-top:12px;font-size:14px}
 .pair{display:grid;gap:4px}
 .pair .bar{height:7px}
@@ -189,12 +202,12 @@ footer{border-top:1px solid var(--line);padding-top:20px;color:var(--mute);font-
 <body>
 <div class="wrap">
 <header>
-  <div class="hd"><img class="uclogo" src="ucl-logo.png" alt="UEFA Champions League" onerror="if(!this.dataset.t){this.dataset.t=1;this.src='ucl-logo.svg'}else{this.style.display='none'}"><div><h1 id="ttl">Football Agent</h1><p class="sub" id="sb">Pantauan akurasi tebakan dari semua liga, diperbarui otomatis dari data di repo.</p></div></div>
+  <div class="hd"><img class="uelogo" src="uel-logo.png" alt="UEFA Europa League" onerror="this.style.display='none'"><img class="uclogo" src="ucl-logo.png" alt="UEFA Champions League" onerror="if(!this.dataset.t){this.dataset.t=1;this.src='ucl-logo.svg'}else{this.style.display='none'}"><div><h1 id="ttl">Football Agent</h1><p class="sub" id="sb">Pantauan akurasi tebakan dari semua liga, diperbarui otomatis dari data di repo.</p></div></div>
   <button class="pill" id="rf" title="Muat ulang data"><i class="live"></i>Data terbaru: <span id="up">memuat</span></button>
 </header>
-<nav class="cats" id="cats" aria-label="Kategori"><button class="cat" data-c="all" aria-pressed="true">Semua liga</button><button class="cat" data-c="ucl" aria-pressed="false">★ UEFA Champions League <span id="nu"></span></button></nav>
+<nav class="cats" id="cats" aria-label="Kategori"><button class="cat" data-c="all" aria-pressed="true">Semua liga</button><button class="cat" data-c="ucl" aria-pressed="false">★ UEFA Champions League <span id="nu"></span></button><button class="cat" data-c="uel" aria-pressed="false">★ UEFA Europa League <span id="nu2"></span></button></nav>
 <main id="app"><p class="empty">Memuat data…</p></main>
-<footer>Ini analisa probabilitas, bukan jaminan hasil dan bukan saran taruhan. Waktu ditampilkan dalam WIB.<p class="ucd">Tampilan UCL ini hanya terinspirasi UEFA Champions League dan tidak berafiliasi dengan UEFA. Nama dan logo adalah merek dagang pemiliknya.</p></footer>
+<footer>Ini analisa probabilitas, bukan jaminan hasil dan bukan saran taruhan. Waktu ditampilkan dalam WIB.<p class="ucd">Tampilan kategori ini hanya terinspirasi kompetisi UEFA dan tidak berafiliasi dengan UEFA. Nama dan logo adalah merek dagang pemiliknya.</p></footer>
 </div>
 <script>
 const $=s=>document.querySelector(s),N=parseFloat,K=['home','draw','away'],
@@ -291,11 +304,11 @@ function legRow(x,l){
 function comboCard(x){
   const lab={win:['ok','Menang'],lose:['no','Gagal'],void:['wait','Dibatalkan']}[x.outcome]||['wait','Berjalan'],
   legs=[...(x.legs||[])].sort((a,b)=>a.kickoff_utc<b.kickoff_utc?-1:1);
-  return `<div class="cb"><div class="ch"><b>${(x.scope=='ucl'?'UCL ':'')+(x.kind=='aman'?'Aman':'Mix')}</b><span class="tag ${lab[0]}">${lab[1]}</span><small>peluang semua benar ${Math.round(N(x.p_comb||0)*100)}%${x.legs_hit?', '+esc(x.legs_hit)+' benar':''}</small></div>${legs.map(l=>legRow(x,l)).join('')}</div>`}
+  return `<div class="cb"><div class="ch"><b>${({ucl:'UCL ',uel:'UEL '}[x.scope]||'')+(x.kind=='aman'?'Aman':'Mix')}</b><span class="tag ${lab[0]}">${lab[1]}</span><small>peluang semua benar ${Math.round(N(x.p_comb||0)*100)}%${x.legs_hit?', '+esc(x.legs_hit)+' benar':''}</small></div>${legs.map(l=>legRow(x,l)).join('')}</div>`}
 
 const KORD={aman:0,mix:1};
 function combosHTML(list){
-  const s=[...list].sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:((a.scope=='ucl'?1:0)-(b.scope=='ucl'?1:0))||((KORD[a.kind]||0)-(KORD[b.kind]||0)));
+  const s=[...list].sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:(({all:0,ucl:1,uel:2}[a.scope||'all']||0)-({all:0,ucl:1,uel:2}[b.scope||'all']||0))||((KORD[a.kind]||0)-(KORD[b.kind]||0)));
   let out='',last='';
   s.forEach(x=>{if(x.date!=last){last=x.date;out+=`<h4 class="dh">${new Date(x.date+'T00:00:00+07:00').toLocaleDateString('id-ID',{timeZone:'Asia/Jakarta',weekday:'long',day:'numeric',month:'long'})}</h4>`}out+=comboCard(x)});
   return out}
@@ -306,17 +319,17 @@ function parlays(){
   const set=VP().filter(x=>x.outcome);
   if(!set.length)return '<p class="empty">Belum ada kombinasi yang selesai.</p>';
   const fin=set.filter(x=>x.outcome=='win'||x.outcome=='lose');
-  const sum=[['aman','Aman'],['mix','Mix'],['ucl-aman','UCL Aman'],['ucl-mix','UCL Mix']].map(([k,l])=>{const s=fin.filter(x=>((x.scope=='ucl'?'ucl-':'')+x.kind)==k);if(!s.length)return '';const w=s.filter(x=>x.outcome=='win').length,e=s.reduce((a,x)=>a+N(x.p_comb||0),0),ok=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[0]||0),0),tt=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[1]||0),0);return `<p>${l}: menang ${w} dari ${s.length} kombinasi (perkiraan ${F2(e,1)}), pilihan benar ${ok} dari ${tt}.</p>`}).join('');
+  const sum=[['aman','Aman'],['mix','Mix'],['ucl-aman','UCL Aman'],['ucl-mix','UCL Mix'],['uel-aman','UEL Aman'],['uel-mix','UEL Mix']].map(([k,l])=>{const s=fin.filter(x=>((x.scope&&x.scope!='all'?x.scope+'-':'')+x.kind)==k);if(!s.length)return '';const w=s.filter(x=>x.outcome=='win').length,e=s.reduce((a,x)=>a+N(x.p_comb||0),0),ok=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[0]||0),0),tt=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[1]||0),0);return `<p>${l}: menang ${w} dari ${s.length} kombinasi (perkiraan ${F2(e,1)}), pilihan benar ${ok} dari ${tt}.</p>`}).join('');
   const recent=[...set].sort((a,b)=>a.date<b.date?1:-1).slice(0,10);
   return (sum?`<div class="sub" style="margin-bottom:8px">${sum}</div>`:'')+combosHTML(recent);
 }
 
 function render(){
-  const RW=VR(),nu=ROWS.filter(isUCL).length;
-  $('#nu').textContent=nu?'('+nu+')':'';
+  const RW=VR();
+  ['ucl','uel'].forEach(c=>{const n=ROWS.filter(r=>inCat(c,r.competition)).length;$(c=='ucl'?'#nu':'#nu2').textContent=n?'('+n+')':''});
   if(!RW.length){
     const vp=VP();
-    $('#app').innerHTML=`<p class="empty">${S.cat=='ucl'?'Belum ada tebakan per laga untuk UEFA Champions League. Analisa per laga muncul sekitar 1 jam sebelum kick-off, biasanya Selasa dan Rabu dini hari WIB.':'Belum ada tebakan per laga. Tebakan pertama muncul saat ada laga 25 sampai 75 menit sebelum kick-off.'}</p>`+(vp.length?`<section><h2>Sedang berjalan</h2><h3 class="sh">Kombinasi harian</h3>${runningCombos()}</section><section><h2>Riwayat kombinasi</h2>${parlays()}</section>`:'');
+    $('#app').innerHTML=`<p class="empty">${S.cat!='all'?'Belum ada tebakan per laga untuk '+CATS[S.cat].title+'. Analisa per laga muncul sekitar 1 jam sebelum kick-off, '+CATS[S.cat].days+'.':'Belum ada tebakan per laga. Tebakan pertama muncul saat ada laga 25 sampai 75 menit sebelum kick-off.'}</p>`+(vp.length?`<section><h2>Sedang berjalan</h2><h3 class="sh">Kombinasi harian</h3>${runningCombos()}</section><section><h2>Riwayat kombinasi</h2>${parlays()}</section>`:'');
     return}
   const done=RW.filter(r=>r.outcome),n=done.length,pend=RW.length-n,
   hit=done.filter(r=>r.correct=='1').length,acc=n?hit/n*100:0,base=n?done.filter(r=>r.outcome=='home').length/n*100:0,
@@ -413,26 +426,30 @@ async function load(){
     LM=r.headers.get('last-modified');
     ROWS=csv(await r.text()).filter(x=>x.match_id).sort((a,b)=>a.kickoff_utc<b.kickoff_utc?-1:1);
     try{const p=await fetch('parlays.json?t='+t,{cache:'no-store'});PAR=p.ok?await p.json():[]}catch(e){PAR=[]}
-    {const us=new Set(PAR.filter(x=>x.scope=='ucl').map(x=>x.date+'|'+x.kind));PAR=PAR.filter(x=>!((x.scope||'all')=='all'&&(x.legs||[]).length&&us.has(x.date+'|'+x.kind)&&x.legs.every(l=>/champions/i.test(l.competition||''))))}
+    ['ucl','uel'].forEach(c=>{const us=new Set(PAR.filter(x=>x.scope==c).map(x=>x.date+'|'+x.kind));PAR=PAR.filter(x=>!((x.scope||'all')=='all'&&(x.legs||[]).length&&us.has(x.date+'|'+x.kind)&&x.legs.every(l=>inCat(c,l.competition))))});
     try{const c=await fetch('crests.json?t='+t);CR=c.ok?((await c.json()).crests||{}):{}}catch(e){CR={}}
     try{const c=await fetch('analyses.json?t='+t);AN=c.ok?await c.json():{}}catch(e){AN={}}
     render();ago();
   }catch(e){$('#app').innerHTML='<p class="err">Data belum bisa dimuat. Buka halaman ini lewat alamat GitHub Pages, bukan dengan klik dua kali pada file, dan pastikan predictions.csv ada di folder yang sama.</p>'}
 }
-const isUCL=r=>/champions/i.test(r.competition||''),
-VR=()=>S.cat=='ucl'?ROWS.filter(isUCL):ROWS,
-VP=()=>S.cat=='ucl'?PAR.filter(x=>(x.legs||[]).some(l=>/champions/i.test(l.competition||''))):PAR;
+const CATS={
+  ucl:{re:/champions league/i,title:'UEFA Champions League',days:'biasanya Selasa dan Rabu dini hari WIB',theme:'#040c26'},
+  uel:{re:/europa league/i,ex:/conference/i,title:'UEFA Europa League',days:'biasanya Kamis dini hari WIB',theme:'#050505'}};
+const inCat=(c,name)=>{const k=CATS[c];name=name||'';return !k||(k.re.test(name)&&!(k.ex&&k.ex.test(name)))},
+VR=()=>S.cat=='all'?ROWS:ROWS.filter(r=>inCat(S.cat,r.competition)),
+VP=()=>S.cat=='all'?PAR:PAR.filter(x=>(x.legs||[]).some(l=>inCat(S.cat,l.competition)));
 function applyCat(){
-  const u=S.cat=='ucl';
-  document.body.classList.toggle('ucl',u);
+  const k=CATS[S.cat];
+  document.body.classList.toggle('ucl',S.cat=='ucl');
+  document.body.classList.toggle('uel',S.cat=='uel');
   document.querySelectorAll('.cat').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.c==S.cat)));
-  $('#ttl').textContent=u?'UEFA Champions League':'Football Agent';
-  $('#sb').textContent=u?'Analisa tebakan khusus pertandingan UEFA Champions League, diperbarui otomatis dari data di repo.':'Pantauan akurasi tebakan dari semua liga, diperbarui otomatis dari data di repo.';
-  document.title=u?'UEFA Champions League | Football Agent':'Football Agent';
-  const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',u?'#040c26':'#0a1812');
+  $('#ttl').textContent=k?k.title:'Football Agent';
+  $('#sb').textContent=k?'Analisa tebakan khusus pertandingan '+k.title+', diperbarui otomatis dari data di repo.':'Pantauan akurasi tebakan dari semua liga, diperbarui otomatis dari data di repo.';
+  document.title=k?k.title+' | Football Agent':'Football Agent';
+  const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',k?k.theme:'#0a1812');
 }
-$('#cats').onclick=e=>{const b=e.target.closest('.cat');if(!b||b.dataset.c==S.cat)return;S.cat=b.dataset.c;S.lg=S.rs=S.q=S.d1=S.d2='';S.lim=40;history.replaceState(null,'',S.cat=='ucl'?'#ucl':location.pathname+location.search);applyCat();if(ROWS.length)render()};
-if(location.hash=='#ucl')S.cat='ucl';
+$('#cats').onclick=e=>{const b=e.target.closest('.cat');if(!b||b.dataset.c==S.cat)return;S.cat=b.dataset.c;S.lg=S.rs=S.q=S.d1=S.d2='';S.lim=40;history.replaceState(null,'',S.cat=='all'?location.pathname+location.search:'#'+S.cat);applyCat();if(ROWS.length)render()};
+if(location.hash=='#ucl'||location.hash=='#uel')S.cat=location.hash.slice(1);
 applyCat();
 $('#rf').onclick=load;
 document.addEventListener('toggle',e=>{const d=e.target;if(d.tagName=='DETAILS'&&d.dataset.k){d.open?S.pop.add(d.dataset.k):S.pop.delete(d.dataset.k)}},true);
