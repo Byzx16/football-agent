@@ -103,6 +103,48 @@ body.ucl .ucd{display:block}
 .pair .bar{height:7px}
 .cal em{font-style:normal;color:var(--mute);font-size:13px;text-align:right}
 @media(max-width:760px){.cal{grid-template-columns:90px 1fr}.cal em{grid-column:1/-1;text-align:left}}
+.mp{display:grid;gap:14px}
+.mp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mp-box{border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:rgba(232,239,228,.03);min-width:0}
+.mp-box h4{font:600 18px/1.2 var(--dg);margin-bottom:10px}
+.mp h5{font:600 15px/1.2 var(--dg);margin:10px 0 4px}
+.mp ul{padding-left:18px}.mp li{margin:3px 0}
+.sig{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:10px}
+.sig b{font:700 22px/1.1 var(--dg)}
+.tag.mt{color:var(--mute)}
+.rb{display:grid;grid-template-columns:112px 1fr 84px;align-items:center;gap:10px;margin:7px 0;font-size:14px}
+.rb span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rb.on span,.rb.on em{font-weight:700}
+.rb em{font-style:normal;text-align:right;white-space:nowrap}
+.rb em small{display:block;color:var(--mute);font-size:11px;font-weight:400}
+.rb .bar{position:relative;height:9px;overflow:visible}
+.rb .bar s{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--chalk);opacity:.85}
+.cps{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:10px}
+.cp{border:1px solid var(--line);border-radius:99px;padding:2px 10px;font-size:12.5px;color:var(--mute);white-space:nowrap}
+.cp i{font-style:normal;margin-right:6px;color:var(--chalk)}
+.note{color:var(--mute);font-size:12.5px;margin-top:8px}
+.xg{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 10px;margin-bottom:8px}
+.xg b{font:700 26px/1 var(--dg)}.xg span{color:var(--mute);font-size:13px}
+.tms,.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tn{display:flex;align-items:center;margin-bottom:2px}
+.tr{color:var(--mute);font-size:13.5px;margin-bottom:6px}
+.fr{display:flex;gap:5px;margin-bottom:6px}
+.fc{width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;border-radius:5px;font:700 12px/1 var(--dg);color:#04110a;background:#6f8478}
+.fc.w{background:var(--ok)}.fc.l{background:var(--no)}.fc.d{background:#9aa89f}
+.fl{color:var(--mute);font-size:12px;line-height:1.5}
+.dh{font:600 18px/1.2 var(--dg);margin:22px 0 4px;color:var(--mute)}
+.cb summary.lg2{display:grid;grid-template-columns:20px 84px minmax(0,1.3fr) minmax(0,1fr) auto;align-items:center;gap:6px 16px;padding:12px 0}
+.cb summary.lg2:before{content:none}
+.chev{color:var(--mute);font-size:18px;line-height:1}
+.cb details .chev:before{content:"+"}
+.cb details[open] .chev:before{content:"\2212"}
+.t-ko{font-size:13px;color:var(--mute);line-height:1.3}
+.t-ko b{display:block;font:600 20px/1.1 var(--dg);color:var(--chalk)}
+.t-tm .tm{margin:2px 0}
+.t-pk b{display:block;color:var(--amber);font-size:15px}
+.t-pk small{color:var(--mute);font-size:12.5px}
+.cb .dd{padding:4px 0 18px 36px}
+@media(max-width:760px){.mp-grid,.tms,.two{grid-template-columns:1fr}.rb{grid-template-columns:90px 1fr 74px}.cb summary.lg2{grid-template-columns:20px 1fr auto}.lg2 .t-ko{grid-column:2}.lg2 .t-pk{grid-column:3;grid-row:1;text-align:right}.lg2 .t-tm,.lg2 .t-rs{grid-column:2/-1}.cb .dd{padding-left:0}}
 .trend{display:flex;align-items:center;gap:6px;margin:12px 0 6px}
 .trend i{width:22px;height:22px;border-radius:4px;background:var(--ok)}
 .trend i.l{background:var(--no)}
@@ -198,35 +240,75 @@ function line(done){
 }
 
 const MK={over15:'Over 1.5',over25:'Over 2.5',under25:'Under 2.5',under35:'Under 3.5',btts:'Kedua tim cetak gol'},
-legText=l=>l.market&&l.market!='1x2'?MK[l.market]+(l.market=='btts'?'':' gol'):l.pick=='home'?l.home_s+' menang':l.pick=='away'?l.away_s+' menang':'Seri';
+legText=l=>l.market&&l.market!='1x2'?MK[l.market]+(l.market=='btts'?'':' gol'):l.pick=='home'?l.home_s+' menang':l.pick=='away'?l.away_s+' menang':'Seri',
+amx=a=>a.indexOf(Math.max(...a)),
+cfp=t=>t>=60?'tinggi':t>=50?'sedang':'rendah';
+
+function chips(list,team){
+  if(!list||!list.length)return '';
+  const t=String(team||'').toLowerCase().slice(0,4);
+  return list.map(s=>{
+    const m=String(s).match(/^(.*?)\s(\d+)-(\d+)\s(.*)$/);
+    if(!m)return `<span class="fc" title="${esc(s)}">?</span>`;
+    const L=m[1].toLowerCase(),R=m[4].toLowerCase(),x=+m[2],y=+m[3],
+    left=L.includes(t)||t.includes(L.slice(0,4)),right=R.includes(t)||t.includes(R.slice(0,4));
+    let k='n';
+    if(left&&!right)k=x>y?'w':x==y?'d':'l';else if(right&&!left)k=y>x?'w':x==y?'d':'l';else if(x==y)k='d';
+    return `<span class="fc ${k}" title="${esc(s)}">${{w:'M',d:'S',l:'K',n:'?'}[k]}</span>`}).join('')
+}
+
+function panel(d){
+  const P=d.p||d.s||d.e||null,top=P?amx(P):-1,cl=P?cfp(P[top]):'',
+  L=(t,x)=>x&&x.length?`<div><h5>${t}</h5><ul>${x.map(i=>`<li>${esc(i)}</li>`).join('')}</ul></div>`:'',
+  sig=P?`<div class="sig"><b>${esc([d.home_s+' menang','Seri',d.away_s+' menang'][top])}</b><span class="tag ${cl=='tinggi'?'ok':cl=='sedang'?'wait':'mt'}">keyakinan ${cl}</span></div>`:'<p class="sub">Peluang hasil laga belum tersimpan.</p>',
+  bars=P?[[d.home_s,P[0],'var(--ok)'],['Seri',P[1],'#6f8478'],[d.away_s,P[2],'var(--amber)']].map(([lab,v,c],i)=>`<div class="rb${i==top?' on':''}"><span>${esc(lab)}</span><div class="bar"><i style="--w:${v}%;--c:${c}"></i></div><em>${Math.round(v)}%</em></div>`).join(''):'',
+  chp=[['Gabungan',d.p],['AI',d.g],['Statistik',d.p?null:d.s],['Elo',d.e],['Poisson',d.x]].filter(c=>c[1]&&c[1].length).map(([l,v])=>`<span class="cp"><i>${l}</i>${v.map(x=>Math.round(N(x))).join(' / ')}</span>`).join(''),
+  G=d.goals,gb=d.gb||null,
+  gr=G?[['Over 1.5',G.o15,gb&&gb[0]],['Over 2.5',G.o25,gb&&gb[1]],['Over 3.5',G.o35,gb&&gb[2]],['Kedua tim cetak gol',G.btts,gb&&gb[3]]].map(([lab,v,b])=>`<div class="rb"><span>${lab}</span><div class="bar"><i style="--w:${v}%;--c:var(--amber)"></i>${b!=null?`<s style="left:${b}%" title="Rata-rata liga ${Math.round(b)}%"></s>`:''}</div><em>${Math.round(v)}%${b!=null?`<small>liga ${Math.round(b)}%</small>`:''}</em></div>`).join(''):'',
+  lean=(G&&gb)?[['Over 1.5',G.o15,gb[0]],['Under 1.5',100-G.o15,100-gb[0]],['Over 2.5',G.o25,gb[1]],['Under 2.5',100-G.o25,100-gb[1]],['Over 3.5',G.o35,gb[2]],['Under 3.5',100-G.o35,100-gb[2]]].sort((a,b)=>(b[1]-b[2])-(a[1]-a[2]))[0]:null,
+  sc=d.top&&d.top.length?`<p class="note">Skor paling mungkin: ${d.top.map(t=>esc(t[0])+' ('+Math.round(t[1])+'%)').join(', ')}.</p>`:(d.score&&d.score!='-'?`<p class="note">Skor tebakan ${esc(d.score)}${d.final?`, skor akhir ${esc(d.final)}`:''}.</p>`:''),
+  tm=(lg,name,rank,f)=>`<div><div class="tn">${lg}<b>${esc(name)}</b></div><div class="tr">${esc(rank||'Klasemen belum tersedia')}</div><div class="fr">${chips(f,name)}</div>${f&&f.length?`<div class="fl">${f.map(x=>esc(x)).join('<br>')}</div>`:''}</div>`,
+  hasTeams=d.home_rank||d.away_rank||(d.home_form&&d.home_form.length)||(d.away_form&&d.away_form.length);
+  return `<div class="mp"><div class="mp-grid">
+  <div class="mp-box"><h4>Sinyal hasil laga</h4>${sig}${bars}<div class="cps">${chp}</div><p class="note">Peluang ${esc(d.home_s)}, seri, ${esc(d.away_s)} (dalam persen).</p></div>
+  <div class="mp-box"><h4>Pasar gol</h4>${G?`<div class="xg"><span>Perkiraan gol</span><b>${F2(N(G.lam_h),1)}</b><span>${esc(d.home_s)}</span><b>${F2(N(G.lam_a),1)}</b><span>${esc(d.away_s)}</span></div>${gr}${gb?'<p class="note">Garis putih pada batang adalah rata-rata liga.</p>':''}${lean?`<p class="note">Sinyal gol terkuat: <b>${lean[0]}</b> (${Math.round(lean[1])}%, rata-rata liga ${Math.round(lean[2])}%).</p>`:''}${sc}`:'<p class="sub">Data gol belum tersimpan.</p>'}</div></div>
+  ${hasTeams?`<div class="mp-box"><h4>Kondisi tim</h4><div class="tms">${tm(logo(d.home,d.home_s),d.home_s,d.home_rank,d.home_form)}${tm(logo(d.away,d.away_s),d.away_s,d.away_rank,d.away_form)}</div><p class="note">Form 5 laga terakhir, dari yang terlama ke yang terbaru: M menang, S seri, K kalah.</p></div>`:''}
+  <div class="mp-box"><h4>Analisa AI</h4>${d.summary?`<p>${esc(d.summary)}</p><div class="two">${L('Faktor kunci',d.factors)}${L('Risiko',d.risks)}</div>`:'<p class="sub">Analisa AI tidak dijalankan untuk laga ini, jadi pilihannya berdasarkan model statistik.</p>'}</div></div>`
+}
 
 function noteHTML(n,l){
   if(!n)return '<p class="sub">Detail belum tersimpan untuk kombinasi ini.</p>';
-  const P=(lab,v)=>v&&v.length?`<div class="pv"><span>${lab}</span><b>${v.map(x=>Math.round(N(x))).join(' / ')}</b></div>`:'',
-  tm=(name,rank,f)=>`<p><b>${esc(name)}</b> ${esc(rank||'')}${f&&f.length?`<br><span class="sub">Form 5 laga: ${f.map(x=>esc(x)).join('; ')}</span>`:''}</p>`,
-  g=n.goals?`<p class="sub">Perkiraan gol ${F2(N(n.goals.lam_h),1)} lawan ${F2(N(n.goals.lam_a),1)}. Over 1.5: ${Math.round(n.goals.o15)}%, Over 2.5: ${Math.round(n.goals.o25)}%, Over 3.5: ${Math.round(n.goals.o35)}%, kedua tim cetak gol: ${Math.round(n.goals.btts)}%.${n.top?` Skor paling mungkin: ${n.top.map(t=>t[0]+' ('+Math.round(t[1])+'%)').join(', ')}.`:''}</p>`:'',
-  L=(t,x)=>x&&x.length?`<h3>${t}</h3><ul>${x.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`:'';
-  return `<div class="pvs">${P('Gabungan',n.p)}${P('AI',n.g)}${P('Elo',n.e)}${P('Poisson',n.x)}</div>${n.p||n.e?'<p class="sub" style="margin-bottom:8px">Peluang tuan rumah, seri, tamu (dalam persen).</p>':''}${tm(l.home_s,n.home_rank,n.home_form)}${tm(l.away_s,n.away_rank,n.away_form)}${g}${n.summary?`<p style="margin-top:10px">${esc(n.summary)}</p>`:'<p class="sub" style="margin-top:10px">Analisa AI tidak dijalankan untuk laga ini, pilihan berdasarkan model statistik.</p>'}${L('Faktor kunci',n.factors)}${L('Risiko',n.risks)}`}
+  return panel({home:l.home,away:l.away,home_s:l.home_s,away_s:l.away_s,p:n.p,s:n.s,g:n.g,e:n.e,x:n.x,goals:n.goals,top:n.top,gb:n.gb,
+    home_rank:n.home_rank,away_rank:n.away_rank,home_form:n.home_form,away_form:n.away_form,summary:n.summary,factors:n.factors,risks:n.risks})
+}
 
 function legRow(x,l){
   const key=x.id+'|'+l.match_id,n=(x.notes||{})[l.match_id],lr=(x.leg_results||{})[l.match_id],
+  ko=fmt(l.kickoff_utc).split(', '),
   rs=lr?`<span class="tag ${lr.hit?'ok':'no'}">${lr.hit?'Benar':'Meleset'}, ${esc(String(lr.score).replace('-',' - '))}</span>`:'';
-  return `<details data-k="${esc(key)}"${S.pop.has(key)?' open':''}><summary><span class="tmi">${logo(l.home,l.home_s)}<b>${esc(l.home_s)}</b></span><span class="sub">lawan</span><span class="tmi">${logo(l.away,l.away_s)}<b>${esc(l.away_s)}</b></span><span class="sub">${fmt(l.kickoff_utc)}</span><b class="pk">${esc(legText(l))}</b><small>${Math.round(l.p)}%</small>${rs}</summary><div class="dd">${noteHTML(n,l)}</div></details>`}
+  return `<details data-k="${esc(key)}"${S.pop.has(key)?' open':''}><summary class="lg2"><span class="chev"></span><span class="t-ko"><b>${esc(ko[1]||'')}</b>${esc(ko[0]||'')}</span><span class="t-tm"><div class="tm">${logo(l.home,l.home_s)}<b>${esc(l.home_s)}</b></div><div class="tm">${logo(l.away,l.away_s)}<b>${esc(l.away_s)}</b></div></span><span class="t-pk"><b>${esc(legText(l))}</b><small>peluang ${Math.round(l.p)}%${l.base!=null?`, rata-rata liga ${Math.round(l.base)}%`:''}</small></span><span class="t-rs">${rs}</span></summary><div class="dd">${noteHTML(n,l)}</div></details>`}
 
 function comboCard(x){
   const lab={win:['ok','Menang'],lose:['no','Gagal'],void:['wait','Dibatalkan']}[x.outcome]||['wait','Berjalan'],
-  d=new Date(x.date+'T00:00:00+07:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'}),
   legs=[...(x.legs||[])].sort((a,b)=>a.kickoff_utc<b.kickoff_utc?-1:1);
-  return `<div class="cb"><div class="ch"><b>${(x.scope=='ucl'?'UCL ':'')+(x.kind=='aman'?'Aman':'Mix')}</b><small>${d}</small><span class="tag ${lab[0]}">${lab[1]}</span><small>peluang semua benar ${Math.round(N(x.p_comb||0)*100)}%${x.legs_hit?', '+esc(x.legs_hit)+' benar':''}</small></div>${legs.map(l=>legRow(x,l)).join('')}</div>`}
+  return `<div class="cb"><div class="ch"><b>${(x.scope=='ucl'?'UCL ':'')+(x.kind=='aman'?'Aman':'Mix')}</b><span class="tag ${lab[0]}">${lab[1]}</span><small>peluang semua benar ${Math.round(N(x.p_comb||0)*100)}%${x.legs_hit?', '+esc(x.legs_hit)+' benar':''}</small></div>${legs.map(l=>legRow(x,l)).join('')}</div>`}
 
-function runningCombos(){const r=VP().filter(x=>!x.outcome);return r.length?r.slice().reverse().map(comboCard).join(''):'<p class="empty" style="padding:10px 0">Tidak ada kombinasi yang sedang berjalan.</p>'}
+const KORD={aman:0,mix:1};
+function combosHTML(list){
+  const s=[...list].sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:((a.scope=='ucl'?1:0)-(b.scope=='ucl'?1:0))||((KORD[a.kind]||0)-(KORD[b.kind]||0)));
+  let out='',last='';
+  s.forEach(x=>{if(x.date!=last){last=x.date;out+=`<h4 class="dh">${new Date(x.date+'T00:00:00+07:00').toLocaleDateString('id-ID',{timeZone:'Asia/Jakarta',weekday:'long',day:'numeric',month:'long'})}</h4>`}out+=comboCard(x)});
+  return out}
+
+function runningCombos(){const r=VP().filter(x=>!x.outcome);return r.length?combosHTML(r):'<p class="empty" style="padding:10px 0">Tidak ada kombinasi yang sedang berjalan.</p>'}
 
 function parlays(){
   const set=VP().filter(x=>x.outcome);
   if(!set.length)return '<p class="empty">Belum ada kombinasi yang selesai.</p>';
   const fin=set.filter(x=>x.outcome=='win'||x.outcome=='lose');
   const sum=[['aman','Aman'],['mix','Mix'],['ucl-aman','UCL Aman'],['ucl-mix','UCL Mix']].map(([k,l])=>{const s=fin.filter(x=>((x.scope=='ucl'?'ucl-':'')+x.kind)==k);if(!s.length)return '';const w=s.filter(x=>x.outcome=='win').length,e=s.reduce((a,x)=>a+N(x.p_comb||0),0),ok=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[0]||0),0),tt=s.reduce((a,x)=>a+(+String(x.legs_hit).split('/')[1]||0),0);return `<p>${l}: menang ${w} dari ${s.length} kombinasi (perkiraan ${F2(e,1)}), pilihan benar ${ok} dari ${tt}.</p>`}).join('');
-  return (sum?`<div class="sub" style="margin-bottom:8px">${sum}</div>`:'')+set.slice(-8).reverse().map(comboCard).join('');
+  const recent=[...set].sort((a,b)=>a.date<b.date?1:-1).slice(0,10);
+  return (sum?`<div class="sub" style="margin-bottom:8px">${sum}</div>`:'')+combosHTML(recent);
 }
 
 function render(){
@@ -295,16 +377,11 @@ const wd=r=>new Date(Date.parse(r.kickoff_utc)+252e5).toISOString().slice(0,10);
 const pick=r=>({home:nm(r,'home'),away:nm(r,'away'),draw:'Seri'}[r.pick]||'-');
 
 function detail(r){
-  const a=AN[r.match_id],pr=k=>r[k]!==''&&r[k]!=null,
-  P=(l,v)=>v?`<div class="pv"><span>${l}</span><b>${v.join(' / ')}</b></div>`:'',
-  fin=P('Gabungan',K.map(k=>Math.round(N(r['p_'+k])))),
-  ai=pr('g_home')?P('AI',K.map(k=>Math.round(N(r['g_'+k])))):'',
-  el=pr('e_home')?P('Elo',K.map(k=>Math.round(N(r['e_'+k])))):'',
-  px=pr('x_home')?P('Poisson',K.map(k=>Math.round(N(r['x_'+k])))):'',
-  ls=r.likely_score&&r.likely_score!='-'?`<p class="sub">Skor tebakan ${esc(r.likely_score)}${r.outcome?`, skor akhir ${esc(r.final_score)}`:''}</p>`:'',
-  gl=pr('o25')?`<p class="sub">Perkiraan gol ${F2(N(r.lam_h),1)} lawan ${F2(N(r.lam_a),1)}. Over 1.5: ${Math.round(N(r.o15))}%, Over 2.5: ${Math.round(N(r.o25))}%, Over 3.5: ${Math.round(N(r.o35))}%, kedua tim cetak gol: ${Math.round(N(r.btts))}%.</p>`:'',
-  L=(t,x)=>x&&x.length?`<h3>${t}</h3><ul>${x.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>`:'';
-  return `<div class="pvs">${fin}${ai}${el}${px}</div><p class="sub" style="margin-bottom:6px">Peluang tuan rumah, seri, tamu (dalam persen).</p>${ls}${gl}${a?`<p>${esc(a.summary)}</p>${L('Faktor kunci',a.factors)}${L('Risiko',a.risks)}`:'<p class="sub">Teks analisa belum tersimpan untuk tebakan ini. Tebakan yang dicatat setelah pembaruan ini akan menampilkan ringkasan, faktor kunci, dan risikonya di sini.</p>'}`;
+  const a=AN[r.match_id]||{},ok=k=>r[k]!==''&&r[k]!=null,arr=p=>K.map(k=>N(r[p+'_'+k]));
+  return panel({home:r.home,away:r.away,home_s:nm(r,'home'),away_s:nm(r,'away'),
+    p:arr('p'),g:ok('g_home')?arr('g'):null,e:ok('e_home')?arr('e'):null,x:ok('x_home')?arr('x'):null,
+    goals:ok('o25')?{lam_h:N(r.lam_h),lam_a:N(r.lam_a),o15:N(r.o15),o25:N(r.o25),o35:N(r.o35),btts:N(r.btts)}:null,
+    score:r.likely_score,final:r.outcome?r.final_score:null,summary:a.summary,factors:a.factors,risks:a.risks})
 }
 
 const mins=m=>m<60?Math.max(1,Math.round(m))+' menit lagi':Math.floor(m/60)+' jam '+Math.round(m%60)+' menit lagi';

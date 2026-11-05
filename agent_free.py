@@ -1056,8 +1056,13 @@ def _leg_notes(b):
                         risks=list(res.get("risks") or [])[:3])
     if elo:
         note["e"] = [round(v, 1) for v in elo]
-    if res and res.get("x"):
-        note["x"] = [round(v, 1) for v in res["x"]]
+    stat = stat_probs(elo, gp)
+    if stat:
+        note["s"] = [round(v, 1) for v in stat]
+    if gp and gp.get("p1x2"):
+        note["x"] = [round(v, 1) for v in gp["p1x2"]]
+    if gp:
+        note["gb"] = [round(v, 1) for v in league_base(b["m"]["competition"]["code"])]
     if gp:
         note["goals"] = {k: round(gp[k], 1) for k in ("lam_h", "lam_a", "o15", "o25", "o35", "btts")}
         note["top"] = [[sc, round(pp, 1)] for sc, pp in gp["top"]]
@@ -1099,6 +1104,10 @@ def format_leg_detail(i, n, b, uses):
             g, e = res["g"], res["e"]
             xs = f"   📊 Poisson {res['x'][0]:.0f}/{res['x'][1]:.0f}/{res['x'][2]:.0f}" if res.get("x") else ""
             lines.append(f"<code>🤖 AI {g[0]:.0f}/{g[1]:.0f}/{g[2]:.0f}   📐 Elo {e[0]:.0f}/{e[1]:.0f}/{e[2]:.0f}{xs}</code>")
+        top_i = max(range(3), key=lambda k: probs[k])
+        conf = "tinggi" if probs[top_i] >= 60 else "sedang" if probs[top_i] >= 50 else "rendah"
+        who = [f"{h_full} menang", "Seri", f"{a_full} menang"][top_i]
+        lines.append(f"🎯 Sinyal hasil laga: <b>{esc(who)}</b> ({probs[top_i]:.0f}%, keyakinan {conf})")
     if gp:
         lean_name, lean_p, lean_b = goal_lean(gp, league_base(m["competition"]["code"]))
         lines += [LINE, "⚽ <b>GOL</b>  <i>(model statistik)</i>",
