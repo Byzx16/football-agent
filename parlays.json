@@ -2002,5 +2002,213 @@
     "hit": true
    }
   }
+ },
+ {
+  "id": "2026-11-06-aman",
+  "date": "2026-11-06",
+  "kind": "aman",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 559638,
+    "kickoff_utc": "2026-11-06T19:45:00Z",
+    "competition": "Ligue 1",
+    "home": "Toulouse FC",
+    "away": "RC Strasbourg Alsace",
+    "home_s": "Toulouse",
+    "away_s": "Strasbourg",
+    "market": "over15",
+    "pick": "over15",
+    "p": 82.99700408806015,
+    "ai": true,
+    "base": 75.4
+   },
+   {
+    "match_id": 565852,
+    "kickoff_utc": "2026-11-06T19:30:00Z",
+    "competition": "Bundesliga",
+    "home": "Hamburger SV",
+    "away": "Borussia Mönchengladbach",
+    "home_s": "HSV",
+    "away_s": "M'gladbach",
+    "market": "under35",
+    "pick": "under35",
+    "p": 69.44504323645307,
+    "ai": true,
+    "base": 54.0
+   }
+  ],
+  "notes": {
+   "559638": {
+    "home_rank": "#12 (10 poin, selisih gol -1)",
+    "away_rank": "#13 (10 poin, selisih gol -2)",
+    "home_form": [
+     "Toulouse 3-2 Le Havre",
+     "Monaco 2-2 Toulouse",
+     "Le Mans 0-3 Toulouse",
+     "Toulouse 0-0 Troyes",
+     "Marseille 2-0 Toulouse"
+    ],
+    "away_form": [
+     "Paris FC 2-1 Strasbourg",
+     "Nice 2-1 Strasbourg",
+     "Strasbourg 1-3 PSG",
+     "Stade Rennais 3-0 Strasbourg",
+     "Strasbourg 5-1 Auxerre"
+    ],
+    "p": [
+     45,
+     26,
+     29
+    ],
+    "g": [
+     45,
+     28,
+     27
+    ],
+    "summary": "Toulouse FC menjamu RC Strasbourg Alsace dalam pertandingan Ligue 1 yang ketat, dengan kedua tim memiliki 10 poin di klasemen. Toulouse diunggulkan karena performa kandang yang lebih baik dan rekor head-to-head baru-baru ini, meskipun mereka menghadapi masalah cedera dan skorsing. Strasbourg, meskipun memiliki rekor tandang yang buruk, datang dengan dorongan moral dari kemenangan besar terakhir mereka.",
+    "factors": [
+     "Toulouse memiliki rekor kandang yang lebih baik dan tidak terkalahkan dalam empat pertemuan terakhir mereka melawan Strasbourg di kandang.",
+     "Strasbourg mengakhiri empat kekalahan beruntun dengan kemenangan telak 5-1 atas Auxerre di laga terakhir, yang bisa menjadi dorongan moral signifikan.",
+     "Toulouse belum mencetak gol dalam dua pertandingan liga terakhir mereka, menunjukkan masalah di lini serang baru-baru ini.",
+     "Strasbourg memiliki rekor tandang yang buruk, kalah dalam tiga pertandingan tandang terakhir mereka di Ligue 1 dan kebobolan banyak gol di setiap laga tandang Ligue 1 musim ini."
+    ],
+    "risks": [
+     "Toulouse akan bermain tanpa Aron Donnum yang diskors dan Rafik Messali yang cedera hingga Desember, melemahkan sisi kanan mereka.",
+     "Strasbourg memiliki beberapa pemain kunci yang diragukan atau baru kembali dari cedera seperti Fabio Balde, Maxi Oyedele, dan Joaquin Panichelli, yang dapat memengaruhi kedalaman skuad.",
+     "Meskipun kalah beruntun, Strasbourg telah menunjukkan kemampuan mencetak gol yang baik di musim ini, dengan 17 gol dalam 9 pertandingan liga."
+    ],
+    "e": [
+     43.8,
+     25.7,
+     30.5
+    ],
+    "s": [
+     43.9,
+     24.4,
+     31.7
+    ],
+    "x": [
+     43.9,
+     23.2,
+     32.9
+    ],
+    "gb": [
+     75.4,
+     55.0,
+     33.8,
+     54.2
+    ],
+    "goals": {
+     "lam_h": 1.7,
+     "lam_a": 1.5,
+     "o15": 83.0,
+     "o25": 62.2,
+     "o35": 39.9,
+     "btts": 63.5
+    },
+    "top": [
+     [
+      "1-1",
+      10.3
+     ],
+     [
+      "2-1",
+      9.0
+     ],
+     [
+      "1-2",
+      7.6
+     ]
+    ]
+   },
+   "565852": {
+    "home_rank": "#15 (9 poin, selisih gol -12)",
+    "away_rank": "#18 (4 poin, selisih gol -11)",
+    "home_form": [
+     "HSV 2-1 1. FC Köln",
+     "Hoffenheim 2-3 HSV",
+     "HSV 1-0 Stuttgart",
+     "SC Paderborn 1-0 HSV",
+     "Frankfurt 3-1 HSV"
+    ],
+    "away_form": [
+     "M'gladbach 3-4 Mainz",
+     "1. FC Köln 2-1 M'gladbach",
+     "M'gladbach 1-2 Hoffenheim",
+     "Stuttgart 2-3 M'gladbach",
+     "M'gladbach 0-0 SC Paderborn"
+    ],
+    "p": [
+     46,
+     27,
+     27
+    ],
+    "g": [
+     45,
+     30,
+     25
+    ],
+    "summary": "Hamburger SV memiliki keunggulan signifikan berdasarkan performa dan posisi klasemen yang sedikit lebih baik dibandingkan Borussia Mönchengladbach yang terpuruk di dasar liga. Dengan momentum positif dan bermain di kandang, HSV diunggulkan untuk meraih poin penuh dalam laga krusial ini. Namun, pertahanan kedua tim yang tidak terlalu solid menunjukkan kemungkinan terjadinya beberapa gol.",
+    "factors": [
+     "Hamburger SV menunjukkan performa yang jauh lebih baik di lima laga terakhir dengan tiga kemenangan, berbanding satu kemenangan dan satu hasil imbang untuk Borussia Mönchengladbach.",
+     "Meskipun kedua tim berada di zona degradasi, HSV berada di posisi yang sedikit lebih baik dan menunjukkan momentum positif, terutama di kandang.",
+     "Borussia Mönchengladbach berada di dasar klasemen dan belum menunjukkan tanda-tanda perbaikan signifikan, dengan pertahanan yang rapuh terlihat dari banyaknya gol yang bersarang di gawang mereka.",
+     "Ini adalah pertandingan krusial bagi kedua tim untuk menghindari degradasi, yang bisa memicu intensitas tinggi dan pendekatan yang lebih hati-hati."
+    ],
+    "risks": [
+     "Informasi mengenai cedera pemain kunci dan susunan pemain terbaru tidak tersedia, yang dapat sangat mempengaruhi hasil pertandingan.",
+     "Meskipun form M'gladbach buruk, mereka mampu mencetak gol dalam beberapa pertandingan terakhir, menunjukkan potensi serangan yang bisa mengejutkan.",
+     "Tekanan tinggi sebagai pertandingan 'enam poin' di zona degradasi dapat membuat pertandingan berjalan ketat dan tidak terduga."
+    ],
+    "e": [
+     48.9,
+     24.1,
+     27.0
+    ],
+    "s": [
+     46.5,
+     24.6,
+     29.0
+    ],
+    "x": [
+     44.0,
+     25.0,
+     30.9
+    ],
+    "gb": [
+     82.7,
+     65.6,
+     46.0,
+     60.7
+    ],
+    "goals": {
+     "lam_h": 1.5,
+     "lam_a": 1.3,
+     "o15": 76.7,
+     "o25": 52.8,
+     "o35": 30.6,
+     "btts": 56.0
+    },
+    "top": [
+     [
+      "1-1",
+      11.8
+     ],
+     [
+      "1-0",
+      9.5
+     ],
+     [
+      "2-1",
+      9.1
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.5764,
+  "tg_msg_id": 177,
+  "outcome": "",
+  "legs_hit": ""
  }
 ]
