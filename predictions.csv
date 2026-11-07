@@ -67,3 +67,4 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 559638,2026-11-06T19:45:00Z,Ligue 1,Toulouse FC,RC Strasbourg Alsace,45,27,28,home,rendah,1-1,home,3-1,1,45,30,25,43.8,25.7,30.5,182,Toulouse,Strasbourg,1.7,1.5,83.0,62.2,39.9,63.5,43.9,23.2,32.9,gemini
 560634,2026-11-06T20:00:00Z,Premier League,Everton FC,Coventry City FC,51,25,24,home,sedang,1-0,home,3-1,1,50,25,25,51.6,23.3,25.1,183,Everton,Coventry City,1.6,0.9,71.3,45.7,24.3,47.7,53.1,25.2,21.7,gemini
 564740,2026-11-06T20:00:00Z,Primera Division,Sevilla FC,Deportivo Alavés,51,25,24,home,sedang,1-1,draw,0-0,0,55,25,20,48.9,24.1,27.0,184,Sevilla FC,Alavés,1.7,1.2,77.8,54.4,32.1,56.6,48.0,24.3,27.7,gemini
+560632,2026-11-07T12:30:00Z,Premier League,Leeds United FC,Tottenham Hotspur FC,35,28,37,away,rendah,1-1,,,,25,30,45,49.1,24.1,26.8,199,Leeds United,Tottenham,1.3,1.1,69.4,43.3,22.3,48.7,41.8,27.4,30.8,gemini
