@@ -2220,5 +2220,664 @@
     "hit": false
    }
   }
+ },
+ {
+  "id": "2026-11-07-aman",
+  "date": "2026-11-07",
+  "kind": "aman",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 565851,
+    "kickoff_utc": "2026-11-07T14:30:00Z",
+    "competition": "Bundesliga",
+    "home": "1. FSV Mainz 05",
+    "away": "FC Bayern München",
+    "home_s": "Mainz",
+    "away_s": "Bayern",
+    "market": "over15",
+    "pick": "over15",
+    "p": 90.85344503544101,
+    "ai": true,
+    "base": 82.7
+   },
+   {
+    "match_id": 565848,
+    "kickoff_utc": "2026-11-07T14:30:00Z",
+    "competition": "Bundesliga",
+    "home": "RB Leipzig",
+    "away": "FC Augsburg",
+    "home_s": "RB Leipzig",
+    "away_s": "Augsburg",
+    "market": "over15",
+    "pick": "over15",
+    "p": 88.94813025057455,
+    "ai": true,
+    "base": 82.7
+   },
+   {
+    "match_id": 559635,
+    "kickoff_utc": "2026-11-07T20:05:00Z",
+    "competition": "Ligue 1",
+    "home": "Paris Saint-Germain FC",
+    "away": "ES Troyes AC",
+    "home_s": "PSG",
+    "away_s": "Troyes",
+    "market": "over15",
+    "pick": "over15",
+    "p": 88.0819599857688,
+    "ai": true,
+    "base": 75.5
+   }
+  ],
+  "notes": {
+   "565851": {
+    "home_rank": "#10 (10 poin, selisih gol 0)",
+    "away_rank": "#1 (18 poin, selisih gol 19)",
+    "home_form": [
+     "M'gladbach 3-4 Mainz",
+     "Mainz 3-4 Leverkusen",
+     "Schalke 0-1 Mainz",
+     "Mainz 2-3 Bremen",
+     "Elversberg 4-1 Mainz"
+    ],
+    "away_form": [
+     "Bayern 6-1 RB Leipzig",
+     "Bayern 2-2 Arsenal",
+     "Freiburg 1-3 Bayern",
+     "Bayern 2-2 Dortmund",
+     "Atleti 0-2 Bayern"
+    ],
+    "p": [
+     13,
+     16,
+     71
+    ],
+    "g": [
+     10,
+     15,
+     75
+    ],
+    "summary": "Bayern Munich adalah favorit kuat dalam pertandingan ini, didukung oleh posisi klasemen yang dominan, performa menyerang yang luar biasa, dan rekor tandang yang tak terkalahkan. Mainz 05 sedang dalam krisis performa, terutama di kandang, dan memiliki masalah pertahanan serta beberapa pemain kunci yang absen karena cedera dan skorsing. Meskipun Bayern memiliki beberapa cedera, kedalaman skuad dan ketajaman Harry Kane diperkirakan akan cukup untuk mengamankan kemenangan.",
+    "factors": [
+     "Bayern Munich memuncaki klasemen dengan selisih gol yang superior (+19) dan performa tak terkalahkan di Bundesliga musim ini (5 menang, 3 seri).",
+     "Mainz 05 berada di posisi ke-10 dan memiliki rekor kandang terburuk di liga musim ini (1 seri, 3 kalah), kebobolan 10 gol di kandang.",
+     "Mainz memiliki rekor pertahanan yang sangat buruk, kebobolan 3+ gol dalam lima dari enam pertandingan Bundesliga terakhir mereka dan kebobolan gol pembuka dalam 15 menit pertama di lima dari enam pertandingan terakhir.",
+     "Bayern Munich memiliki rekor head-to-head yang dominan melawan Mainz (33 kemenangan dari 46 pertemuan) dan memenangkan pertemuan terakhir mereka 4-3 di kandang Mainz."
+    ],
+    "risks": [
+     "Bayern Munich memiliki beberapa pemain kunci yang cedera di lini serang (Musiala, Luis Diaz, Gnabry, Saibari), meskipun Harry Kane dalam performa puncak.",
+     "Mainz 05 akan termotivasi untuk mengakhiri rentetan kekalahan kandang mereka dan menghadapi tim besar seringkali bisa memicu performa tak terduga.",
+     "Meskipun Bayern memiliki skuad yang dalam, jadwal padat dengan pertandingan Liga Champions di tengah pekan bisa menyebabkan kelelahan pada beberapa pemain."
+    ],
+    "e": [
+     15.7,
+     18.4,
+     65.8
+    ],
+    "s": [
+     15.4,
+     17.3,
+     67.3
+    ],
+    "x": [
+     15.1,
+     16.2,
+     68.7
+    ],
+    "gb": [
+     82.7,
+     65.7,
+     46.2,
+     60.8
+    ],
+    "goals": {
+     "lam_h": 1.3,
+     "lam_a": 2.7,
+     "o15": 90.9,
+     "o25": 76.2,
+     "o35": 56.7,
+     "btts": 66.9
+    },
+    "top": [
+     [
+      "1-2",
+      8.7
+     ],
+     [
+      "1-3",
+      7.9
+     ],
+     [
+      "0-2",
+      6.9
+     ]
+    ]
+   },
+   "565848": {
+    "home_rank": "#4 (15 poin, selisih gol 11)",
+    "away_rank": "#11 (9 poin, selisih gol 3)",
+    "home_form": [
+     "Bayern 6-1 RB Leipzig",
+     "Real Madrid 4-1 RB Leipzig",
+     "RB Leipzig 4-0 Elversberg",
+     "Schalke 0-2 RB Leipzig",
+     "RB Leipzig 2-3 Man City"
+    ],
+    "away_form": [
+     "Bremen 3-2 Augsburg",
+     "Augsburg 2-2 Bayern",
+     "Elversberg 4-3 Augsburg",
+     "Augsburg 1-1 Union Berlin",
+     "Augsburg 1-2 Freiburg"
+    ],
+    "e": [
+     57.4,
+     21.4,
+     21.2
+    ],
+    "s": [
+     60.1,
+     19.9,
+     20.0
+    ],
+    "x": [
+     62.9,
+     18.3,
+     18.8
+    ],
+    "gb": [
+     82.7,
+     65.7,
+     46.2,
+     60.8
+    ],
+    "goals": {
+     "lam_h": 2.5,
+     "lam_a": 1.3,
+     "o15": 88.9,
+     "o25": 72.5,
+     "o35": 51.9,
+     "btts": 66.6
+    },
+    "top": [
+     [
+      "2-1",
+      9.2
+     ],
+     [
+      "3-1",
+      7.5
+     ],
+     [
+      "1-1",
+      7.4
+     ]
+    ]
+   },
+   "559635": {
+    "home_rank": "#1 (20 poin, selisih gol 11)",
+    "away_rank": "#16 (8 poin, selisih gol -9)",
+    "home_form": [
+     "Strasbourg 1-3 PSG",
+     "PSG 4-2 Barça",
+     "PSG 2-0 Olympique Lyon",
+     "Le Havre 1-5 PSG",
+     "Villarreal 0-6 PSG"
+    ],
+    "away_form": [
+     "Angers SCO 2-0 Troyes",
+     "Troyes 0-2 Marseille",
+     "Troyes 1-3 RC Lens",
+     "Toulouse 0-0 Troyes",
+     "Troyes 2-0 Le Mans"
+    ],
+    "p": [
+     83,
+     11,
+     6
+    ],
+    "e": [
+     82.2,
+     11.8,
+     6.0
+    ],
+    "s": [
+     83.2,
+     11.2,
+     5.6
+    ],
+    "x": [
+     84.2,
+     10.7,
+     5.2
+    ],
+    "gb": [
+     75.5,
+     55.2,
+     34.1,
+     54.4
+    ],
+    "goals": {
+     "lam_h": 3.0,
+     "lam_a": 0.7,
+     "o15": 88.1,
+     "o25": 70.9,
+     "o35": 49.9,
+     "btts": 45.6
+    },
+    "top": [
+     [
+      "3-0",
+      11.7
+     ],
+     [
+      "2-0",
+      11.6
+     ],
+     [
+      "4-0",
+      8.8
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.7118,
+  "tg_msg_id": 192,
+  "outcome": "",
+  "legs_hit": ""
+ },
+ {
+  "id": "2026-11-07-mix",
+  "date": "2026-11-07",
+  "kind": "mix",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 565848,
+    "kickoff_utc": "2026-11-07T14:30:00Z",
+    "competition": "Bundesliga",
+    "home": "RB Leipzig",
+    "away": "FC Augsburg",
+    "home_s": "RB Leipzig",
+    "away_s": "Augsburg",
+    "market": "over15",
+    "pick": "over15",
+    "p": 88.94813025057455,
+    "ai": true,
+    "base": 82.7
+   },
+   {
+    "match_id": 558535,
+    "kickoff_utc": "2026-11-07T17:00:00Z",
+    "competition": "Serie A",
+    "home": "Parma Calcio 1913",
+    "away": "Bologna FC 1909",
+    "home_s": "Parma",
+    "away_s": "Bologna",
+    "market": "under35",
+    "pick": "under35",
+    "p": 84.10427421642207,
+    "ai": true,
+    "base": 73.9
+   },
+   {
+    "match_id": 559635,
+    "kickoff_utc": "2026-11-07T20:05:00Z",
+    "competition": "Ligue 1",
+    "home": "Paris Saint-Germain FC",
+    "away": "ES Troyes AC",
+    "home_s": "PSG",
+    "away_s": "Troyes",
+    "market": "1x2",
+    "pick": "home",
+    "p": 83.0,
+    "ai": false
+   },
+   {
+    "match_id": 564744,
+    "kickoff_utc": "2026-11-07T13:00:00Z",
+    "competition": "Primera Division",
+    "home": "Málaga CF",
+    "away": "Real Racing Club de Santander",
+    "home_s": "Málaga",
+    "away_s": "Santander",
+    "market": "over15",
+    "pick": "over15",
+    "p": 82.82530597128938,
+    "ai": true,
+    "base": 77.5
+   },
+   {
+    "match_id": 558534,
+    "kickoff_utc": "2026-11-07T14:00:00Z",
+    "competition": "Serie A",
+    "home": "Cagliari Calcio",
+    "away": "Frosinone Calcio",
+    "home_s": "Cagliari",
+    "away_s": "Frosinone",
+    "market": "over15",
+    "pick": "over15",
+    "p": 82.25994388637862,
+    "ai": true,
+    "base": 75.6
+   }
+  ],
+  "notes": {
+   "565848": {
+    "home_rank": "#4 (15 poin, selisih gol 11)",
+    "away_rank": "#11 (9 poin, selisih gol 3)",
+    "home_form": [
+     "Bayern 6-1 RB Leipzig",
+     "Real Madrid 4-1 RB Leipzig",
+     "RB Leipzig 4-0 Elversberg",
+     "Schalke 0-2 RB Leipzig",
+     "RB Leipzig 2-3 Man City"
+    ],
+    "away_form": [
+     "Bremen 3-2 Augsburg",
+     "Augsburg 2-2 Bayern",
+     "Elversberg 4-3 Augsburg",
+     "Augsburg 1-1 Union Berlin",
+     "Augsburg 1-2 Freiburg"
+    ],
+    "e": [
+     57.4,
+     21.4,
+     21.2
+    ],
+    "s": [
+     60.1,
+     19.9,
+     20.0
+    ],
+    "x": [
+     62.9,
+     18.3,
+     18.8
+    ],
+    "gb": [
+     82.7,
+     65.7,
+     46.2,
+     60.8
+    ],
+    "goals": {
+     "lam_h": 2.5,
+     "lam_a": 1.3,
+     "o15": 88.9,
+     "o25": 72.5,
+     "o35": 51.9,
+     "btts": 66.6
+    },
+    "top": [
+     [
+      "2-1",
+      9.2
+     ],
+     [
+      "3-1",
+      7.5
+     ],
+     [
+      "1-1",
+      7.4
+     ]
+    ]
+   },
+   "558535": {
+    "home_rank": "#15 (8 poin, selisih gol -7)",
+    "away_rank": "#9 (14 poin, selisih gol 1)",
+    "home_form": [
+     "Inter 3-0 Parma",
+     "Parma 0-3 Torino",
+     "Lazio 2-1 Parma",
+     "Parma 0-0 Udinese",
+     "Atalanta 0-3 Parma"
+    ],
+    "away_form": [
+     "Lecce 1-2 Bologna",
+     "Bologna 1-3 Inter",
+     "Cagliari 0-2 Bologna",
+     "Milan 2-4 Bologna",
+     "Bologna 2-1 Monza"
+    ],
+    "e": [
+     34.8,
+     27.5,
+     37.8
+    ],
+    "s": [
+     29.8,
+     28.3,
+     41.9
+    ],
+    "x": [
+     24.8,
+     29.2,
+     46.0
+    ],
+    "gb": [
+     75.6,
+     51.2,
+     26.1,
+     49.8
+    ],
+    "goals": {
+     "lam_h": 0.8,
+     "lam_a": 1.3,
+     "o15": 61.7,
+     "o25": 34.7,
+     "o35": 15.9,
+     "btts": 40.4
+    },
+    "top": [
+     [
+      "0-1",
+      15.5
+     ],
+     [
+      "1-1",
+      13.0
+     ],
+     [
+      "0-0",
+      12.4
+     ]
+    ]
+   },
+   "559635": {
+    "home_rank": "#1 (20 poin, selisih gol 11)",
+    "away_rank": "#16 (8 poin, selisih gol -9)",
+    "home_form": [
+     "Strasbourg 1-3 PSG",
+     "PSG 4-2 Barça",
+     "PSG 2-0 Olympique Lyon",
+     "Le Havre 1-5 PSG",
+     "Villarreal 0-6 PSG"
+    ],
+    "away_form": [
+     "Angers SCO 2-0 Troyes",
+     "Troyes 0-2 Marseille",
+     "Troyes 1-3 RC Lens",
+     "Toulouse 0-0 Troyes",
+     "Troyes 2-0 Le Mans"
+    ],
+    "p": [
+     83,
+     11,
+     6
+    ],
+    "e": [
+     82.2,
+     11.8,
+     6.0
+    ],
+    "s": [
+     83.2,
+     11.2,
+     5.6
+    ],
+    "x": [
+     84.2,
+     10.7,
+     5.2
+    ],
+    "gb": [
+     75.5,
+     55.2,
+     34.1,
+     54.4
+    ],
+    "goals": {
+     "lam_h": 3.0,
+     "lam_a": 0.7,
+     "o15": 88.1,
+     "o25": 70.9,
+     "o35": 49.9,
+     "btts": 45.6
+    },
+    "top": [
+     [
+      "3-0",
+      11.7
+     ],
+     [
+      "2-0",
+      11.6
+     ],
+     [
+      "4-0",
+      8.8
+     ]
+    ]
+   },
+   "564744": {
+    "home_rank": "#20 (5 poin, selisih gol -13)",
+    "away_rank": "#16 (11 poin, selisih gol -14)",
+    "home_form": [
+     "Getafe 1-0 Málaga",
+     "Málaga 1-1 Espanyol",
+     "Málaga 2-5 Real Sociedad",
+     "Alavés 1-1 Málaga",
+     "Real Betis 2-1 Málaga"
+    ],
+    "away_form": [
+     "Celta 5-0 Santander",
+     "Santander 2-2 Valencia",
+     "Osasuna 2-0 Santander",
+     "Santander 2-1 Espanyol",
+     "Santander 0-3 Real Madrid"
+    ],
+    "e": [
+     43.0,
+     25.9,
+     31.1
+    ],
+    "s": [
+     44.6,
+     24.5,
+     30.9
+    ],
+    "x": [
+     46.3,
+     23.0,
+     30.7
+    ],
+    "gb": [
+     77.5,
+     52.7,
+     28.8,
+     56.8
+    ],
+    "goals": {
+     "lam_h": 1.8,
+     "lam_a": 1.4,
+     "o15": 82.8,
+     "o25": 61.9,
+     "o35": 39.7,
+     "btts": 63.0
+    },
+    "top": [
+     [
+      "1-1",
+      10.3
+     ],
+     [
+      "2-1",
+      9.2
+     ],
+     [
+      "1-2",
+      7.3
+     ]
+    ]
+   },
+   "558534": {
+    "home_rank": "#12 (13 poin, selisih gol -6)",
+    "away_rank": "#6 (20 poin, selisih gol 10)",
+    "home_form": [
+     "Cagliari 1-1 Juventus",
+     "Monza 4-0 Cagliari",
+     "Cagliari 0-2 Bologna",
+     "Roma 4-2 Cagliari",
+     "Lazio 2-1 Cagliari"
+    ],
+    "away_form": [
+     "Napoli 3-0 Frosinone",
+     "Frosinone 4-2 Sassuolo",
+     "Atalanta 4-4 Frosinone",
+     "Frosinone 5-1 Lecce",
+     "Frosinone 2-0 Torino"
+    ],
+    "e": [
+     32.0,
+     26.3,
+     41.7
+    ],
+    "s": [
+     26.5,
+     23.8,
+     49.7
+    ],
+    "x": [
+     21.0,
+     21.3,
+     57.7
+    ],
+    "gb": [
+     75.6,
+     51.2,
+     26.1,
+     49.8
+    ],
+    "goals": {
+     "lam_h": 1.1,
+     "lam_a": 2.0,
+     "o15": 82.3,
+     "o25": 61.0,
+     "o35": 38.7,
+     "btts": 58.9
+    },
+    "top": [
+     [
+      "1-2",
+      9.9
+     ],
+     [
+      "1-1",
+      9.8
+     ],
+     [
+      "0-2",
+      8.7
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.423,
+  "tg_msg_id": 192,
+  "outcome": "",
+  "legs_hit": ""
  }
 ]
