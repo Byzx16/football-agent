@@ -2484,8 +2484,22 @@
   },
   "p_comb": 0.7118,
   "tg_msg_id": 192,
-  "outcome": "",
-  "legs_hit": ""
+  "outcome": "lose",
+  "legs_hit": "2/3",
+  "leg_results": {
+   "565851": {
+    "score": "1-2",
+    "hit": true
+   },
+   "565848": {
+    "score": "5-2",
+    "hit": true
+   },
+   "559635": {
+    "score": "1-0",
+    "hit": false
+   }
+  }
  },
  {
   "id": "2026-11-07-mix",
@@ -2877,7 +2891,29 @@
   },
   "p_comb": 0.423,
   "tg_msg_id": 192,
-  "outcome": "",
-  "legs_hit": ""
+  "outcome": "lose",
+  "legs_hit": "4/5",
+  "leg_results": {
+   "565848": {
+    "score": "5-2",
+    "hit": true
+   },
+   "558535": {
+    "score": "1-2",
+    "hit": true
+   },
+   "559635": {
+    "score": "1-0",
+    "hit": true
+   },
+   "564744": {
+    "score": "1-2",
+    "hit": true
+   },
+   "558534": {
+    "score": "1-0",
+    "hit": false
+   }
+  }
  }
 ]
