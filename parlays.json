@@ -2915,5 +2915,633 @@
     "hit": false
    }
   }
+ },
+ {
+  "id": "2026-11-08-aman",
+  "date": "2026-11-08",
+  "kind": "aman",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 558538,
+    "kickoff_utc": "2026-11-08T14:00:00Z",
+    "competition": "Serie A",
+    "home": "AC Monza",
+    "away": "Atalanta BC",
+    "home_s": "Monza",
+    "away_s": "Atalanta",
+    "market": "over15",
+    "pick": "over15",
+    "p": 86.5498255333489,
+    "ai": true,
+    "base": 75.6
+   },
+   {
+    "match_id": 560637,
+    "kickoff_utc": "2026-11-08T14:00:00Z",
+    "competition": "Premier League",
+    "home": "Ipswich Town FC",
+    "away": "AFC Bournemouth",
+    "home_s": "Ipswich Town",
+    "away_s": "Bournemouth",
+    "market": "over15",
+    "pick": "over15",
+    "p": 85.58212147689,
+    "ai": true,
+    "base": 77.5
+   },
+   {
+    "match_id": 559630,
+    "kickoff_utc": "2026-11-08T19:45:00Z",
+    "competition": "Ligue 1",
+    "home": "Racing Club de Lens",
+    "away": "Olympique de Marseille",
+    "home_s": "RC Lens",
+    "away_s": "Marseille",
+    "market": "over15",
+    "pick": "over15",
+    "p": 85.01388318738562,
+    "ai": true,
+    "base": 74.8
+   }
+  ],
+  "notes": {
+   "558538": {
+    "home_rank": "#18 (7 poin, selisih gol -7)",
+    "away_rank": "#13 (11 poin, selisih gol -4)",
+    "home_form": [
+     "Lazio 3-1 Monza",
+     "Monza 4-0 Cagliari",
+     "Torino 3-2 Monza",
+     "Monza 1-4 Napoli",
+     "Bologna 2-1 Monza"
+    ],
+    "away_form": [
+     "Atalanta 3-1 Venezia FC",
+     "Milan 3-2 Atalanta",
+     "Atalanta 4-4 Frosinone",
+     "Fiorentina 2-2 Atalanta",
+     "Atalanta 0-3 Parma"
+    ],
+    "e": [
+     41.2,
+     26.5,
+     32.3
+    ],
+    "s": [
+     37.4,
+     24.3,
+     38.3
+    ],
+    "x": [
+     33.7,
+     22.1,
+     44.2
+    ],
+    "gb": [
+     75.6,
+     51.2,
+     25.8,
+     49.8
+    ],
+    "goals": {
+     "lam_h": 1.6,
+     "lam_a": 1.9,
+     "o15": 86.5,
+     "o25": 68.2,
+     "o35": 46.6,
+     "btts": 68.2
+    },
+    "top": [
+     [
+      "1-1",
+      9.1
+     ],
+     [
+      "1-2",
+      8.6
+     ],
+     [
+      "2-1",
+      7.4
+     ]
+    ]
+   },
+   "560637": {
+    "home_rank": "#14 (11 poin, selisih gol -4)",
+    "away_rank": "#9 (12 poin, selisih gol 1)",
+    "home_form": [
+     "Everton 1-0 Ipswich Town",
+     "Ipswich Town 2-1 Fulham",
+     "Man City 3-2 Ipswich Town",
+     "Ipswich Town 1-1 Nottingham",
+     "Hull City 2-2 Ipswich Town"
+    ],
+    "away_form": [
+     "Bournemouth 0-1 Liverpool",
+     "Chelsea 5-1 Bournemouth",
+     "Bournemouth 2-0 Sunderland",
+     "Man United 0-3 Bournemouth",
+     "Bournemouth 2-0 Leeds United"
+    ],
+    "e": [
+     36.5,
+     27.8,
+     35.6
+    ],
+    "s": [
+     38.1,
+     25.2,
+     36.7
+    ],
+    "x": [
+     39.7,
+     22.5,
+     37.7
+    ],
+    "gb": [
+     77.5,
+     52.1,
+     29.1,
+     53.5
+    ],
+    "goals": {
+     "lam_h": 1.7,
+     "lam_a": 1.7,
+     "o15": 85.6,
+     "o25": 66.5,
+     "o35": 44.7,
+     "btts": 67.1
+    },
+    "top": [
+     [
+      "1-1",
+      9.5
+     ],
+     [
+      "2-1",
+      8.3
+     ],
+     [
+      "1-2",
+      8.1
+     ]
+    ]
+   },
+   "559630": {
+    "home_rank": "#9 (13 poin, selisih gol 3)",
+    "away_rank": "#6 (15 poin, selisih gol 7)",
+    "home_form": [
+     "Troyes 1-3 RC Lens",
+     "Club Brugge 3-0 RC Lens",
+     "RC Lens 2-1 Paris FC",
+     "Lille 1-0 RC Lens",
+     "RC Lens 1-9 Como 1907"
+    ],
+    "away_form": [
+     "Marseille 1-2 PSG",
+     "Troyes 0-2 Marseille",
+     "Angers SCO 2-5 Marseille",
+     "Marseille 4-3 Le Havre",
+     "Marseille 2-0 Toulouse"
+    ],
+    "e": [
+     43.9,
+     25.7,
+     30.4
+    ],
+    "s": [
+     43.4,
+     24.2,
+     32.4
+    ],
+    "x": [
+     43.0,
+     22.6,
+     34.4
+    ],
+    "gb": [
+     74.8,
+     54.8,
+     33.8,
+     53.9
+    ],
+    "goals": {
+     "lam_h": 1.8,
+     "lam_a": 1.6,
+     "o15": 85.0,
+     "o25": 65.5,
+     "o35": 43.6,
+     "btts": 66.2
+    },
+    "top": [
+     [
+      "1-1",
+      9.7
+     ],
+     [
+      "2-1",
+      8.7
+     ],
+     [
+      "1-2",
+      7.7
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.6297,
+  "tg_msg_id": 241,
+  "outcome": "",
+  "legs_hit": ""
+ },
+ {
+  "id": "2026-11-08-mix",
+  "date": "2026-11-08",
+  "kind": "mix",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 558538,
+    "kickoff_utc": "2026-11-08T14:00:00Z",
+    "competition": "Serie A",
+    "home": "AC Monza",
+    "away": "Atalanta BC",
+    "home_s": "Monza",
+    "away_s": "Atalanta",
+    "market": "over15",
+    "pick": "over15",
+    "p": 86.5498255333489,
+    "ai": true,
+    "base": 75.6
+   },
+   {
+    "match_id": 560637,
+    "kickoff_utc": "2026-11-08T14:00:00Z",
+    "competition": "Premier League",
+    "home": "Ipswich Town FC",
+    "away": "AFC Bournemouth",
+    "home_s": "Ipswich Town",
+    "away_s": "Bournemouth",
+    "market": "over15",
+    "pick": "over15",
+    "p": 85.58212147689,
+    "ai": true,
+    "base": 77.5
+   },
+   {
+    "match_id": 559630,
+    "kickoff_utc": "2026-11-08T19:45:00Z",
+    "competition": "Ligue 1",
+    "home": "Racing Club de Lens",
+    "away": "Olympique de Marseille",
+    "home_s": "RC Lens",
+    "away_s": "Marseille",
+    "market": "over15",
+    "pick": "over15",
+    "p": 85.01388318738562,
+    "ai": true,
+    "base": 74.8
+   },
+   {
+    "match_id": 564746,
+    "kickoff_utc": "2026-11-08T20:00:00Z",
+    "competition": "Primera Division",
+    "home": "Club Atlético de Madrid",
+    "away": "FC Barcelona",
+    "home_s": "Atleti",
+    "away_s": "Barça",
+    "market": "over15",
+    "pick": "over15",
+    "p": 83.35916358788043,
+    "ai": true,
+    "base": 77.5
+   },
+   {
+    "match_id": 559631,
+    "kickoff_utc": "2026-11-08T16:15:00Z",
+    "competition": "Ligue 1",
+    "home": "Le Mans FC",
+    "away": "AS Monaco FC",
+    "home_s": "Le Mans",
+    "away_s": "Monaco",
+    "market": "over15",
+    "pick": "over15",
+    "p": 80.90254627407091,
+    "ai": true,
+    "base": 74.8
+   }
+  ],
+  "notes": {
+   "558538": {
+    "home_rank": "#18 (7 poin, selisih gol -7)",
+    "away_rank": "#13 (11 poin, selisih gol -4)",
+    "home_form": [
+     "Lazio 3-1 Monza",
+     "Monza 4-0 Cagliari",
+     "Torino 3-2 Monza",
+     "Monza 1-4 Napoli",
+     "Bologna 2-1 Monza"
+    ],
+    "away_form": [
+     "Atalanta 3-1 Venezia FC",
+     "Milan 3-2 Atalanta",
+     "Atalanta 4-4 Frosinone",
+     "Fiorentina 2-2 Atalanta",
+     "Atalanta 0-3 Parma"
+    ],
+    "e": [
+     41.2,
+     26.5,
+     32.3
+    ],
+    "s": [
+     37.4,
+     24.3,
+     38.3
+    ],
+    "x": [
+     33.7,
+     22.1,
+     44.2
+    ],
+    "gb": [
+     75.6,
+     51.2,
+     25.8,
+     49.8
+    ],
+    "goals": {
+     "lam_h": 1.6,
+     "lam_a": 1.9,
+     "o15": 86.5,
+     "o25": 68.2,
+     "o35": 46.6,
+     "btts": 68.2
+    },
+    "top": [
+     [
+      "1-1",
+      9.1
+     ],
+     [
+      "1-2",
+      8.6
+     ],
+     [
+      "2-1",
+      7.4
+     ]
+    ]
+   },
+   "560637": {
+    "home_rank": "#14 (11 poin, selisih gol -4)",
+    "away_rank": "#9 (12 poin, selisih gol 1)",
+    "home_form": [
+     "Everton 1-0 Ipswich Town",
+     "Ipswich Town 2-1 Fulham",
+     "Man City 3-2 Ipswich Town",
+     "Ipswich Town 1-1 Nottingham",
+     "Hull City 2-2 Ipswich Town"
+    ],
+    "away_form": [
+     "Bournemouth 0-1 Liverpool",
+     "Chelsea 5-1 Bournemouth",
+     "Bournemouth 2-0 Sunderland",
+     "Man United 0-3 Bournemouth",
+     "Bournemouth 2-0 Leeds United"
+    ],
+    "e": [
+     36.5,
+     27.8,
+     35.6
+    ],
+    "s": [
+     38.1,
+     25.2,
+     36.7
+    ],
+    "x": [
+     39.7,
+     22.5,
+     37.7
+    ],
+    "gb": [
+     77.5,
+     52.1,
+     29.1,
+     53.5
+    ],
+    "goals": {
+     "lam_h": 1.7,
+     "lam_a": 1.7,
+     "o15": 85.6,
+     "o25": 66.5,
+     "o35": 44.7,
+     "btts": 67.1
+    },
+    "top": [
+     [
+      "1-1",
+      9.5
+     ],
+     [
+      "2-1",
+      8.3
+     ],
+     [
+      "1-2",
+      8.1
+     ]
+    ]
+   },
+   "559630": {
+    "home_rank": "#9 (13 poin, selisih gol 3)",
+    "away_rank": "#6 (15 poin, selisih gol 7)",
+    "home_form": [
+     "Troyes 1-3 RC Lens",
+     "Club Brugge 3-0 RC Lens",
+     "RC Lens 2-1 Paris FC",
+     "Lille 1-0 RC Lens",
+     "RC Lens 1-9 Como 1907"
+    ],
+    "away_form": [
+     "Marseille 1-2 PSG",
+     "Troyes 0-2 Marseille",
+     "Angers SCO 2-5 Marseille",
+     "Marseille 4-3 Le Havre",
+     "Marseille 2-0 Toulouse"
+    ],
+    "e": [
+     43.9,
+     25.7,
+     30.4
+    ],
+    "s": [
+     43.4,
+     24.2,
+     32.4
+    ],
+    "x": [
+     43.0,
+     22.6,
+     34.4
+    ],
+    "gb": [
+     74.8,
+     54.8,
+     33.8,
+     53.9
+    ],
+    "goals": {
+     "lam_h": 1.8,
+     "lam_a": 1.6,
+     "o15": 85.0,
+     "o25": 65.5,
+     "o35": 43.6,
+     "btts": 66.2
+    },
+    "top": [
+     [
+      "1-1",
+      9.7
+     ],
+     [
+      "2-1",
+      8.7
+     ],
+     [
+      "1-2",
+      7.7
+     ]
+    ]
+   },
+   "564746": {
+    "home_rank": "#3 (28 poin, selisih gol 14)",
+    "away_rank": "#1 (30 poin, selisih gol 34)",
+    "home_form": [
+     "Espanyol 0-1 Atleti",
+     "Stuttgart 1-1 Atleti",
+     "Atleti 1-0 Deportivo",
+     "Levante 0-2 Atleti",
+     "Atleti 0-2 Bayern"
+    ],
+    "away_form": [
+     "Real Betis 2-5 Barça",
+     "PSG 4-2 Barça",
+     "Barça 1-2 Real Madrid",
+     "Barça 6-1 Alavés",
+     "Barça 3-0 Aston Villa"
+    ],
+    "e": [
+     30.1,
+     25.5,
+     44.4
+    ],
+    "s": [
+     30.7,
+     24.2,
+     45.0
+    ],
+    "x": [
+     31.4,
+     22.9,
+     45.7
+    ],
+    "gb": [
+     77.5,
+     52.6,
+     28.5,
+     56.7
+    ],
+    "goals": {
+     "lam_h": 1.4,
+     "lam_a": 1.8,
+     "o15": 83.4,
+     "o25": 62.8,
+     "o35": 40.6,
+     "btts": 63.7
+    },
+    "top": [
+     [
+      "1-1",
+      10.2
+     ],
+     [
+      "1-2",
+      9.1
+     ],
+     [
+      "2-1",
+      7.4
+     ]
+    ]
+   },
+   "559631": {
+    "home_rank": "#17 (7 poin, selisih gol -7)",
+    "away_rank": "#7 (15 poin, selisih gol 2)",
+    "home_form": [
+     "Le Mans 2-1 Lorient",
+     "PSG 3-1 Le Mans",
+     "Le Mans 0-3 Toulouse",
+     "Auxerre 1-1 Le Mans",
+     "Troyes 2-0 Le Mans"
+    ],
+    "away_form": [
+     "Monaco 2-1 RC Lens",
+     "Monaco 2-2 Toulouse",
+     "Lorient 1-0 Monaco",
+     "Monaco 1-1 Lille",
+     "Paris FC 3-1 Monaco"
+    ],
+    "e": [
+     34.3,
+     27.3,
+     38.3
+    ],
+    "s": [
+     34.8,
+     25.7,
+     39.5
+    ],
+    "x": [
+     35.3,
+     24.0,
+     40.7
+    ],
+    "gb": [
+     74.8,
+     54.8,
+     33.8,
+     53.9
+    ],
+    "goals": {
+     "lam_h": 1.5,
+     "lam_a": 1.6,
+     "o15": 80.9,
+     "o25": 58.9,
+     "o35": 36.5,
+     "btts": 61.2
+    },
+    "top": [
+     [
+      "1-1",
+      11.0
+     ],
+     [
+      "1-2",
+      8.7
+     ],
+     [
+      "2-1",
+      8.0
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.4247,
+  "tg_msg_id": 241,
+  "outcome": "",
+  "legs_hit": ""
  }
 ]
