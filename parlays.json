@@ -3152,8 +3152,22 @@
   },
   "p_comb": 0.6297,
   "tg_msg_id": 241,
-  "outcome": "",
-  "legs_hit": ""
+  "outcome": "lose",
+  "legs_hit": "2/3",
+  "leg_results": {
+   "558538": {
+    "score": "0-1",
+    "hit": false
+   },
+   "560637": {
+    "score": "1-2",
+    "hit": true
+   },
+   "559630": {
+    "score": "1-2",
+    "hit": true
+   }
+  }
  },
  {
   "id": "2026-11-08-mix",
