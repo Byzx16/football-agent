@@ -100,7 +100,7 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 559633,2026-11-08T16:15:00Z,Ligue 1,Le Havre AC,FC Lorient,27,26,47,away,rendah,1-1,,,,20,25,55,33.6,27.0,39.4,259,Le Havre,Lorient,1.1,1.2,66.0,39.3,19.3,45.7,32.8,28.6,38.6,gemini-nosearch
 559631,2026-11-08T16:15:00Z,Ligue 1,Le Mans FC,AS Monaco FC,35,26,39,away,rendah,1-1,,,,,,,34.3,27.3,38.3,260,Le Mans,Monaco,1.5,1.6,80.9,58.9,36.5,61.2,35.3,24.0,40.7,
 559634,2026-11-08T16:15:00Z,Ligue 1,Angers SCO,OGC Nice,37,28,35,home,rendah,1-1,,,,,,,37.1,27.7,35.2,261,Angers SCO,Nice,1.2,1.2,69.4,43.3,22.4,49.1,37.5,27.6,35.0,
-559632,2026-11-08T16:15:00Z,Ligue 1,Stade Brestois 29,Olympique Lyonnais,34,26,40,away,rendah,1-1,,,,,,,33.8,27.1,39.1,262,Brest,Olympique Lyon,1.3,1.4,74.7,50.1,28.1,54.3,33.2,25.8,41.0,
+559632,2026-11-08T16:15:00Z,Ligue 1,Stade Brestois 29,Olympique Lyonnais,34,26,40,away,rendah,1-1,home,2-0,0,,,,33.8,27.1,39.1,262,Brest,Olympique Lyon,1.3,1.4,74.7,50.1,28.1,54.3,33.2,25.8,41.0,
 560639,2026-11-08T16:30:00Z,Premier League,Manchester United FC,Aston Villa FC,36,27,37,away,rendah,1-1,,,,30,28,42,42.2,26.2,31.6,264,Man United,Aston Villa,1.7,1.4,80.2,57.9,35.5,60.0,44.7,24.0,31.3,gemini
 565854,2026-11-08T16:30:00Z,Bundesliga,SC Freiburg,1. FC Union Berlin,63,20,17,home,tinggi,2-0,,,,,,,60.9,20.2,18.9,265,Freiburg,Union Berlin,2.2,1.0,83.4,62.8,40.6,56.2,65.8,18.9,15.3,
 558530,2026-11-08T17:00:00Z,Serie A,FC Internazionale Milano,Como 1907,46,25,29,home,rendah,1-1,,,,50,25,25,46.2,25.0,28.9,266,Inter,Como 1907,1.4,1.5,77.8,54.3,32.0,57.7,36.2,25.0,38.8,gemini
