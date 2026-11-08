@@ -95,3 +95,4 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 560635,2026-11-08T14:00:00Z,Premier League,Crystal Palace FC,Liverpool FC,21,22,57,away,sedang,1-1,,,,15,20,65,26.4,23.9,49.7,253,Crystal Palace,Liverpool,1.2,1.7,77.2,53.5,31.2,55.4,26.3,24.3,49.4,gemini
 560637,2026-11-08T14:00:00Z,Premier League,Ipswich Town FC,AFC Bournemouth,33,26,41,away,rendah,1-1,,,,28,27,45,36.5,27.8,35.6,254,Ipswich Town,Bournemouth,1.7,1.7,85.6,66.5,44.7,67.1,39.7,22.5,37.7,gemini
 558538,2026-11-08T14:00:00Z,Serie A,AC Monza,Atalanta BC,29,25,46,away,rendah,1-1,,,,20,25,55,41.2,26.5,32.3,255,Monza,Atalanta,1.6,1.9,86.5,68.2,46.6,68.2,33.7,22.1,44.2,gemini
+565855,2026-11-08T14:30:00Z,Bundesliga,1. FC Köln,Bayer 04 Leverkusen,27,25,48,away,rendah,1-1,,,,22,25,53,30.4,25.6,44.0,256,1. FC Köln,Leverkusen,1.5,1.7,81.8,60.4,38.0,62.2,34.0,23.6,42.4,gemini
