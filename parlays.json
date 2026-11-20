@@ -3831,7 +3831,21 @@
   },
   "p_comb": 0.6186,
   "tg_msg_id": 309,
-  "outcome": "",
-  "legs_hit": ""
+  "outcome": "lose",
+  "legs_hit": "2/3",
+  "leg_results": {
+   "565859": {
+    "score": "1-1",
+    "hit": true
+   },
+   "559622": {
+    "score": "3-1",
+    "hit": false
+   },
+   "564748": {
+    "score": "0-1",
+    "hit": true
+   }
+  }
  }
 ]
