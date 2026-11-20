@@ -3579,5 +3579,259 @@
     "hit": true
    }
   }
+ },
+ {
+  "id": "2026-11-20-aman",
+  "date": "2026-11-20",
+  "kind": "aman",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 565859,
+    "kickoff_utc": "2026-11-20T19:30:00Z",
+    "competition": "Bundesliga",
+    "home": "FC Bayern München",
+    "away": "1. FC Köln",
+    "home_s": "Bayern",
+    "away_s": "1. FC Köln",
+    "market": "over15",
+    "pick": "over15",
+    "p": 93.80393670848267,
+    "ai": true,
+    "base": 82.9
+   },
+   {
+    "match_id": 559622,
+    "kickoff_utc": "2026-11-20T19:45:00Z",
+    "competition": "Ligue 1",
+    "home": "ES Troyes AC",
+    "away": "Le Havre AC",
+    "home_s": "Troyes",
+    "away_s": "Le Havre",
+    "market": "under35",
+    "pick": "under35",
+    "p": 82.00213873397101,
+    "ai": true,
+    "base": 67.0
+   },
+   {
+    "match_id": 564748,
+    "kickoff_utc": "2026-11-20T20:00:00Z",
+    "competition": "Primera Division",
+    "home": "Athletic Club",
+    "away": "RCD Espanyol de Barcelona",
+    "home_s": "Athletic",
+    "away_s": "Espanyol",
+    "market": "under35",
+    "pick": "under35",
+    "p": 80.41964023366684,
+    "ai": true,
+    "base": 72.0
+   }
+  ],
+  "notes": {
+   "565859": {
+    "home_rank": "#1 (21 poin, selisih gol 20)",
+    "away_rank": "#15 (9 poin, selisih gol -4)",
+    "home_form": [
+     "Bayern 2-2 Arsenal",
+     "Freiburg 1-3 Bayern",
+     "Bayern 2-2 Dortmund",
+     "Atleti 0-2 Bayern",
+     "Mainz 1-2 Bayern"
+    ],
+    "away_form": [
+     "1. FC Köln 2-1 M'gladbach",
+     "Frankfurt 1-0 1. FC Köln",
+     "1. FC Köln 0-0 Schalke",
+     "Union Berlin 1-1 1. FC Köln",
+     "1. FC Köln 1-2 Leverkusen"
+    ],
+    "p": [
+     86,
+     9,
+     5
+    ],
+    "e": [
+     84.5,
+     10.8,
+     4.8
+    ],
+    "s": [
+     86.0,
+     9.4,
+     4.6
+    ],
+    "x": [
+     87.5,
+     8.1,
+     4.4
+    ],
+    "gb": [
+     82.9,
+     66.0,
+     45.5,
+     61.3
+    ],
+    "goals": {
+     "lam_h": 3.7,
+     "lam_a": 0.8,
+     "o15": 93.8,
+     "o25": 82.4,
+     "o35": 65.5,
+     "btts": 54.4
+    },
+    "top": [
+     [
+      "3-0",
+      9.3
+     ],
+     [
+      "4-0",
+      8.5
+     ],
+     [
+      "2-0",
+      7.6
+     ]
+    ]
+   },
+   "559622": {
+    "home_rank": "#17 (8 poin, selisih gol -10)",
+    "away_rank": "#18 (2 poin, selisih gol -13)",
+    "home_form": [
+     "Troyes 0-2 Marseille",
+     "Troyes 1-3 RC Lens",
+     "Toulouse 0-0 Troyes",
+     "Troyes 2-0 Le Mans",
+     "PSG 1-0 Troyes"
+    ],
+    "away_form": [
+     "Lille 1-0 Le Havre",
+     "Le Havre 1-3 Auxerre",
+     "Marseille 4-3 Le Havre",
+     "Le Havre 1-5 PSG",
+     "Le Havre 0-2 Lorient"
+    ],
+    "p": [
+     49,
+     25,
+     26
+    ],
+    "e": [
+     56.1,
+     21.8,
+     22.1
+    ],
+    "s": [
+     48.4,
+     25.4,
+     26.2
+    ],
+    "x": [
+     40.8,
+     29.0,
+     30.3
+    ],
+    "gb": [
+     75.5,
+     54.2,
+     33.0,
+     53.8
+    ],
+    "goals": {
+     "lam_h": 1.2,
+     "lam_a": 1.0,
+     "o15": 64.5,
+     "o25": 37.6,
+     "o35": 18.0,
+     "btts": 44.1
+    },
+    "top": [
+     [
+      "1-0",
+      13.4
+     ],
+     [
+      "1-1",
+      13.3
+     ],
+     [
+      "0-0",
+      11.1
+     ]
+    ]
+   },
+   "564748": {
+    "home_rank": "#7 (16 poin, selisih gol 4)",
+    "away_rank": "#13 (12 poin, selisih gol -1)",
+    "home_form": [
+     "Valencia 0-0 Athletic",
+     "Levante 3-1 Athletic",
+     "Athletic 4-0 Getafe",
+     "Athletic 2-1 Real Sociedad",
+     "Osasuna 1-1 Athletic"
+    ],
+    "away_form": [
+     "Málaga 1-1 Espanyol",
+     "Espanyol 0-1 Atleti",
+     "Santander 2-1 Espanyol",
+     "Villarreal 0-1 Espanyol",
+     "Espanyol 0-0 Deportivo"
+    ],
+    "p": [
+     49,
+     25,
+     26
+    ],
+    "e": [
+     52.7,
+     22.9,
+     24.4
+    ],
+    "s": [
+     48.9,
+     25.4,
+     25.7
+    ],
+    "x": [
+     45.1,
+     27.9,
+     27.0
+    ],
+    "gb": [
+     77.2,
+     52.1,
+     28.0,
+     56.1
+    ],
+    "goals": {
+     "lam_h": 1.3,
+     "lam_a": 1.0,
+     "o15": 66.4,
+     "o25": 39.8,
+     "o35": 19.6,
+     "btts": 45.1
+    },
+    "top": [
+     [
+      "1-0",
+      13.6
+     ],
+     [
+      "1-1",
+      13.0
+     ],
+     [
+      "0-0",
+      10.3
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.6186,
+  "tg_msg_id": 309,
+  "outcome": "",
+  "legs_hit": ""
  }
 ]
