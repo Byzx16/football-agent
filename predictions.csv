@@ -127,3 +127,4 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 560644,2026-11-21T15:00:00Z,Premier League,Aston Villa FC,Sunderland AFC,57,23,20,home,sedang,1-0,,,,55,25,20,62.1,19.8,18.1,339,Aston Villa,Sunderland,1.8,0.9,75.2,50.7,28.7,50.6,56.5,23.4,20.1,gemini
 560647,2026-11-21T15:00:00Z,Premier League,AFC Bournemouth,Nottingham Forest FC,60,21,19,home,tinggi,1-1,,,,65,20,15,58.4,21.0,20.5,340,Bournemouth,Nottingham,1.6,1.1,75.5,51.1,29.0,53.1,50.9,24.5,24.6,gemini
 560650,2026-11-21T15:00:00Z,Premier League,Coventry City FC,Crystal Palace FC,43,27,30,home,rendah,1-1,,,,38,30,32,53.7,22.6,23.7,341,Coventry City,Crystal Palace,1.5,1.2,75.9,51.7,29.5,55.1,44.4,25.2,30.4,gemini
+564751,2026-11-21T15:15:00Z,Primera Division,Rayo Vallecano de Madrid,Valencia CF,45,30,25,home,rendah,1-0,,,,38,35,27,51.9,23.2,24.9,342,Rayo Vallecano,Valencia,1.5,0.9,70.5,44.6,23.4,47.3,51.7,25.7,22.6,gemini
