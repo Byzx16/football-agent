@@ -3847,5 +3847,638 @@
     "hit": true
    }
   }
+ },
+ {
+  "id": "2026-11-21-aman",
+  "date": "2026-11-21",
+  "kind": "aman",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 565865,
+    "kickoff_utc": "2026-11-21T14:30:00Z",
+    "competition": "Bundesliga",
+    "home": "Eintracht Frankfurt",
+    "away": "TSG 1899 Hoffenheim",
+    "home_s": "Frankfurt",
+    "away_s": "Hoffenheim",
+    "market": "over15",
+    "pick": "over15",
+    "p": 89.20638573293016,
+    "ai": true,
+    "base": 83.0
+   },
+   {
+    "match_id": 559627,
+    "kickoff_utc": "2026-11-21T19:45:00Z",
+    "competition": "Ligue 1",
+    "home": "RC Strasbourg Alsace",
+    "away": "Stade Brestois 29",
+    "home_s": "Strasbourg",
+    "away_s": "Brest",
+    "market": "over15",
+    "pick": "over15",
+    "p": 85.14473743686526,
+    "ai": true,
+    "base": 75.6
+   },
+   {
+    "match_id": 559628,
+    "kickoff_utc": "2026-11-21T16:15:00Z",
+    "competition": "Ligue 1",
+    "home": "OGC Nice",
+    "away": "Paris Saint-Germain FC",
+    "home_s": "Nice",
+    "away_s": "PSG",
+    "market": "over15",
+    "pick": "over15",
+    "p": 82.60310280309432,
+    "ai": true,
+    "base": 75.6
+   }
+  ],
+  "notes": {
+   "565865": {
+    "home_rank": "#10 (12 poin, selisih gol -5)",
+    "away_rank": "#9 (12 poin, selisih gol -1)",
+    "home_form": [
+     "RB Leipzig 6-0 Frankfurt",
+     "Frankfurt 1-0 1. FC Köln",
+     "Dortmund 1-0 Frankfurt",
+     "Frankfurt 3-1 HSV",
+     "SC Paderborn 2-2 Frankfurt"
+    ],
+    "away_form": [
+     "Hoffenheim 2-3 HSV",
+     "M'gladbach 1-2 Hoffenheim",
+     "Hoffenheim 3-0 Leverkusen",
+     "Bremen 2-0 Hoffenheim",
+     "Hoffenheim 2-1 Schalke"
+    ],
+    "e": [
+     38.4,
+     27.3,
+     34.3
+    ],
+    "s": [
+     39.0,
+     24.3,
+     36.7
+    ],
+    "x": [
+     39.7,
+     21.3,
+     39.0
+    ],
+    "gb": [
+     83.0,
+     65.7,
+     45.3,
+     61.5
+    ],
+    "goals": {
+     "lam_h": 1.9,
+     "lam_a": 1.9,
+     "o15": 89.2,
+     "o25": 73.0,
+     "o35": 52.5,
+     "btts": 72.2
+    },
+    "top": [
+     [
+      "1-1",
+      8.1
+     ],
+     [
+      "2-1",
+      7.7
+     ],
+     [
+      "1-2",
+      7.7
+     ]
+    ]
+   },
+   "559627": {
+    "home_rank": "#14 (10 poin, selisih gol -4)",
+    "away_rank": "#9 (15 poin, selisih gol 6)",
+    "home_form": [
+     "Nice 2-1 Strasbourg",
+     "Strasbourg 1-3 PSG",
+     "Stade Rennais 3-0 Strasbourg",
+     "Strasbourg 5-1 Auxerre",
+     "Toulouse 3-1 Strasbourg"
+    ],
+    "away_form": [
+     "Brest 5-1 Angers SCO",
+     "Lille 1-1 Brest",
+     "Brest 1-2 Nice",
+     "Lorient 0-2 Brest",
+     "Brest 2-0 Olympique Lyon"
+    ],
+    "e": [
+     46.2,
+     25.0,
+     28.8
+    ],
+    "s": [
+     47.4,
+     23.5,
+     29.1
+    ],
+    "x": [
+     48.6,
+     22.1,
+     29.3
+    ],
+    "gb": [
+     75.6,
+     54.4,
+     33.3,
+     54.0
+    ],
+    "goals": {
+     "lam_h": 1.9,
+     "lam_a": 1.5,
+     "o15": 85.1,
+     "o25": 65.7,
+     "o35": 43.8,
+     "btts": 65.6
+    },
+    "top": [
+     [
+      "1-1",
+      9.5
+     ],
+     [
+      "2-1",
+      9.2
+     ],
+     [
+      "1-2",
+      6.9
+     ]
+    ]
+   },
+   "559628": {
+    "home_rank": "#6 (17 poin, selisih gol 3)",
+    "away_rank": "#1 (23 poin, selisih gol 12)",
+    "home_form": [
+     "Nice 2-1 Strasbourg",
+     "Olympique Lyon 2-1 Nice",
+     "Brest 1-2 Nice",
+     "Nice 5-2 Stade Rennais",
+     "Angers SCO 0-2 Nice"
+    ],
+    "away_form": [
+     "PSG 4-2 Barça",
+     "PSG 2-0 Olympique Lyon",
+     "Le Havre 1-5 PSG",
+     "Villarreal 0-6 PSG",
+     "PSG 1-0 Troyes"
+    ],
+    "p": [
+     17,
+     19,
+     64
+    ],
+    "e": [
+     16.5,
+     18.9,
+     64.6
+    ],
+    "s": [
+     16.7,
+     19.4,
+     63.9
+    ],
+    "x": [
+     16.9,
+     19.8,
+     63.3
+    ],
+    "gb": [
+     75.6,
+     54.4,
+     33.3,
+     54.0
+    ],
+    "goals": {
+     "lam_h": 1.0,
+     "lam_a": 2.2,
+     "o15": 82.6,
+     "o25": 61.6,
+     "o35": 39.3,
+     "btts": 56.6
+    },
+    "top": [
+     [
+      "1-2",
+      9.9
+     ],
+     [
+      "0-2",
+      9.7
+     ],
+     [
+      "1-1",
+      9.2
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.6274,
+  "tg_msg_id": 321,
+  "outcome": "",
+  "legs_hit": ""
+ },
+ {
+  "id": "2026-11-21-mix",
+  "date": "2026-11-21",
+  "kind": "mix",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 565865,
+    "kickoff_utc": "2026-11-21T14:30:00Z",
+    "competition": "Bundesliga",
+    "home": "Eintracht Frankfurt",
+    "away": "TSG 1899 Hoffenheim",
+    "home_s": "Frankfurt",
+    "away_s": "Hoffenheim",
+    "market": "over15",
+    "pick": "over15",
+    "p": 89.20638573293016,
+    "ai": true,
+    "base": 83.0
+   },
+   {
+    "match_id": 559627,
+    "kickoff_utc": "2026-11-21T19:45:00Z",
+    "competition": "Ligue 1",
+    "home": "RC Strasbourg Alsace",
+    "away": "Stade Brestois 29",
+    "home_s": "Strasbourg",
+    "away_s": "Brest",
+    "market": "over15",
+    "pick": "over15",
+    "p": 85.14473743686526,
+    "ai": true,
+    "base": 75.6
+   },
+   {
+    "match_id": 559623,
+    "kickoff_utc": "2026-11-21T19:45:00Z",
+    "competition": "Ligue 1",
+    "home": "Racing Club de Lens",
+    "away": "Toulouse FC",
+    "home_s": "RC Lens",
+    "away_s": "Toulouse",
+    "market": "over15",
+    "pick": "over15",
+    "p": 81.8157230725606,
+    "ai": true,
+    "base": 75.6
+   },
+   {
+    "match_id": 565861,
+    "kickoff_utc": "2026-11-21T17:30:00Z",
+    "competition": "Bundesliga",
+    "home": "FC Schalke 04",
+    "away": "VfB Stuttgart",
+    "home_s": "Schalke",
+    "away_s": "Stuttgart",
+    "market": "under35",
+    "pick": "under35",
+    "p": 80.73650325285024,
+    "ai": true,
+    "base": 54.7
+   },
+   {
+    "match_id": 559624,
+    "kickoff_utc": "2026-11-21T19:45:00Z",
+    "competition": "Ligue 1",
+    "home": "Lille OSC",
+    "away": "Olympique Lyonnais",
+    "home_s": "Lille",
+    "away_s": "Olympique Lyon",
+    "market": "under35",
+    "pick": "under35",
+    "p": 80.16549242589868,
+    "ai": true,
+    "base": 66.7
+   }
+  ],
+  "notes": {
+   "565865": {
+    "home_rank": "#10 (12 poin, selisih gol -5)",
+    "away_rank": "#9 (12 poin, selisih gol -1)",
+    "home_form": [
+     "RB Leipzig 6-0 Frankfurt",
+     "Frankfurt 1-0 1. FC Köln",
+     "Dortmund 1-0 Frankfurt",
+     "Frankfurt 3-1 HSV",
+     "SC Paderborn 2-2 Frankfurt"
+    ],
+    "away_form": [
+     "Hoffenheim 2-3 HSV",
+     "M'gladbach 1-2 Hoffenheim",
+     "Hoffenheim 3-0 Leverkusen",
+     "Bremen 2-0 Hoffenheim",
+     "Hoffenheim 2-1 Schalke"
+    ],
+    "e": [
+     38.4,
+     27.3,
+     34.3
+    ],
+    "s": [
+     39.0,
+     24.3,
+     36.7
+    ],
+    "x": [
+     39.7,
+     21.3,
+     39.0
+    ],
+    "gb": [
+     83.0,
+     65.7,
+     45.3,
+     61.5
+    ],
+    "goals": {
+     "lam_h": 1.9,
+     "lam_a": 1.9,
+     "o15": 89.2,
+     "o25": 73.0,
+     "o35": 52.5,
+     "btts": 72.2
+    },
+    "top": [
+     [
+      "1-1",
+      8.1
+     ],
+     [
+      "2-1",
+      7.7
+     ],
+     [
+      "1-2",
+      7.7
+     ]
+    ]
+   },
+   "559627": {
+    "home_rank": "#14 (10 poin, selisih gol -4)",
+    "away_rank": "#9 (15 poin, selisih gol 6)",
+    "home_form": [
+     "Nice 2-1 Strasbourg",
+     "Strasbourg 1-3 PSG",
+     "Stade Rennais 3-0 Strasbourg",
+     "Strasbourg 5-1 Auxerre",
+     "Toulouse 3-1 Strasbourg"
+    ],
+    "away_form": [
+     "Brest 5-1 Angers SCO",
+     "Lille 1-1 Brest",
+     "Brest 1-2 Nice",
+     "Lorient 0-2 Brest",
+     "Brest 2-0 Olympique Lyon"
+    ],
+    "e": [
+     46.2,
+     25.0,
+     28.8
+    ],
+    "s": [
+     47.4,
+     23.5,
+     29.1
+    ],
+    "x": [
+     48.6,
+     22.1,
+     29.3
+    ],
+    "gb": [
+     75.6,
+     54.4,
+     33.3,
+     54.0
+    ],
+    "goals": {
+     "lam_h": 1.9,
+     "lam_a": 1.5,
+     "o15": 85.1,
+     "o25": 65.7,
+     "o35": 43.8,
+     "btts": 65.6
+    },
+    "top": [
+     [
+      "1-1",
+      9.5
+     ],
+     [
+      "2-1",
+      9.2
+     ],
+     [
+      "1-2",
+      6.9
+     ]
+    ]
+   },
+   "559623": {
+    "home_rank": "#11 (13 poin, selisih gol 2)",
+    "away_rank": "#12 (13 poin, selisih gol 1)",
+    "home_form": [
+     "Club Brugge 3-0 RC Lens",
+     "RC Lens 2-1 Paris FC",
+     "Lille 1-0 RC Lens",
+     "RC Lens 1-9 Como 1907",
+     "RC Lens 1-2 Marseille"
+    ],
+    "away_form": [
+     "Monaco 2-2 Toulouse",
+     "Le Mans 0-3 Toulouse",
+     "Toulouse 0-0 Troyes",
+     "Marseille 2-0 Toulouse",
+     "Toulouse 3-1 Strasbourg"
+    ],
+    "e": [
+     47.9,
+     24.4,
+     27.6
+    ],
+    "s": [
+     48.2,
+     23.8,
+     28.1
+    ],
+    "x": [
+     48.4,
+     23.1,
+     28.5
+    ],
+    "gb": [
+     75.6,
+     54.4,
+     33.3,
+     54.0
+    ],
+    "goals": {
+     "lam_h": 1.8,
+     "lam_a": 1.3,
+     "o15": 81.8,
+     "o25": 60.3,
+     "o35": 38.0,
+     "btts": 61.3
+    },
+    "top": [
+     [
+      "1-1",
+      10.5
+     ],
+     [
+      "2-1",
+      9.4
+     ],
+     [
+      "1-0",
+      7.9
+     ]
+    ]
+   },
+   "565861": {
+    "home_rank": "#17 (6 poin, selisih gol -6)",
+    "away_rank": "#8 (12 poin, selisih gol 0)",
+    "home_form": [
+     "Freiburg 2-1 Schalke",
+     "Schalke 0-1 Mainz",
+     "1. FC Köln 0-0 Schalke",
+     "Schalke 0-2 RB Leipzig",
+     "Hoffenheim 2-1 Schalke"
+    ],
+    "away_form": [
+     "Stuttgart 1-1 Atleti",
+     "Stuttgart 2-3 M'gladbach",
+     "Leverkusen 2-4 Stuttgart",
+     "Galatasaray 2-0 Stuttgart",
+     "Stuttgart 1-0 Bremen"
+    ],
+    "e": [
+     31.2,
+     26.0,
+     42.8
+    ],
+    "s": [
+     29.1,
+     27.0,
+     43.8
+    ],
+    "x": [
+     27.1,
+     28.1,
+     44.9
+    ],
+    "gb": [
+     83.0,
+     65.7,
+     45.3,
+     61.5
+    ],
+    "goals": {
+     "lam_h": 1.0,
+     "lam_a": 1.3,
+     "o15": 66.0,
+     "o25": 39.3,
+     "o35": 19.3,
+     "btts": 44.8
+    },
+    "top": [
+     [
+      "0-1",
+      13.7
+     ],
+     [
+      "1-1",
+      13.0
+     ],
+     [
+      "0-0",
+      10.4
+     ]
+    ]
+   },
+   "559624": {
+    "home_rank": "#2 (21 poin, selisih gol 7)",
+    "away_rank": "#5 (17 poin, selisih gol 6)",
+    "home_form": [
+     "Lille 2-4 Galatasaray",
+     "Monaco 1-1 Lille",
+     "Lille 1-0 RC Lens",
+     "Bodø/Glimt 0-0 Lille",
+     "Stade Rennais 1-2 Lille"
+    ],
+    "away_form": [
+     "RC Lens 2-1 Olympique Lyon",
+     "Olympique Lyon 2-1 Nice",
+     "PSG 2-0 Olympique Lyon",
+     "Olympique Lyon 2-0 Angers SCO",
+     "Brest 2-0 Olympique Lyon"
+    ],
+    "e": [
+     46.3,
+     24.9,
+     28.8
+    ],
+    "s": [
+     42.8,
+     26.7,
+     30.6
+    ],
+    "x": [
+     39.3,
+     28.4,
+     32.3
+    ],
+    "gb": [
+     75.6,
+     54.4,
+     33.3,
+     54.0
+    ],
+    "goals": {
+     "lam_h": 1.2,
+     "lam_a": 1.1,
+     "o15": 66.7,
+     "o25": 40.1,
+     "o35": 19.8,
+     "btts": 46.3
+    },
+    "top": [
+     [
+      "1-1",
+      13.2
+     ],
+     [
+      "1-0",
+      12.3
+     ],
+     [
+      "0-1",
+      10.9
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.4022,
+  "tg_msg_id": 321,
+  "outcome": "",
+  "legs_hit": ""
  }
 ]
