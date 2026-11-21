@@ -124,8 +124,8 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 565862,2026-11-21T14:30:00Z,Bundesliga,Borussia Mönchengladbach,Borussia Dortmund,18,21,61,away,tinggi,1-1,away,0-1,1,15,20,65,19.1,20.3,60.7,336,M'gladbach,Dortmund,1.1,1.9,79.1,56.2,33.8,55.5,21.6,22.6,55.8,gemini
 560642,2026-11-21T15:00:00Z,Premier League,Chelsea FC,Leeds United FC,48,26,26,home,rendah,1-1,,,,48,28,24,45.8,25.1,29.1,337,Chelsea,Leeds United,1.6,1.1,75.7,51.4,29.3,53.9,48.9,24.7,26.4,gemini
 560648,2026-11-21T15:00:00Z,Premier League,Tottenham Hotspur FC,Ipswich Town FC,53,24,23,home,sedang,1-1,,,,55,25,20,48.5,24.3,27.2,338,Tottenham,Ipswich Town,1.8,1.2,80.9,58.9,36.5,59.4,51.4,22.9,25.7,gemini
-560644,2026-11-21T15:00:00Z,Premier League,Aston Villa FC,Sunderland AFC,57,23,20,home,sedang,1-0,,,,55,25,20,62.1,19.8,18.1,339,Aston Villa,Sunderland,1.8,0.9,75.2,50.7,28.7,50.6,56.5,23.4,20.1,gemini
-560647,2026-11-21T15:00:00Z,Premier League,AFC Bournemouth,Nottingham Forest FC,60,21,19,home,tinggi,1-1,,,,65,20,15,58.4,21.0,20.5,340,Bournemouth,Nottingham,1.6,1.1,75.5,51.1,29.0,53.1,50.9,24.5,24.6,gemini
+560644,2026-11-21T15:00:00Z,Premier League,Aston Villa FC,Sunderland AFC,57,23,20,home,sedang,1-0,draw,0-0,0,55,25,20,62.1,19.8,18.1,339,Aston Villa,Sunderland,1.8,0.9,75.2,50.7,28.7,50.6,56.5,23.4,20.1,gemini
+560647,2026-11-21T15:00:00Z,Premier League,AFC Bournemouth,Nottingham Forest FC,60,21,19,home,tinggi,1-1,home,2-0,1,65,20,15,58.4,21.0,20.5,340,Bournemouth,Nottingham,1.6,1.1,75.5,51.1,29.0,53.1,50.9,24.5,24.6,gemini
 560650,2026-11-21T15:00:00Z,Premier League,Coventry City FC,Crystal Palace FC,43,27,30,home,rendah,1-1,,,,38,30,32,53.7,22.6,23.7,341,Coventry City,Crystal Palace,1.5,1.2,75.9,51.7,29.5,55.1,44.4,25.2,30.4,gemini
 564751,2026-11-21T15:15:00Z,Primera Division,Rayo Vallecano de Madrid,Valencia CF,45,30,25,home,rendah,1-0,,,,38,35,27,51.9,23.2,24.9,342,Rayo Vallecano,Valencia,1.5,0.9,70.5,44.6,23.4,47.3,51.7,25.7,22.6,gemini
 559628,2026-11-21T16:15:00Z,Ligue 1,OGC Nice,Paris Saint-Germain FC,16,20,64,away,tinggi,1-2,,,,15,20,65,16.5,18.9,64.6,344,Nice,PSG,1.0,2.2,82.6,61.6,39.3,56.6,16.9,19.8,63.3,gemini
