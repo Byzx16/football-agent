@@ -142,7 +142,7 @@ match_id,kickoff_utc,competition,home,away,p_home,p_draw,p_away,pick,confidence,
 558521,2026-11-22T11:30:00Z,Serie A,Juventus FC,Venezia FC,67,20,13,home,tinggi,1-0,home,4-0,1,68,20,12,67.6,17.8,14.6,396,Juventus,Venezia FC,2.0,0.7,74.6,49.9,27.9,43.7,66.9,20.5,12.6,gemini
 564749,2026-11-22T13:00:00Z,Primera Division,FC Barcelona,Villarreal CF,77,14,9,home,tinggi,3-1,home,3-2,1,75,15,10,77.0,14.1,8.9,397,Barça,Villarreal,3.2,1.0,92.2,79.1,60.6,61.1,79.6,12.0,8.4,gemini
 560646,2026-11-22T14:00:00Z,Premier League,Hull City AFC,Brighton & Hove Albion FC,25,26,49,away,rendah,1-1,,,,20,25,55,31.9,26.3,41.8,398,Hull City,Brighton Hove,1.1,1.3,69.1,43.0,22.1,48.2,29.7,27.4,42.9,gemini
-558522,2026-11-22T14:00:00Z,Serie A,Bologna FC 1909,Udinese Calcio,61,21,18,home,tinggi,1-1,,,,65,20,15,63.3,19.4,17.4,399,Bologna,Udinese,1.7,1.1,75.5,51.1,29.0,52.8,51.8,24.3,23.9,gemini
+558522,2026-11-22T14:00:00Z,Serie A,Bologna FC 1909,Udinese Calcio,61,21,18,home,tinggi,1-1,draw,1-1,0,65,20,15,63.3,19.4,17.4,399,Bologna,Udinese,1.7,1.1,75.5,51.1,29.0,52.8,51.8,24.3,23.9,gemini
 558524,2026-11-22T14:00:00Z,Serie A,US Sassuolo Calcio,Genoa CFC,34,26,40,away,rendah,1-1,,,,28,27,45,42.7,26.0,31.3,400,Sassuolo,Genoa,1.4,1.3,76.0,51.9,29.7,55.8,38.7,25.5,35.8,gemini
 559625,2026-11-22T14:00:00Z,Ligue 1,Paris FC,Angers SCO,65,20,15,home,tinggi,1-0,,,,65,20,15,69.4,17.1,13.5,401,Paris FC,Angers SCO,1.8,0.8,73.4,48.3,26.5,45.6,61.9,22.4,15.7,gemini
 565864,2026-11-22T14:30:00Z,Bundesliga,FC Augsburg,1. FSV Mainz 05,41,27,32,home,rendah,1-1,,,,35,30,35,47.2,24.7,28.2,402,Augsburg,Mainz,2.0,1.5,86.5,68.1,46.5,67.6,47.7,21.8,30.5,gemini
