@@ -4797,8 +4797,22 @@
   },
   "p_comb": 0.7183,
   "tg_msg_id": 388,
-  "outcome": "",
-  "legs_hit": ""
+  "outcome": "win",
+  "legs_hit": "3/3",
+  "leg_results": {
+   "564749": {
+    "score": "3-2",
+    "hit": true
+   },
+   "564750": {
+    "score": "3-2",
+    "hit": true
+   },
+   "559629": {
+    "score": "2-3",
+    "hit": true
+   }
+  }
  },
  {
   "id": "2026-11-22-mix",
