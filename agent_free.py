@@ -24,6 +24,7 @@ TELEGRAM_CHAT_ID  = os.environ["TELEGRAM_CHAT_ID"]
 
 GEMINI_MODEL = "gemini-2.5-flash"
 LEAGUES = "PL,PD,SA,BL1,FL1,CL"
+TEAM_LEAGUES = LEAGUES + ",PPL,DED"   # liga tambahan hanya untuk rating tim (klub Portugal dan Belanda sering main di UEL)
 NOTIFY_WINDOW_MIN = (int(os.getenv("NOTIFY_MIN_MINUTES", 45)),
                      int(os.getenv("NOTIFY_MAX_MINUTES", 90)))   # kirim saat kick-off tinggal sekian menit
 MAX_MATCHES_PER_RUN = 8          # maksimal laga yang dianalisa dalam satu run
@@ -33,6 +34,8 @@ PARLAY_HOUR_WIB = int(os.getenv("PARLAY_HOUR_WIB", 6))   # jam kombinasi harian 
 PARLAY_FILE = "parlays.json"
 UCL_PARLAY_HOUR_WIB = int(os.getenv("UCL_PARLAY_HOUR_WIB", 21))   # jam kombinasi khusus UCL dikirim (WIB)
 UCL_PARLAY_LAST_FILE = "last_parlay_ucl.txt"
+UEL_PARLAY_HOUR_WIB = int(os.getenv("UEL_PARLAY_HOUR_WIB", 21))   # jam kombinasi UEL dikirim (WIB)
+UEL_PARLAY_LAST_FILE = "last_parlay_uel.txt"
 UCL_SHORTLIST = 8            # laga UCL yang dianalisa AI untuk kombinasi UCL
 UCL_WINDOW_H = 12            # laga UCL yang kick-off-nya dalam sekian jam ke depan ikut dipindai
 PARLAY_LAST_FILE = "last_parlay.txt"
@@ -46,6 +49,8 @@ REPORT_HOUR_WIB = 9                           # laporan harian dikirim di run pe
 GOALS_FILE = "goals_cache.json"
 GOAL_PRIOR = 8.0                 # kekuatan prior model gol (setara kira-kira 6 laga)
 PARLAY_GOAL_EDGE = 5             # pasar gol hanya masuk kombinasi kalau peluangnya minimal sekian poin di atas rata-rata liga
+VALUE_EDGE = 5                  # selisih peluang agent dikurangi peluang pasar (poin) yang dianggap 'ada value'
+STAT_W_MARKET = 0.5              # bobot odds pasar di campuran statistik kalau odds tersedia (UEL)
 STAT_W_ELO = 0.5                 # bobot Elo di campuran statistik (sisanya 1X2 dari model gol Poisson), hasil backtest
 PARLAY_MIN_GOAL_PROB = 62        # peluang minimal pasar gol (over/under) supaya boleh masuk kombinasi (%)
 ELO_FILE = "elo_cache.json"
@@ -58,7 +63,8 @@ PRED_FIELDS = ["match_id", "kickoff_utc", "competition", "home", "away",
                "g_home", "g_draw", "g_away", "e_home", "e_draw", "e_away",
                "tg_msg_id", "home_s", "away_s",
                "lam_h", "lam_a", "o15", "o25", "o35", "btts",
-               "x_home", "x_draw", "x_away", "ai_src"]
+               "x_home", "x_draw", "x_away", "ai_src", "m_home", "m_draw", "m_away",
+               "od_home", "od_draw", "od_away", "ob_home", "ob_draw", "ob_away"]
 
 FD = "https://api.football-data.org/v4"
 FD_HEADERS = {"X-Auth-Token": FOOTBALL_DATA_KEY}
@@ -96,10 +102,8 @@ def upcoming_matches(test_mode=False):
         "dateTo": (now + dt.timedelta(days=2)).date().isoformat(),
         "competitions": LEAGUES,
     })
-    if not data:
-        return []
     out = []
-    for m in data.get("matches", []):
+    for m in (data or {}).get("matches", []):
         if m["status"] not in ("TIMED", "SCHEDULED"):
             continue
         ko = dt.datetime.fromisoformat(m["utcDate"].replace("Z", "+00:00"))
@@ -108,11 +112,24 @@ def upcoming_matches(test_mode=False):
             continue
         if test_mode or NOTIFY_WINDOW_MIN[0] <= mins <= NOTIFY_WINDOW_MIN[1]:
             out.append((mins, m))
+    um = _uel_mod()
+    if um:
+        lo, hi = (0, 48 * 60) if test_mode else NOTIFY_WINDOW_MIN
+        for m in um.matches_in_window(lo, hi) or []:
+            out.append(((dt.datetime.fromisoformat(m["utcDate"].replace("Z", "+00:00")) - now).total_seconds() / 60, m))
+    if out:
+        try:
+            import oddsfeed
+            oddsfeed.attach([m for _, m in out if m["competition"]["code"] != "EL"])
+        except Exception as e:
+            print("[odds] odds bayangan gagal dipasang ->", type(e).__name__, e)
     out.sort(key=lambda x: x[0])
     return [m for _, m in out]
 
 _standings_cache = {}
 def standings(comp_code):
+    if comp_code == "EL":
+        return {}                      # UEL tidak ada di paket gratis football-data.org
     if comp_code in _standings_cache:
         return _standings_cache[comp_code]
     data = fd_get(f"/competitions/{comp_code}/standings")
@@ -129,6 +146,8 @@ def standings(comp_code):
     return result
 
 def team_form(team_id, n=5):
+    if team_id <= 0:
+        return []                      # tim di luar data football-data.org (id sintetis)
     data = fd_get(f"/teams/{team_id}/matches", {"status": "FINISHED", "limit": n})
     if not data:
         return []
@@ -162,7 +181,7 @@ def build_ratings():
     try:
         c = json.load(open(ELO_FILE))
         built = dt.datetime.fromisoformat(c["built_utc"])
-        if now - built < dt.timedelta(hours=ELO_CACHE_HOURS) and c.get("ratings") and _load_goals():
+        if now - built < dt.timedelta(hours=ELO_CACHE_HOURS) and c.get("ratings") and c.get("leagues") == TEAM_LEAGUES and _load_goals():
             return {int(k): v for k, v in c["ratings"].items()}
     except Exception:
         pass
@@ -171,7 +190,7 @@ def build_ratings():
     R, allm = {}, []
     for season in (cur - 1, cur):
         ms = []
-        for code in LEAGUES.split(","):
+        for code in TEAM_LEAGUES.split(","):
             data = fd_get(f"/competitions/{code}/matches", {"season": season, "status": "FINISHED"})
             if data:
                 ms += data.get("matches", [])
@@ -188,7 +207,7 @@ def build_ratings():
     if not R:
         return {}
     with open(ELO_FILE, "w") as f:
-        json.dump({"built_utc": now.isoformat(), "ratings": {str(k): v for k, v in R.items()}}, f)
+        json.dump({"built_utc": now.isoformat(), "leagues": TEAM_LEAGUES, "ratings": {str(k): v for k, v in R.items()}}, f)
     return R
 
 GOALS = None
@@ -301,12 +320,19 @@ def goal_lean(gp, base=DEFAULT_BASE):
             ("Over 3.5", gp["o35"], o35), ("Under 3.5", 100 - gp["o35"], 100 - o35)]
     return max(opts, key=lambda x: x[1] - x[2])
 
-def stat_probs(elo, gp=None):
-    """Probabilitas model statistik (persen): campuran Elo dan 1X2 dari model gol Poisson."""
+def stat_probs(elo, gp=None, mk=None):
+    """Probabilitas model statistik (persen): campuran Elo dan 1X2 Poisson; kalau ada odds pasar (mk), dicampur lagi."""
     px = gp.get("p1x2") if gp else None
+    base = None
     if elo and px:
-        return [STAT_W_ELO * e + (1 - STAT_W_ELO) * p for e, p in zip(elo, px)]
-    return list(elo) if elo else (list(px) if px else None)
+        base = [STAT_W_ELO * e + (1 - STAT_W_ELO) * p for e, p in zip(elo, px)]
+    elif elo:
+        base = list(elo)
+    elif px:
+        base = list(px)
+    if mk and base:
+        return [STAT_W_MARKET * m + (1 - STAT_W_MARKET) * b for m, b in zip(mk, base)]
+    return list(mk) if mk else base
 
 def elo_predict(R, hid, aid):
     """Probabilitas (home, seri, away) dalam persen, atau None kalau salah satu tim belum punya rating."""
@@ -318,12 +344,13 @@ def elo_predict(R, hid, aid):
     tot = ph + d + pa
     return (ph / tot * 100, d / tot * 100, pa / tot * 100)
 
-def elo_only(elo, gp=None):
-    """Sinyal cadangan kalau analisa AI gagal: hanya dari model statistik (Elo dan model gol)."""
-    stat = stat_probs(elo, gp)
+def elo_only(elo, gp=None, mk=None):
+    """Sinyal cadangan kalau analisa AI gagal: hanya dari model statistik (Elo, model gol) dan odds pasar kalau ada."""
+    stat = stat_probs(elo, gp, mk)
+    src = "model statistik dan odds pasar" if mk else "model statistik, yaitu Elo dan model gol berdasarkan hasil pertandingan"
     res = normalize({
         "home_win": stat[0], "draw": stat[1], "away_win": stat[2],
-        "key_factors": ["Analisa AI tidak tersedia (kuota atau gangguan), sinyal ini hanya dari model statistik, yaitu Elo dan model gol berdasarkan hasil pertandingan."],
+        "key_factors": [f"Analisa AI tidak tersedia (kuota atau gangguan), sinyal ini hanya dari {src}."],
         "risks": ["Tanpa info berita, cedera, dan lineup. Perlakukan dengan lebih hati-hati."],
         "likely_score": "-", "summary": "Hanya berdasarkan model statistik, tanpa berita terbaru.",
     })
@@ -331,17 +358,23 @@ def elo_only(elo, gp=None):
         res["e"] = elo
     if gp and gp.get("p1x2"):
         res["x"] = tuple(gp["p1x2"])
+    if mk:
+        res["m"] = tuple(mk)
+        res["m_used"] = True
     res["ai_failed"] = True
     return res
 
-def combine(res, elo, gp=None):
-    """Gabungkan probabilitas AI dengan model statistik (Elo + Poisson). Kalau model statistik tidak ada, pakai AI saja."""
+def combine(res, elo, gp=None, mk=None):
+    """Gabungkan probabilitas AI dengan model statistik (Elo + Poisson + odds pasar kalau ada)."""
     res["g"] = (res["home_win"], res["draw"], res["away_win"])
-    stat = stat_probs(elo, gp)
+    stat = stat_probs(elo, gp, mk)
     if elo:
         res["e"] = elo
     if gp and gp.get("p1x2"):
         res["x"] = tuple(gp["p1x2"])
+    if mk:
+        res["m"] = tuple(mk)
+        res["m_used"] = True
     if stat:
         mix = [W_GEMINI * g + (1 - W_GEMINI) * x for g, x in zip(res["g"], stat)]
         res["home_win"], res["draw"], res["away_win"] = mix
@@ -523,6 +556,18 @@ def send_telegram(text, reply_to=None):
         raise RuntimeError(f"Telegram menolak pesan: {r2.status_code} - {_tg_error(r2)}")
     return r2.json()["result"]["message_id"]
 
+def _uel_mod():
+    try:
+        import uel
+        return uel
+    except Exception as e:
+        print("[uel] modul tidak bisa dimuat ->", type(e).__name__)
+        return None
+
+def _is_uel(name):
+    n = name or ""
+    return bool(re.search(r"europa league", n, re.I)) and not re.search(r"conference", n, re.I)
+
 def _tgl(d):
     return f"{d.day} {BULAN[d.month - 1]} {d.year}"
 
@@ -550,12 +595,17 @@ def format_msg(match, res):
     title, models = "PROBABILITAS", ""
     if res.get("ai_failed"):
         title = "PROBABILITAS (model statistik saja, AI sedang tidak tersedia)"
-    elif res.get("e") and res.get("g"):
-        g, e = res["g"], res["e"]
-        title = "PROBABILITAS (gabungan AI + model statistik)"
-        xs = f"   📊 Poisson {res['x'][0]:.0f}/{res['x'][1]:.0f}/{res['x'][2]:.0f}" if res.get("x") else ""
-        models = (f"<code>🤖 AI {g[0]:.0f}/{g[1]:.0f}/{g[2]:.0f}   "
-                  f"📐 Elo {e[0]:.0f}/{e[1]:.0f}/{e[2]:.0f}{xs}</code>\n")
+    elif res.get("g"):
+        g = res["g"]
+        parts = [f"🤖 AI {g[0]:.0f}/{g[1]:.0f}/{g[2]:.0f}"]
+        if res.get("e"):
+            parts.append(f"📐 Elo {res['e'][0]:.0f}/{res['e'][1]:.0f}/{res['e'][2]:.0f}")
+        if res.get("x"):
+            parts.append(f"📊 Poisson {res['x'][0]:.0f}/{res['x'][1]:.0f}/{res['x'][2]:.0f}")
+        if res.get("m"):
+            parts.append(f"📈 Pasar {res['m'][0]:.0f}/{res['m'][1]:.0f}/{res['m'][2]:.0f}")
+        title = "PROBABILITAS (gabungan AI + model statistik" + (" + pasar)" if res.get("m_used") else ")")
+        models = "<code>" + "   ".join(parts) + "</code>\n"
 
     pick_name = {"home": h_full, "draw": "Seri", "away": a_full}[res["pick"]]
     conf = res["confidence"]
@@ -576,6 +626,12 @@ def format_msg(match, res):
             f"🎯 Sinyal gol terkuat: <b>{lean_name}</b> ({lean_p:.0f}%, rata-rata liga {lean_b:.0f}%)\n{LINE}\n"
         )
     ai_line = f"<i>{esc(res['ai_note'])}</i>\n" if res.get("ai_note") else ""
+    value_line = ""
+    if res.get("m") and res.get("od") and res.get("pick") in ("home", "draw", "away"):
+        vi = {"home": 0, "draw": 1, "away": 2}[res["pick"]]
+        edge = (res["home_win"], res["draw"], res["away_win"])[vi] - res["m"][vi]
+        value_line = (f"💰 Odds rata-rata {res['od'][vi]:.2f}, pasar {res['m'][vi]:.0f}%, selisih {edge:+.0f} poin "
+                      f"{'(ada value)' if edge >= VALUE_EDGE else '(tanpa value)'}\n")
     factors = "\n".join(f"✅ {esc(x)}" for x in res.get("key_factors", [])[:4])
     risks = "\n".join(f"⚠️ {esc(x)}" for x in res.get("risks", [])[:3])
 
@@ -587,6 +643,7 @@ def format_msg(match, res):
         f"{LINE}\n"
         f"{signal}\n"
         f"{CONF_ICON[conf]} Keyakinan: <b>{conf}</b>   🔢 Skor mungkin: <b>{esc(res.get('likely_score', '-'))}</b>\n"
+        f"{value_line}"
         f"{LINE}\n"
         f"{goals_block}"
         f"💡 <b>FAKTOR KUNCI</b>\n{factors}\n\n"
@@ -673,6 +730,9 @@ def log_prediction(match, res, msg_id=None):
         **{k: round(v, 1) for k, v in zip(("g_home", "g_draw", "g_away"), res.get("g") or ())},
         **{k: round(v, 1) for k, v in zip(("e_home", "e_draw", "e_away"), res.get("e") or ())},
         **{k: round(v, 1) for k, v in zip(("x_home", "x_draw", "x_away"), res.get("x") or ())},
+        **{k: round(v, 1) for k, v in zip(("m_home", "m_draw", "m_away"), res.get("m") or ())},
+        **{k: round(v, 2) for k, v in zip(("od_home", "od_draw", "od_away"), res.get("od") or ())},
+        **{k: round(v, 2) for k, v in zip(("ob_home", "ob_draw", "ob_away"), res.get("ob") or ())},
         **({k: round(res["goals"][k], 1) for k in ("lam_h", "lam_a", "o15", "o25", "o35", "btts")} if res.get("goals") else {}),
     })
     write_preds(rows)
@@ -766,6 +826,15 @@ def settle_results(max_calls=3, notify=True):
             bulk_ok = True
             found = {m["id"]: m for m in data.get("matches", [])}
 
+    uel_ids = {int(r["match_id"]) for r, ko in pending if _is_uel(r.get("competition"))}
+    if uel_ids:
+        um = _uel_mod()
+        if um:
+            try:
+                found.update(um.finished(uel_ids))
+            except Exception as e:
+                print("[uel] skor gagal diambil ->", e)
+
     calls, newly = 0, []
     for r, ko in pending:
         mid = int(r["match_id"])
@@ -802,6 +871,33 @@ def _brier(rows, pref):
         o = [1.0 if r["outcome"] == k else 0.0 for k in ("home", "draw", "away")]
         tot += sum((x - y) ** 2 for x, y in zip(p, o))
     return tot / len(rows)
+
+def _fnum(x):
+    try:
+        return float(x)
+    except (TypeError, ValueError):
+        return None
+
+def _bets(done):
+    """Taruhan simulasi 1 unit pada pilihan agent, memakai odds rata-rata bandar saat analisa."""
+    out = []
+    for r in done:
+        side = r.get("pick")
+        if side not in ("home", "draw", "away"):
+            continue
+        odd = _fnum(r.get(f"od_{side}"))
+        if not odd or odd <= 1:
+            continue
+        mkt, pp = _fnum(r.get(f"m_{side}")), _fnum(r.get(f"p_{side}"))
+        out.append({"won": r.get("correct") == "1", "odd": odd, "conf": _conf(r),
+                    "edge": (pp - mkt) if (pp is not None and mkt is not None) else None})
+    return out
+
+def _roi_line(label, bets):
+    if not bets:
+        return None
+    profit = sum((b["odd"] - 1) if b["won"] else -1 for b in bets)
+    return f"{label}: {sum(b['won'] for b in bets)}/{len(bets)} menang, ROI <b>{profit / len(bets) * 100:+.0f}%</b> ({profit:+.1f} unit)"
 
 def build_report():
     rows = read_preds()
@@ -862,6 +958,23 @@ def build_report():
     else:
         lines.append(f"Gabungan: <b>{_brier(done, 'p'):.3f}</b>  <i>(tebak acak = 0.667)</i>")
 
+    bets = _bets(done)
+    if bets:
+        lines += [LINE, f"💰 <b>SIMULASI TARUHAN 1 UNIT</b>  <i>(odds rata-rata bandar saat analisa, {len(bets)} laga)</i>"]
+        if len(bets) < 5:
+            lines.append("<i>Baru sedikit laga yang punya odds, simulasi muncul setelah minimal 5 laga.</i>")
+        else:
+            lines.append(_roi_line("Semua pilihan", bets))
+            for c in ("tinggi", "sedang", "rendah"):
+                ln = _roi_line(f"{CONF_ICON[c]} Keyakinan {c}", [b for b in bets if b["conf"] == c])
+                if ln:
+                    lines.append(ln)
+            for lab, sel in ((f"Ber-value (selisih ≥ {VALUE_EDGE} poin)", [b for b in bets if b["edge"] is not None and b["edge"] >= VALUE_EDGE]),
+                             ("Tanpa value", [b for b in bets if b["edge"] is not None and b["edge"] < VALUE_EDGE])):
+                ln = _roi_line(lab, sel)
+                if ln:
+                    lines.append(ln)
+            lines.append("<i>Simulasi, bukan jaminan. Odds akhir dan margin bandar bisa berbeda.</i>")
     gl = [r for r in done if r.get("o25") and _total_goals(r) is not None]
     if gl:
         lines += [LINE, f"⚽ <b>GOL</b>  <i>(model Poisson, {len(gl)} laga)</i>"]
@@ -1014,23 +1127,24 @@ def build_parlay_legs(ratings, ms=None, shortlist=None):
         hid, aid = m["homeTeam"]["id"], m["awayTeam"]["id"]
         elo = elo_predict(ratings, hid, aid)
         gp = goal_probs(hid, aid, m["competition"]["code"])
-        if elo or gp:
-            info.append((m, elo, gp))
+        mk = m.get("_mk")
+        if elo or gp or mk:
+            info.append((m, elo, gp, mk))
     n_scanned = len(info)
-    ranked = sorted([x for x in info if x[1]], key=lambda x: -max(x[1]))
+    ranked = sorted([x for x in info if x[1] or x[3]], key=lambda x: -max(stat_probs(x[1], x[2], x[3])))
     short_ids = {x[0]["id"] for x in ranked[:(shortlist or PARLAY_SHORTLIST)]}
 
     per_match, bundles = [], {}
-    for m, elo, gp in info:
-        b = {"m": m, "elo": elo, "gp": gp, "res": None, "ctx": None}
+    for m, elo, gp, mk in info:
+        b = {"m": m, "elo": elo, "gp": gp, "mk": mk, "res": None, "ctx": None}
         opts = []
         if m["id"] in short_ids:
             ctx = _ctx_for(m)
             try:
-                res = combine(analyze(m, ctx), elo, gp)
+                res = combine(analyze(m, ctx), elo, gp, mk)
             except Exception as e:
                 print("[parlay] AI gagal, pakai model statistik saja ->", e)
-                res = elo_only(elo, gp)
+                res = elo_only(elo, gp, mk)
             b["ctx"], b["res"] = ctx, res
             leg = _leg_from(m, res)
             if leg["p"] >= PARLAY_MIN_PROB:
@@ -1056,9 +1170,11 @@ def _leg_notes(b):
                         risks=list(res.get("risks") or [])[:3])
     if elo:
         note["e"] = [round(v, 1) for v in elo]
-    stat = stat_probs(elo, gp)
+    stat = stat_probs(elo, gp, b.get("mk"))
     if stat:
         note["s"] = [round(v, 1) for v in stat]
+    if b.get("mk"):
+        note["m"] = [round(v, 1) for v in b["mk"]]
     if gp and gp.get("p1x2"):
         note["x"] = [round(v, 1) for v in gp["p1x2"]]
     if gp:
@@ -1100,10 +1216,16 @@ def format_leg_detail(i, n, b, uses):
         w = max(len(r[1]) for r in rows)
         lines += [LINE, f"📊 <b>{title}</b>"]
         lines += [f"{ic} <code>{esc(nm_.ljust(w))} {bar(p)} {p:>3.0f}%</code>" for ic, nm_, p in rows]
-        if res and res.get("g") and res.get("e"):
-            g, e = res["g"], res["e"]
-            xs = f"   📊 Poisson {res['x'][0]:.0f}/{res['x'][1]:.0f}/{res['x'][2]:.0f}" if res.get("x") else ""
-            lines.append(f"<code>🤖 AI {g[0]:.0f}/{g[1]:.0f}/{g[2]:.0f}   📐 Elo {e[0]:.0f}/{e[1]:.0f}/{e[2]:.0f}{xs}</code>")
+        if res and res.get("g"):
+            g = res["g"]
+            parts = [f"🤖 AI {g[0]:.0f}/{g[1]:.0f}/{g[2]:.0f}"]
+            if res.get("e"):
+                parts.append(f"📐 Elo {res['e'][0]:.0f}/{res['e'][1]:.0f}/{res['e'][2]:.0f}")
+            if res.get("x"):
+                parts.append(f"📊 Poisson {res['x'][0]:.0f}/{res['x'][1]:.0f}/{res['x'][2]:.0f}")
+            if res.get("m"):
+                parts.append(f"📈 Pasar {res['m'][0]:.0f}/{res['m'][1]:.0f}/{res['m'][2]:.0f}")
+            lines.append("<code>" + "   ".join(parts) + "</code>")
         top_i = max(range(3), key=lambda k: probs[k])
         conf = "tinggi" if probs[top_i] >= 60 else "sedang" if probs[top_i] >= 50 else "rendah"
         who = [f"{h_full} menang", "Seri", f"{a_full} menang"][top_i]
@@ -1150,11 +1272,11 @@ def _fmt_combo(title, legs):
 
 def format_parlay_msg(safe, mix, n_scanned, scope="all"):
     wib = dt.datetime.now(dt.timezone(dt.timedelta(hours=7)))
-    ucl = scope == "ucl"
-    intro = (f"Draft malam sebelum kick-off: lineup belum keluar, bisa berubah. {n_scanned} laga UCL dipindai dan dianalisa. "
-             if ucl else f"Draft: lineup belum keluar, bisa berubah. {n_scanned} laga dipindai dari semua liga. ")
+    cup = {"ucl": ("🏆 <b>KOMBINASI UCL</b>", "UCL"), "uel": ("🧡 <b>KOMBINASI UEL</b>", "UEL")}.get(scope)
+    intro = (f"Draft malam sebelum kick-off: lineup belum keluar, bisa berubah. {n_scanned} laga {cup[1]} dipindai dan dianalisa. "
+             if cup else f"Draft: lineup belum keluar, bisa berubah. {n_scanned} laga dipindai dari semua liga. ")
     lines = [
-        f"{'🏆 <b>KOMBINASI UCL</b>' if ucl else '🎰 <b>KOMBINASI HARIAN</b>'}  •  {_tgl(wib)}",
+        f"{cup[0] if cup else '🎰 <b>KOMBINASI HARIAN</b>'}  •  {_tgl(wib)}",
         f"<i>{intro}Pilihan mencakup hasil laga dan over/under gol. "
         f"Detail tiap laga ada di balasan pesan ini. Analisa per laga tetap datang sekitar 1 jam sebelum kick-off.</i>",
         LINE,
@@ -1181,9 +1303,8 @@ def run_daily_parlay(manual=False, scope="all"):
     except Exception as e:
         print("[parlay] rating Elo gagal ->", e)
         return False
-    ucl = scope == "ucl"
     ms = None
-    if not ucl:
+    if scope == "all":
         # UCL punya kombinasi sendiri (UCL Aman dan UCL Mix), jadi kombinasi harian hanya memuat liga domestik
         allm = matches_in_window()
         if allm is None:
@@ -1191,13 +1312,20 @@ def run_daily_parlay(manual=False, scope="all"):
         ms = [m for m in allm if m["competition"]["code"] != "CL"]
         if not ms:
             return "none"
-    if ucl:
+    elif scope == "ucl":
         ms = matches_in_window(20, UCL_WINDOW_H * 60, "CL")
         if ms is None:
             return False
         if not ms:
             return "none"
-    per_match, n_scanned, bundles = build_parlay_legs(ratings, ms, UCL_SHORTLIST if ucl else None)
+    elif scope == "uel":
+        um = _uel_mod()
+        ms = um.matches_in_window(20, UCL_WINDOW_H * 60) if um else None
+        if ms is None:
+            return False
+        if not ms:
+            return "none"
+    per_match, n_scanned, bundles = build_parlay_legs(ratings, ms, UCL_SHORTLIST if scope != "all" else None)
     # AMAN: satu pilihan terkuat per laga (pasar apa pun), ambil 3 teratas
     best = sorted((max(o, key=lambda l: l["p"]) for o in per_match), key=lambda l: -l["p"])
     safe = best[:3] if len(best) >= 2 else []
@@ -1233,7 +1361,7 @@ def run_daily_parlay(manual=False, scope="all"):
     items = [x for x in _load_parlays() if not (x["date"] == today and not x["outcome"] and x.get("scope", "all") == scope)]
     for kind, combo in (("aman", safe), ("mix", mix)):
         if combo:
-            items.append({"id": f"{today}-{'ucl-' if ucl else ''}{kind}", "date": today, "kind": kind, "scope": scope, "legs": combo,
+            items.append({"id": f"{today}-{scope + '-' if scope != 'all' else ''}{kind}", "date": today, "kind": kind, "scope": scope, "legs": combo,
                           "notes": {str(l["match_id"]): _leg_notes(bundles[l["match_id"]]) for l in combo},
                           "p_comb": round(_combo(combo), 4), "tg_msg_id": msg_id,
                           "outcome": "", "legs_hit": ""})
@@ -1285,6 +1413,29 @@ def maybe_send_ucl_parlay():
     except Exception as e:
         print("Kombinasi UCL gagal ->", e)
 
+def maybe_send_uel_parlay():
+    """Kombinasi khusus UEL: sekali per hari, di run pertama setelah UEL_PARLAY_HOUR_WIB,
+    hanya kalau ada laga UEL yang kick-off-nya dalam UCL_WINDOW_H jam ke depan."""
+    wib = dt.datetime.now(dt.timezone(dt.timedelta(hours=7)))
+    if wib.hour < UEL_PARLAY_HOUR_WIB:
+        return
+    today = wib.date().isoformat()
+    try:
+        last = open(UEL_PARLAY_LAST_FILE).read().strip()
+    except Exception:
+        last = ""
+    if last == today:
+        return
+    try:
+        r = run_daily_parlay(scope="uel")
+        if r:                                  # True (terkirim) atau "none" (tidak ada laga UEL)
+            with open(UEL_PARLAY_LAST_FILE, "w") as f:
+                f.write(today)
+            if r is True:
+                print("Kombinasi UEL terkirim.")
+    except Exception as e:
+        print("Kombinasi UEL gagal ->", e)
+
 def format_parlay_result(x, details):
     esc = lambda ee: html.escape(str(ee))
     names = {"aman": "🛡️ AMAN", "mix": "🎲 MIX"}
@@ -1295,7 +1446,7 @@ def format_parlay_result(x, details):
                     f"      <i>pilihan: {esc(_leg_pick_text(leg))}</i>")
     win = x["outcome"] == "win"
     return "\n".join([
-        f"🏁 <b>HASIL KOMBINASI {'UCL ' if x.get('scope') == 'ucl' else ''}{names.get(x['kind'], x['kind'].upper())}</b>",
+        f"🏁 <b>HASIL KOMBINASI {({'ucl': 'UCL ', 'uel': 'UEL '}).get(x.get('scope'), '')}{names.get(x['kind'], x['kind'].upper())}</b>",
         LINE, *rows, LINE,
         f"{'✅ <b>KOMBINASI MENANG</b>' if win else '❌ <b>KOMBINASI GAGAL</b>'}  ({x['legs_hit']} pilihan benar)",
         f"📊 Peluang awal semua benar: {x['p_comb'] * 100:.0f}%",
@@ -1324,6 +1475,14 @@ def settle_parlays(notify=True):
                                    "dateTo": (max(kos).date() + dt.timedelta(days=1)).isoformat(),
                                    "competitions": LEAGUES})
         found = {m["id"]: m for m in (data or {}).get("matches", [])}
+        uel_ids = {int(l["match_id"]) for x in ready for l in x["legs"] if _is_uel(l.get("competition"))}
+        if uel_ids:
+            um = _uel_mod()
+            if um:
+                try:
+                    found.update(um.finished(uel_ids))
+                except Exception as e:
+                    print("[uel] skor gagal diambil ->", e)
         for x in ready:
             details, complete = [], True
             for leg in x["legs"]:
@@ -1361,21 +1520,24 @@ def update_crests(max_age_days=14):
     try:
         with open(CREST_FILE, encoding="utf-8") as f:
             c = json.load(f)
-        limit = max_age_days if c.get("crests") else 1
+        limit = max_age_days if c.get("crests") and c.get("ids") else 1
         if now - dt.datetime.fromisoformat(c["built_utc"]) < dt.timedelta(days=limit):
             return
     except Exception:
         pass
-    crests = {}
-    for code in LEAGUES.split(","):
+    crests, ids, shorts = {}, {}, {}
+    for code in TEAM_LEAGUES.split(","):
         data = fd_get(f"/competitions/{code}/teams")
         for t in (data or {}).get("teams", []):
+            ids.setdefault(t["name"], t["id"])
+            if t.get("shortName"):
+                shorts.setdefault(t["name"], t["shortName"])
             if t.get("crest"):
                 crests[t["name"]] = t["crest"]
                 if t.get("shortName"):
                     crests.setdefault(t["shortName"], t["crest"])
     with open(CREST_FILE, "w", encoding="utf-8") as f:
-        json.dump({"built_utc": now.isoformat(), "crests": crests}, f, ensure_ascii=False)
+        json.dump({"built_utc": now.isoformat(), "crests": crests, "ids": ids, "shorts": shorts}, f, ensure_ascii=False)
     print(f"[logo] {len(crests)} logo tim tersimpan")
 
 def maybe_send_daily_report():
@@ -1407,6 +1569,10 @@ def maybe_send_daily_report():
 def main():
     args = sys.argv[1:]
 
+    if "--parlay-uel" in args:
+        run_daily_parlay(manual=True, scope="uel")
+        return
+
     if "--parlay-ucl" in args:
         run_daily_parlay(manual=True, scope="ucl")
         return
@@ -1431,6 +1597,7 @@ def main():
         maybe_send_daily_report()
         maybe_send_daily_parlay()
         maybe_send_ucl_parlay()
+        maybe_send_uel_parlay()
         try:
             update_crests()
         except Exception as e:
@@ -1469,14 +1636,19 @@ def main():
         try:
             elo = elo_predict(ratings, hid, aid)
             gp = goal_probs(hid, aid, comp)
+            mk = m.get("_mk")
             try:
-                res = combine(analyze(m, ctx), elo, gp)
+                res = combine(analyze(m, ctx), elo, gp, mk)
             except Exception as ai_err:
                 print("[ai] analisa gagal ->", ai_err)
-                if not (elo or gp):
+                if not (elo or gp or mk):
                     raise
                 print("[ai] pakai sinyal model statistik saja untuk laga ini")
-                res = elo_only(elo, gp)
+                res = elo_only(elo, gp, mk)
+            if m.get("_mkshadow") and not res.get("m"):
+                res["m"] = tuple(m["_mkshadow"])          # hanya dicatat dan ditampilkan, tidak dicampur ke tebakan
+            if m.get("_od"):
+                res["od"], res["ob"] = tuple(m["_od"]), tuple(m.get("_ob") or ())
             if gp:
                 res["goals"] = gp
                 res["likely_score"] = gp["top"][0][0]

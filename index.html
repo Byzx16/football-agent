@@ -158,6 +158,9 @@ body.uel .uelogo{display:block;height:clamp(96px,17vw,168px);width:auto;max-widt
 .t-pk small{color:var(--mute);font-size:12.5px}
 .cb .dd{padding:4px 0 18px 36px}
 @media(max-width:760px){.mp-grid,.tms,.two{grid-template-columns:1fr}.rb{grid-template-columns:90px 1fr 74px}.cb summary.lg2{grid-template-columns:20px 1fr auto}.lg2 .t-ko{grid-column:2}.lg2 .t-pk{grid-column:3;grid-row:1;text-align:right}.lg2 .t-tm,.lg2 .t-rs{grid-column:2/-1}.cb .dd{padding-left:0}}
+.up{color:var(--ok)}.dn{color:var(--no)}
+.rt td:nth-child(n+2),.rt th:nth-child(n+2){text-align:right}
+.rt{min-width:0}
 .trend{display:flex;align-items:center;gap:6px;margin:12px 0 6px}
 .trend i{width:22px;height:22px;border-radius:4px;background:var(--ok)}
 .trend i.l{background:var(--no)}
@@ -231,6 +234,35 @@ function calib(done){
   return rows||'<p class="empty" style="padding:14px 0">Belum ada laga selesai.</p>';
 }
 
+function roiRows(done){
+  const out=[];
+  done.forEach(r=>{const s=r.pick;if(!['home','draw','away'].includes(s))return;const odd=N(r['od_'+s]);if(!odd||odd<=1)return;
+    const pp=N(r['p_'+s]),mk=N(r['m_'+s]),won=r.correct=='1',hasM=r['m_'+s]!==''&&r['m_'+s]!=null&&!isNaN(mk)&&!isNaN(pp);
+    out.push({t:r.kickoff_utc,won,odd,conf:cf(r),edge:hasM?pp-mk:null,profit:won?odd-1:-1})});
+  out.sort((a,b)=>a.t<b.t?-1:1);out.forEach((x,i)=>x.i=i);return out;
+}
+function roiLine(label,b){
+  if(!b.length)return '';
+  const pr=b.reduce((a,x)=>a+x.profit,0),w=b.filter(x=>x.won).length,roi=pr/b.length*100;
+  return `<tr><td>${label}</td><td>${w}/${b.length}</td><td class="${roi>=0?'up':'dn'}">${roi>=0?'+':''}${Math.round(roi)}%</td><td class="${pr>=0?'up':'dn'}">${pr>=0?'+':''}${F2(pr,1)} unit</td></tr>`;
+}
+function profitChart(b,V){
+  if(b.length<2)return '';
+  const W=640,H=220,P={l:48,r:14,t:12,b:14},iw=W-P.l-P.r,ih=H-P.t-P.b,n=b.length;
+  const cum=a=>{let s=0;return a.map(x=>({i:x.i,v:(s+=x.profit)}))},A=cum(b),VC=V.length>1?cum(V):[];
+  const vals=[0,...A.map(p=>p.v),...VC.map(p=>p.v)],lo=Math.min(...vals),hi=Math.max(...vals),rng=(hi-lo)||1;
+  const X=i=>P.l+iw*i/Math.max(1,n-1),Y=v=>P.t+ih*(1-(v-lo)/rng),pth=a=>a.map((p,k)=>(k?'L':'M')+X(p.i).toFixed(1)+' '+Y(p.v).toFixed(1)).join('');
+  const ticks=[...new Set([lo,0,hi].map(v=>Math.round(v*10)/10))].map(v=>`<line x1="${P.l}" x2="${W-P.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(232,239,228,${v==0?.3:.08})" ${v==0?'stroke-dasharray="5 5"':''}/><text x="${P.l-8}" y="${Y(v)+4}" text-anchor="end" fill="#8fa598" font-size="12">${v>0?'+':''}${F2(v,1)}</text>`).join('');
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Profit kumulatif simulasi taruhan 1 unit">${ticks}<path d="${pth(A)}" fill="none" style="stroke:var(--amber)" stroke-width="3" stroke-linejoin="round"/>${VC.length?`<path d="${pth(VC)}" fill="none" style="stroke:var(--ok)" stroke-width="2.5" stroke-dasharray="6 4"/>`:''}</svg><div class="lg"><span><i></i>Semua pilihan</span>${VC.length?'<span><i class="d" style="border-top-color:var(--ok)"></i>Hanya yang ber-value</span>':''}</div>`;
+}
+function roiSection(done){
+  const b=roiRows(done);
+  if(!b.length)return '<p class="empty" style="padding:14px 0">Belum ada tebakan yang punya odds. Odds mulai dicatat sejak pembaruan ini.</p>';
+  if(b.length<5)return `<p class="empty" style="padding:14px 0">Baru ${b.length} laga yang punya odds. Simulasi muncul setelah minimal 5 laga.</p>`;
+  const V=b.filter(x=>x.edge!=null&&x.edge>=5),NV=b.filter(x=>x.edge!=null&&x.edge<5);
+  return `<p class="note" style="margin:0 0 8px">${b.length} laga punya odds. Taruhan 1 unit di tiap pilihan, odds rata-rata bandar saat analisa.</p><div class="tw"><table class="rt"><thead><tr><th>Kelompok</th><th>Menang</th><th>ROI</th><th>Profit</th></tr></thead><tbody>${roiLine('Semua pilihan',b)}${['tinggi','sedang','rendah'].map(c=>roiLine('Keyakinan '+c,b.filter(x=>x.conf==c))).join('')}${roiLine('Ber-value (selisih ≥ 5 poin)',V)}${roiLine('Tanpa value',NV)}</tbody></table></div>${profitChart(b,V)}<p class="note">Selisih adalah peluang agent dikurangi peluang pasar untuk pilihan itu. Sampel kecil mudah menipu, jadi baca ini sebagai gambaran awal. Margin bandar dan odds akhir bisa berbeda dari simulasi.</p>`;
+}
+
 function csv(t){t=t.replace(/^\uFEFF/,'');const R=[];let r=[],f='',q=0;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=0}else f+=c}else if(c=='"')q=1;else if(c==','){r.push(f);f=''}else if(c=='\n'||c=='\r'){if(c=='\r'&&t[i+1]=='\n')i++;r.push(f);f='';if(r.length>1||r[0]!=='')R.push(r);r=[]}else f+=c}if(f!==''||r.length){r.push(f);R.push(r)}const h=R.shift()||[];return R.map(x=>Object.fromEntries(h.map((k,i)=>[k.trim(),x[i]==null?'':x[i]])))}
 
 function cu(el){const to=N(el.dataset.to)||0,dec=+(el.dataset.dec||0),suf=el.dataset.suf||'',d=RM?1:1400,t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,4);el.textContent=F2(to*e,dec)+suf;if(k<1)requestAnimationFrame(f)})(t0)}
@@ -271,11 +303,11 @@ function chips(list,team){
 }
 
 function panel(d){
-  const P=d.p||d.s||d.e||null,top=P?amx(P):-1,cl=P?cfp(P[top]):'',
+  const P=d.p||d.s||d.e||d.m||null,top=P?amx(P):-1,cl=P?cfp(P[top]):'',
   L=(t,x)=>x&&x.length?`<div><h5>${t}</h5><ul>${x.map(i=>`<li>${esc(i)}</li>`).join('')}</ul></div>`:'',
   sig=P?`<div class="sig"><b>${esc([d.home_s+' menang','Seri',d.away_s+' menang'][top])}</b><span class="tag ${cl=='tinggi'?'ok':cl=='sedang'?'wait':'mt'}">keyakinan ${cl}</span></div>`:'<p class="sub">Peluang hasil laga belum tersimpan.</p>',
   bars=P?[[d.home_s,P[0],'var(--ok)'],['Seri',P[1],'#6f8478'],[d.away_s,P[2],'var(--amber)']].map(([lab,v,c],i)=>`<div class="rb${i==top?' on':''}"><span>${esc(lab)}</span><div class="bar"><i style="--w:${v}%;--c:${c}"></i></div><em>${Math.round(v)}%</em></div>`).join(''):'',
-  chp=[['Gabungan',d.p],['AI',d.g],['Statistik',d.p?null:d.s],['Elo',d.e],['Poisson',d.x]].filter(c=>c[1]&&c[1].length).map(([l,v])=>`<span class="cp"><i>${l}</i>${v.map(x=>Math.round(N(x))).join(' / ')}</span>`).join(''),
+  chp=[['Gabungan',d.p],['AI',d.g],['Statistik',d.p?null:d.s],['Elo',d.e],['Poisson',d.x],['Pasar',d.m]].filter(c=>c[1]&&c[1].length).map(([l,v])=>`<span class="cp"><i>${l}</i>${v.map(x=>Math.round(N(x))).join(' / ')}</span>`).join(''),
   G=d.goals,gb=d.gb||null,
   gr=G?[['Over 1.5',G.o15,gb&&gb[0]],['Over 2.5',G.o25,gb&&gb[1]],['Over 3.5',G.o35,gb&&gb[2]],['Kedua tim cetak gol',G.btts,gb&&gb[3]]].map(([lab,v,b])=>`<div class="rb"><span>${lab}</span><div class="bar"><i style="--w:${v}%;--c:var(--amber)"></i>${b!=null?`<s style="left:${b}%" title="Rata-rata liga ${Math.round(b)}%"></s>`:''}</div><em>${Math.round(v)}%${b!=null?`<small>liga ${Math.round(b)}%</small>`:''}</em></div>`).join(''):'',
   lean=(G&&gb)?[['Over 1.5',G.o15,gb[0]],['Under 1.5',100-G.o15,100-gb[0]],['Over 2.5',G.o25,gb[1]],['Under 2.5',100-G.o25,100-gb[1]],['Over 3.5',G.o35,gb[2]],['Under 3.5',100-G.o35,100-gb[2]]].sort((a,b)=>(b[1]-b[2])-(a[1]-a[2]))[0]:null,
@@ -291,7 +323,7 @@ function panel(d){
 
 function noteHTML(n,l){
   if(!n)return '<p class="sub">Detail belum tersimpan untuk kombinasi ini.</p>';
-  return panel({home:l.home,away:l.away,home_s:l.home_s,away_s:l.away_s,p:n.p,s:n.s,g:n.g,e:n.e,x:n.x,goals:n.goals,top:n.top,gb:n.gb,
+  return panel({home:l.home,away:l.away,home_s:l.home_s,away_s:l.away_s,p:n.p,s:n.s,g:n.g,e:n.e,x:n.x,m:n.m,goals:n.goals,top:n.top,gb:n.gb,
     home_rank:n.home_rank,away_rank:n.away_rank,home_form:n.home_form,away_form:n.away_form,summary:n.summary,factors:n.factors,risks:n.risks})
 }
 
@@ -365,6 +397,7 @@ function render(){
   <section class="obs"><h2>Akurasi dari laga ke laga</h2><p class="sub">Setiap titik adalah akurasi kumulatif sampai laga itu.</p>${line(done)}</section>
   <section class="cols obs"><div><h2>Akurasi per tingkat keyakinan</h2><p class="sub">Sinyal yang diberi keyakinan tinggi seharusnya lebih sering benar.</p>${bars}</div><div><h2>Siapa yang paling jitu</h2><p class="sub">Kualitas probabilitas AI, model Elo, dan gabungan keduanya.</p>${bri}</div></section>
   <section class="obs"><h2>Seberapa bisa dipercaya peluang agent</h2><p class="sub">Kelompok laga menurut peluang tertinggi yang diberikan agent. Batang abu-abu adalah peluang yang diberikan, batang kuning adalah seberapa sering tebakannya benar. Kalau agent jujur, keduanya sama panjang.</p>${calib(done)}</section>
+  <section class="obs"><h2>Simulasi taruhan 1 unit</h2><p class="sub">Seandainya tiap pilihan agent ditaruh 1 unit. Ini alat ukur untuk melihat apakah peluang agent mengalahkan harga pasar, bukan saran taruhan.</p>${roiSection(done)}</section>
   <section><h2>Riwayat kombinasi</h2><p class="sub" style="margin-bottom:10px">Kombinasi yang sudah selesai. Satu laga meleset, seluruh kombinasi gagal. Klik sebuah laga untuk melihat detailnya.</p>${parlays()}</section>
   <section><h2>Riwayat tebakan</h2><p class="sub">Hanya laga yang sudah selesai.</p>
     <div class="f"><select id="lg" aria-label="Filter liga"><option value="">Semua liga</option>${lgs.map(l=>`<option${S.lg==l?' selected':''}>${esc(l)}</option>`).join('')}</select>
@@ -392,7 +425,7 @@ const pick=r=>({home:nm(r,'home'),away:nm(r,'away'),draw:'Seri'}[r.pick]||'-');
 function detail(r){
   const a=AN[r.match_id]||{},ok=k=>r[k]!==''&&r[k]!=null,arr=p=>K.map(k=>N(r[p+'_'+k]));
   return panel({home:r.home,away:r.away,home_s:nm(r,'home'),away_s:nm(r,'away'),
-    p:arr('p'),g:ok('g_home')?arr('g'):null,e:ok('e_home')?arr('e'):null,x:ok('x_home')?arr('x'):null,
+    p:arr('p'),g:ok('g_home')?arr('g'):null,e:ok('e_home')?arr('e'):null,x:ok('x_home')?arr('x'):null,m:ok('m_home')?arr('m'):null,
     goals:ok('o25')?{lam_h:N(r.lam_h),lam_a:N(r.lam_a),o15:N(r.o15),o25:N(r.o25),o35:N(r.o35),btts:N(r.btts)}:null,
     score:r.likely_score,final:r.outcome?r.final_score:null,summary:a.summary,factors:a.factors,risks:a.risks})
 }

@@ -8,7 +8,7 @@ on:
       mode:
         description: "Mode jalan manual"
         type: choice
-        options: [normal, test, report, parlay, ucl_parlay, backtest]
+        options: [normal, test, report, parlay, ucl_parlay, uel_parlay, backtest]
         default: normal
 
 # satu run pada satu waktu, supaya file data tidak bentrok
@@ -37,6 +37,7 @@ jobs:
         env:
           FOOTBALL_DATA_KEY: ${{ secrets.FOOTBALL_DATA_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}            # The Odds API: jadwal, odds, dan skor UEL
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}            # opsional: penyedia AI cadangan
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}      # opsional
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}  # opsional
@@ -48,6 +49,7 @@ jobs:
           NOTIFY_MAX_MINUTES: "75"
           PARLAY_HOUR_WIB: "15"     # jam kombinasi harian dikirim (WIB)
           UCL_PARLAY_HOUR_WIB: "21"   # jam kombinasi khusus UCL dikirim (WIB)
+          UEL_PARLAY_HOUR_WIB: "21"   # jam kombinasi khusus UEL dikirim (WIB)
           MODE_INPUT: ${{ inputs.mode }}
         run: |
           MODE="$MODE_INPUT"
@@ -56,6 +58,7 @@ jobs:
             report) python agent_free.py --report ;;
             parlay) python agent_free.py --parlay ;;
             ucl_parlay) python agent_free.py --parlay-ucl ;;
+            uel_parlay) python agent_free.py --parlay-uel ;;
             backtest) python backtest.py --telegram ;;
             *)      python agent_free.py ;;
           esac
@@ -64,7 +67,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for f in sent.json predictions.csv elo_cache.json last_report.txt parlays.json last_parlay.txt crests.json analyses.json goals_cache.json last_parlay_ucl.txt; do
+          for f in sent.json predictions.csv elo_cache.json last_report.txt parlays.json last_parlay.txt crests.json analyses.json goals_cache.json last_parlay_ucl.txt last_parlay_uel.txt uel_cache.json odds_cache.json; do
             [ -f "$f" ] && git add "$f"
           done
           if ! git diff --cached --quiet; then
