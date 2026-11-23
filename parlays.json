@@ -5224,5 +5224,179 @@
     "hit": true
    }
   }
+ },
+ {
+  "id": "2026-11-23-aman",
+  "date": "2026-11-23",
+  "kind": "aman",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 558519,
+    "kickoff_utc": "2026-11-23T19:45:00Z",
+    "competition": "Serie A",
+    "home": "AC Monza",
+    "away": "ACF Fiorentina",
+    "home_s": "Monza",
+    "away_s": "Fiorentina",
+    "market": "over15",
+    "pick": "over15",
+    "p": 87.30450546721728,
+    "ai": true,
+    "base": 76.1
+   },
+   {
+    "match_id": 560649,
+    "kickoff_utc": "2026-11-23T20:00:00Z",
+    "competition": "Premier League",
+    "home": "Brentford FC",
+    "away": "Everton FC",
+    "home_s": "Brentford",
+    "away_s": "Everton",
+    "market": "under35",
+    "pick": "under35",
+    "p": 75.26838399686741,
+    "ai": true,
+    "base": 70.2
+   }
+  ],
+  "notes": {
+   "558519": {
+    "home_rank": "#18 (7 poin, selisih gol -8)",
+    "away_rank": "#15 (9 poin, selisih gol -8)",
+    "home_form": [
+     "Monza 4-0 Cagliari",
+     "Torino 3-2 Monza",
+     "Monza 1-4 Napoli",
+     "Bologna 2-1 Monza",
+     "Monza 0-1 Atalanta"
+    ],
+    "away_form": [
+     "Fiorentina 1-3 Como 1907",
+     "Inter 2-1 Fiorentina",
+     "Fiorentina 2-2 Atalanta",
+     "Sassuolo 2-4 Fiorentina",
+     "Fiorentina 2-2 Juventus"
+    ],
+    "p": [
+     43,
+     24,
+     33
+    ],
+    "e": [
+     43.6,
+     25.7,
+     30.6
+    ],
+    "s": [
+     42.7,
+     23.8,
+     33.5
+    ],
+    "x": [
+     41.7,
+     21.9,
+     36.3
+    ],
+    "gb": [
+     76.1,
+     51.1,
+     26.2,
+     49.8
+    ],
+    "goals": {
+     "lam_h": 1.9,
+     "lam_a": 1.7,
+     "o15": 87.3,
+     "o25": 69.5,
+     "o35": 48.2,
+     "btts": 69.4
+    },
+    "top": [
+     [
+      "1-1",
+      8.9
+     ],
+     [
+      "2-1",
+      8.3
+     ],
+     [
+      "1-2",
+      7.7
+     ]
+    ]
+   },
+   "560649": {
+    "home_rank": "#10 (14 poin, selisih gol 5)",
+    "away_rank": "#7 (16 poin, selisih gol 2)",
+    "home_form": [
+     "Aston Villa 2-2 Brentford",
+     "Brentford 1-2 Liverpool",
+     "Hull City 1-1 Brentford",
+     "Brentford 2-0 Nottingham",
+     "Brighton Hove 2-0 Brentford"
+    ],
+    "away_form": [
+     "Hull City 2-2 Everton",
+     "Everton 0-2 Chelsea",
+     "Arsenal 2-0 Everton",
+     "Newcastle 0-1 Everton",
+     "Everton 3-1 Coventry City"
+    ],
+    "p": [
+     49,
+     25,
+     26
+    ],
+    "e": [
+     49.7,
+     23.9,
+     26.4
+    ],
+    "s": [
+     48.7,
+     25.0,
+     26.3
+    ],
+    "x": [
+     47.7,
+     26.0,
+     26.3
+    ],
+    "gb": [
+     77.9,
+     52.0,
+     29.8,
+     53.3
+    ],
+    "goals": {
+     "lam_h": 1.5,
+     "lam_a": 1.0,
+     "o15": 71.7,
+     "o25": 46.2,
+     "o35": 24.7,
+     "btts": 49.9
+    },
+    "top": [
+     [
+      "1-1",
+      12.4
+     ],
+     [
+      "1-0",
+      11.9
+     ],
+     [
+      "2-1",
+      9.2
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.6571,
+  "tg_msg_id": 431,
+  "outcome": "",
+  "legs_hit": ""
  }
 ]
