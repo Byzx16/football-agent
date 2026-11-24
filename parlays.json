@@ -5408,5 +5408,678 @@
     "hit": false
    }
   }
+ },
+ {
+  "id": "2026-11-24-ucl-aman",
+  "date": "2026-11-24",
+  "kind": "aman",
+  "scope": "ucl",
+  "legs": [
+   {
+    "match_id": 575402,
+    "kickoff_utc": "2026-11-24T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "RB Leipzig",
+    "away": "Racing Club de Lens",
+    "home_s": "RB Leipzig",
+    "away_s": "RC Lens",
+    "market": "over15",
+    "pick": "over15",
+    "p": 94.27095523448274,
+    "ai": true,
+    "base": 85.9
+   },
+   {
+    "match_id": 575403,
+    "kickoff_utc": "2026-11-24T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Como 1907",
+    "away": "PAE AEK",
+    "home_s": "Como 1907",
+    "away_s": "PAE AEK",
+    "market": "over15",
+    "pick": "over15",
+    "p": 94.10407542408308,
+    "ai": true,
+    "base": 85.9
+   },
+   {
+    "match_id": 575397,
+    "kickoff_utc": "2026-11-24T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Real Madrid CF",
+    "away": "PSV",
+    "home_s": "Real Madrid",
+    "away_s": "PSV",
+    "market": "over15",
+    "pick": "over15",
+    "p": 92.5578269276367,
+    "ai": true,
+    "base": 85.9
+   }
+  ],
+  "notes": {
+   "575402": {
+    "home_rank": "#29 (3 poin, selisih gol -6)",
+    "away_rank": "#33 (3 poin, selisih gol -12)",
+    "home_form": [
+     "RB Leipzig 4-0 Elversberg",
+     "Schalke 0-2 RB Leipzig",
+     "RB Leipzig 2-3 Man City",
+     "RB Leipzig 5-2 Augsburg",
+     "Union Berlin 1-5 RB Leipzig"
+    ],
+    "away_form": [
+     "RC Lens 2-1 Paris FC",
+     "Lille 1-0 RC Lens",
+     "RC Lens 1-9 Como 1907",
+     "RC Lens 1-2 Marseille",
+     "RC Lens 1-1 Toulouse"
+    ],
+    "p": [
+     60,
+     19,
+     21
+    ],
+    "e": [
+     57.8,
+     21.3,
+     21.0
+    ],
+    "s": [
+     60.1,
+     19.0,
+     20.9
+    ],
+    "x": [
+     62.4,
+     16.7,
+     20.8
+    ],
+    "gb": [
+     85.9,
+     70.0,
+     51.7,
+     59.8
+    ],
+    "goals": {
+     "lam_h": 2.9,
+     "lam_a": 1.7,
+     "o15": 94.3,
+     "o25": 83.5,
+     "o35": 67.1,
+     "btts": 77.0
+    },
+    "top": [
+     [
+      "2-1",
+      7.2
+     ],
+     [
+      "3-1",
+      7.0
+     ],
+     [
+      "2-2",
+      6.1
+     ]
+    ]
+   },
+   "575403": {
+    "home_rank": "#4 (9 poin, selisih gol 13)",
+    "away_rank": "#29 (3 poin, selisih gol -6)",
+    "home_form": [
+     "Torino 1-3 Como 1907",
+     "Como 1907 1-0 Venezia FC",
+     "RC Lens 1-9 Como 1907",
+     "Inter 2-0 Como 1907",
+     "Como 1907 2-0 Cagliari"
+    ],
+    "away_form": [
+     "PAE AEK 1-0 LASK",
+     "Shaktar 3-1 PAE AEK",
+     "Man City 5-1 PAE AEK",
+     "PAE AEK 2-3 Real Madrid"
+    ],
+    "p": [
+     80,
+     12,
+     8
+    ],
+    "e": [
+     72.3,
+     16.0,
+     11.7
+    ],
+    "s": [
+     79.3,
+     12.3,
+     8.4
+    ],
+    "x": [
+     86.3,
+     8.6,
+     5.1
+    ],
+    "gb": [
+     85.9,
+     70.0,
+     51.7,
+     59.8
+    ],
+    "goals": {
+     "lam_h": 3.7,
+     "lam_a": 0.9,
+     "o15": 94.1,
+     "o25": 83.1,
+     "o35": 66.5,
+     "btts": 57.5
+    },
+    "top": [
+     [
+      "3-0",
+      8.6
+     ],
+     [
+      "4-0",
+      7.9
+     ],
+     [
+      "3-1",
+      7.7
+     ]
+    ]
+   },
+   "575397": {
+    "home_rank": "#2 (12 poin, selisih gol 6)",
+    "away_rank": "#24 (4 poin, selisih gol -1)",
+    "home_form": [
+     "Barça 1-2 Real Madrid",
+     "Santander 0-3 Real Madrid",
+     "PAE AEK 2-3 Real Madrid",
+     "Valencia 0-3 Real Madrid",
+     "Real Madrid 2-1 Celta"
+    ],
+    "away_form": [
+     "PSV 1-1 Feyenoord",
+     "PSV 7-0 Willem II",
+     "PSV 1-2 Club Brugge",
+     "Cambuur 2-5 PSV",
+     "NEC 1-4 PSV"
+    ],
+    "p": [
+     55,
+     20,
+     25
+    ],
+    "e": [
+     55.4,
+     22.0,
+     22.6
+    ],
+    "s": [
+     54.8,
+     20.5,
+     24.7
+    ],
+    "x": [
+     54.2,
+     18.9,
+     26.9
+    ],
+    "gb": [
+     85.9,
+     70.0,
+     51.7,
+     59.8
+    ],
+    "goals": {
+     "lam_h": 2.5,
+     "lam_a": 1.8,
+     "o15": 92.6,
+     "o25": 79.7,
+     "o35": 61.5,
+     "btts": 76.0
+    },
+    "top": [
+     [
+      "2-1",
+      7.8
+     ],
+     [
+      "2-2",
+      6.8
+     ],
+     [
+      "3-1",
+      6.5
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.8211,
+  "tg_msg_id": 442,
+  "outcome": "",
+  "legs_hit": ""
+ },
+ {
+  "id": "2026-11-24-ucl-mix",
+  "date": "2026-11-24",
+  "kind": "mix",
+  "scope": "ucl",
+  "legs": [
+   {
+    "match_id": 575403,
+    "kickoff_utc": "2026-11-24T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Como 1907",
+    "away": "PAE AEK",
+    "home_s": "Como 1907",
+    "away_s": "PAE AEK",
+    "market": "1x2",
+    "pick": "home",
+    "p": 80.0,
+    "ai": false
+   },
+   {
+    "match_id": 575396,
+    "kickoff_utc": "2026-11-24T17:45:00Z",
+    "competition": "UEFA Champions League",
+    "home": "FK Bodø/Glimt",
+    "away": "LASK Linz",
+    "home_s": "Bodø/Glimt",
+    "away_s": "LASK",
+    "market": "over25",
+    "pick": "over25",
+    "p": 75.81376811402596,
+    "ai": true,
+    "base": 70.0
+   },
+   {
+    "match_id": 575395,
+    "kickoff_utc": "2026-11-24T17:45:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Galatasaray SK",
+    "away": "Aston Villa FC",
+    "home_s": "Galatasaray",
+    "away_s": "Aston Villa",
+    "market": "btts",
+    "pick": "btts",
+    "p": 70.71747205265488,
+    "ai": true,
+    "base": 59.8
+   },
+   {
+    "match_id": 575400,
+    "kickoff_utc": "2026-11-24T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Feyenoord Rotterdam",
+    "away": "FC Porto",
+    "home_s": "Feyenoord",
+    "away_s": "Porto",
+    "market": "btts",
+    "pick": "btts",
+    "p": 66.90392853115969,
+    "ai": true,
+    "base": 59.8
+   },
+   {
+    "match_id": 575398,
+    "kickoff_utc": "2026-11-24T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Manchester City FC",
+    "away": "SSC Napoli",
+    "home_s": "Man City",
+    "away_s": "Napoli",
+    "market": "1x2",
+    "pick": "home",
+    "p": 62.0,
+    "ai": false
+   }
+  ],
+  "notes": {
+   "575403": {
+    "home_rank": "#4 (9 poin, selisih gol 13)",
+    "away_rank": "#29 (3 poin, selisih gol -6)",
+    "home_form": [
+     "Torino 1-3 Como 1907",
+     "Como 1907 1-0 Venezia FC",
+     "RC Lens 1-9 Como 1907",
+     "Inter 2-0 Como 1907",
+     "Como 1907 2-0 Cagliari"
+    ],
+    "away_form": [
+     "PAE AEK 1-0 LASK",
+     "Shaktar 3-1 PAE AEK",
+     "Man City 5-1 PAE AEK",
+     "PAE AEK 2-3 Real Madrid"
+    ],
+    "p": [
+     80,
+     12,
+     8
+    ],
+    "e": [
+     72.3,
+     16.0,
+     11.7
+    ],
+    "s": [
+     79.3,
+     12.3,
+     8.4
+    ],
+    "x": [
+     86.3,
+     8.6,
+     5.1
+    ],
+    "gb": [
+     85.9,
+     70.0,
+     51.7,
+     59.8
+    ],
+    "goals": {
+     "lam_h": 3.7,
+     "lam_a": 0.9,
+     "o15": 94.1,
+     "o25": 83.1,
+     "o35": 66.5,
+     "btts": 57.5
+    },
+    "top": [
+     [
+      "3-0",
+      8.6
+     ],
+     [
+      "4-0",
+      7.9
+     ],
+     [
+      "3-1",
+      7.7
+     ]
+    ]
+   },
+   "575396": {
+    "home_rank": "#25 (4 poin, selisih gol -5)",
+    "away_rank": "#16 (6 poin, selisih gol 1)",
+    "home_form": [
+     "Bayern 5-0 Bodø/Glimt",
+     "Bodø/Glimt 1-0 Dortmund",
+     "Napoli 4-3 Bodø/Glimt",
+     "Bodø/Glimt 0-0 Lille"
+    ],
+    "away_form": [
+     "PAE AEK 1-0 LASK",
+     "LASK 3-6 Liverpool",
+     "Sporting CP 2-3 LASK",
+     "LASK 4-0 Sl. Bratislava"
+    ],
+    "p": [
+     40,
+     24,
+     36
+    ],
+    "g": [
+     35,
+     25,
+     40
+    ],
+    "summary": "LASK Linz sedikit diunggulkan berdasarkan posisi klasemen dan produktivitas gol yang lebih tinggi dalam beberapa pertandingan terakhir. Namun, FK Bodø/Glimt memiliki rekor kandang yang cukup baik melawan tim-tim kuat, yang bisa menjadi faktor penyeimbang. Pertandingan ini diprediksi akan berjalan ketat dengan LASK memiliki sedikit keunggulan.",
+    "factors": [
+     "LASK Linz memiliki posisi klasemen yang lebih baik (#16 dengan 6 poin dan selisih gol +1) dibandingkan FK Bodø/Glimt (#25 dengan 4 poin dan selisih gol -5).",
+     "LASK Linz menunjukkan performa menyerang yang lebih tajam, mencetak 10 gol dalam 4 laga terakhir dibandingkan 4 gol oleh Bodø/Glimt.",
+     "FK Bodø/Glimt menunjukkan ketahanan di kandang dengan kemenangan atas Dortmund dan hasil imbang melawan Lille di kompetisi yang sama.",
+     "Kedua tim memiliki rekor kebobolan yang serupa dalam 4 pertandingan terakhir mereka (9 gol), menunjukkan potensi pertandingan dengan gol."
+    ],
+    "risks": [
+     "Informasi mengenai cedera pemain kunci dan susunan pemain terbaru kedua tim tidak tersedia.",
+     "Faktor kelelahan akibat jadwal padat dan motivasi spesifik di kompetisi ini tidak diketahui.",
+     "Performa kandang Bodø/Glimt yang solid bisa menjadi penentu, namun LASK juga mampu meraih kemenangan tandang penting."
+    ],
+    "e": [
+     50.9,
+     23.5,
+     25.6
+    ],
+    "s": [
+     46.1,
+     22.1,
+     31.8
+    ],
+    "x": [
+     41.3,
+     20.8,
+     37.9
+    ],
+    "gb": [
+     85.9,
+     70.0,
+     51.7,
+     59.8
+    ],
+    "goals": {
+     "lam_h": 2.0,
+     "lam_a": 1.9,
+     "o15": 90.7,
+     "o25": 75.8,
+     "o35": 56.2,
+     "btts": 74.4
+    },
+    "top": [
+     [
+      "2-1",
+      7.5
+     ],
+     [
+      "1-1",
+      7.4
+     ],
+     [
+      "2-2",
+      7.3
+     ]
+    ]
+   },
+   "575395": {
+    "home_rank": "#18 (6 poin, selisih gol -1)",
+    "away_rank": "#6 (9 poin, selisih gol 6)",
+    "home_form": [
+     "Sporting CP 3-1 Galatasaray",
+     "Galatasaray 1-4 Barça",
+     "Lille 2-4 Galatasaray",
+     "Galatasaray 2-0 Stuttgart"
+    ],
+    "away_form": [
+     "Aston Villa 2-1 Man City",
+     "Aston Villa 1-1 Fulham",
+     "Barça 3-0 Aston Villa",
+     "Man United 4-4 Aston Villa",
+     "Aston Villa 0-0 Sunderland"
+    ],
+    "e": [
+     42.3,
+     26.1,
+     31.5
+    ],
+    "s": [
+     42.5,
+     23.9,
+     33.6
+    ],
+    "x": [
+     42.8,
+     21.6,
+     35.7
+    ],
+    "gb": [
+     85.9,
+     70.0,
+     51.7,
+     59.8
+    ],
+    "goals": {
+     "lam_h": 1.9,
+     "lam_a": 1.8,
+     "o15": 88.3,
+     "o25": 71.2,
+     "o35": 50.3,
+     "btts": 70.7
+    },
+    "top": [
+     [
+      "1-1",
+      8.5
+     ],
+     [
+      "2-1",
+      8.2
+     ],
+     [
+      "1-2",
+      7.5
+     ]
+    ]
+   },
+   "575400": {
+    "home_rank": "#32 (3 poin, selisih gol -7)",
+    "away_rank": "#26 (3 poin, selisih gol -1)",
+    "home_form": [
+     "PSV 1-1 Feyenoord",
+     "Feyenoord 1-1 Sittard",
+     "Feyenoord 0-3 Inter",
+     "Heerenveen 5-3 Feyenoord",
+     "Feyenoord 2-3 Excelsior"
+    ],
+    "away_form": [
+     "Porto 0-1 PSV",
+     "Gil Vicente 0-1 Porto",
+     "Porto 4-0 Estoril Praia",
+     "Porto 4-1 Napoli",
+     "Vitória SC 1-2 Porto"
+    ],
+    "p": [
+     30,
+     24,
+     46
+    ],
+    "e": [
+     30.6,
+     25.7,
+     43.7
+    ],
+    "s": [
+     29.8,
+     23.7,
+     46.5
+    ],
+    "x": [
+     29.0,
+     21.7,
+     49.3
+    ],
+    "gb": [
+     85.9,
+     70.0,
+     51.7,
+     59.8
+    ],
+    "goals": {
+     "lam_h": 1.5,
+     "lam_a": 2.0,
+     "o15": 86.2,
+     "o25": 67.6,
+     "o35": 45.9,
+     "btts": 66.9
+    },
+    "top": [
+     [
+      "1-1",
+      9.1
+     ],
+     [
+      "1-2",
+      9.1
+     ],
+     [
+      "2-1",
+      6.8
+     ]
+    ]
+   },
+   "575398": {
+    "home_rank": "#7 (9 poin, selisih gol 5)",
+    "away_rank": "#27 (3 poin, selisih gol -5)",
+    "home_form": [
+     "Aston Villa 2-1 Man City",
+     "Man City 0-1 Brighton Hove",
+     "RB Leipzig 2-3 Man City",
+     "Nottingham 3-1 Man City",
+     "Man City 1-1 Fulham"
+    ],
+    "away_form": [
+     "Monza 1-4 Napoli",
+     "Juventus 2-0 Napoli",
+     "Porto 4-1 Napoli",
+     "Napoli 1-1 Lazio",
+     "Napoli 1-0 Torino"
+    ],
+    "p": [
+     62,
+     19,
+     19
+    ],
+    "e": [
+     59.6,
+     20.6,
+     19.8
+    ],
+    "s": [
+     62.1,
+     19.1,
+     18.8
+    ],
+    "x": [
+     64.5,
+     17.6,
+     17.9
+    ],
+    "gb": [
+     85.9,
+     70.0,
+     51.7,
+     59.8
+    ],
+    "goals": {
+     "lam_h": 2.6,
+     "lam_a": 1.3,
+     "o15": 90.1,
+     "o25": 74.7,
+     "o35": 54.7,
+     "btts": 67.8
+    },
+    "top": [
+     [
+      "2-1",
+      8.9
+     ],
+     [
+      "3-1",
+      7.6
+     ],
+     [
+      "1-1",
+      6.9
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.1779,
+  "tg_msg_id": 442,
+  "outcome": "",
+  "legs_hit": ""
  }
 ]
