@@ -5659,8 +5659,22 @@
   },
   "p_comb": 0.8211,
   "tg_msg_id": 442,
-  "outcome": "",
-  "legs_hit": ""
+  "outcome": "lose",
+  "legs_hit": "2/3",
+  "leg_results": {
+   "575402": {
+    "score": "3-1",
+    "hit": true
+   },
+   "575403": {
+    "score": "1-0",
+    "hit": false
+   },
+   "575397": {
+    "score": "5-1",
+    "hit": true
+   }
+  }
  },
  {
   "id": "2026-11-24-ucl-mix",
