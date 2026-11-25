@@ -6362,8 +6362,22 @@
   },
   "p_comb": 0.8437,
   "tg_msg_id": 471,
-  "outcome": "",
-  "legs_hit": ""
+  "outcome": "win",
+  "legs_hit": "3/3",
+  "leg_results": {
+   "575404": {
+    "score": "1-4",
+    "hit": true
+   },
+   "575411": {
+    "score": "2-2",
+    "hit": true
+   },
+   "575409": {
+    "score": "0-3",
+    "hit": true
+   }
+  }
  },
  {
   "id": "2026-11-25-ucl-mix",
@@ -6764,7 +6778,29 @@
   },
   "p_comb": 0.2291,
   "tg_msg_id": 471,
-  "outcome": "",
-  "legs_hit": ""
+  "outcome": "lose",
+  "legs_hit": "3/5",
+  "leg_results": {
+   "575409": {
+    "score": "0-3",
+    "hit": true
+   },
+   "575411": {
+    "score": "2-2",
+    "hit": false
+   },
+   "575404": {
+    "score": "1-4",
+    "hit": true
+   },
+   "575405": {
+    "score": "0-1",
+    "hit": false
+   },
+   "575407": {
+    "score": "2-0",
+    "hit": true
+   }
+  }
  }
 ]
