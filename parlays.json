@@ -6117,5 +6117,654 @@
     "hit": false
    }
   }
+ },
+ {
+  "id": "2026-11-25-ucl-aman",
+  "date": "2026-11-25",
+  "kind": "aman",
+  "scope": "ucl",
+  "legs": [
+   {
+    "match_id": 575404,
+    "kickoff_utc": "2026-11-25T17:45:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Sabah FK",
+    "away": "FC Barcelona",
+    "home_s": "Sabah FK",
+    "away_s": "Barça",
+    "market": "over15",
+    "pick": "over15",
+    "p": 95.43786565124189,
+    "ai": true,
+    "base": 84.3
+   },
+   {
+    "match_id": 575411,
+    "kickoff_utc": "2026-11-25T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Sporting Clube de Portugal",
+    "away": "Manchester United FC",
+    "home_s": "Sporting CP",
+    "away_s": "Man United",
+    "market": "over15",
+    "pick": "over15",
+    "p": 95.06060773415777,
+    "ai": true,
+    "base": 84.3
+   },
+   {
+    "match_id": 575409,
+    "kickoff_utc": "2026-11-25T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Club Brugge KV",
+    "away": "Liverpool FC",
+    "home_s": "Club Brugge",
+    "away_s": "Liverpool",
+    "market": "over15",
+    "pick": "over15",
+    "p": 92.99895445843308,
+    "ai": true,
+    "base": 84.3
+   }
+  ],
+  "notes": {
+   "575404": {
+    "home_rank": "#30 (3 poin, selisih gol -6)",
+    "away_rank": "#8 (9 poin, selisih gol 8)",
+    "home_form": [
+     "Man United 4-0 Sabah FK",
+     "Sabah FK 2-0 Slavia Praha",
+     "Sabah FK 1-2 Dortmund",
+     "Viking 4-1 Sabah FK"
+    ],
+    "away_form": [
+     "Barça 1-2 Real Madrid",
+     "Barça 6-1 Alavés",
+     "Barça 3-0 Aston Villa",
+     "Atleti 1-2 Barça",
+     "Barça 3-2 Villarreal"
+    ],
+    "p": [
+     13,
+     15,
+     72
+    ],
+    "e": [
+     14.8,
+     17.9,
+     67.3
+    ],
+    "s": [
+     12.5,
+     14.9,
+     72.6
+    ],
+    "x": [
+     10.3,
+     11.8,
+     77.9
+    ],
+    "gb": [
+     84.3,
+     68.1,
+     50.7,
+     59.0
+    ],
+    "goals": {
+     "lam_h": 1.3,
+     "lam_a": 3.5,
+     "o15": 95.4,
+     "o25": 86.3,
+     "o35": 71.4,
+     "btts": 71.6
+    },
+    "top": [
+     [
+      "1-3",
+      7.6
+     ],
+     [
+      "1-4",
+      6.7
+     ],
+     [
+      "1-2",
+      6.5
+     ]
+    ]
+   },
+   "575411": {
+    "home_rank": "#12 (9 poin, selisih gol 4)",
+    "away_rank": "#19 (6 poin, selisih gol 0)",
+    "home_form": [
+     "Sporting CP 2-3 LASK",
+     "Sporting CP 1-2 Acad. Viseu",
+     "Casa Pia 0-2 Sporting CP",
+     "Shaktar 0-1 Sporting CP",
+     "Sporting CP 1-0 Moreirense"
+    ],
+    "away_form": [
+     "Man United 0-3 Bournemouth",
+     "Chelsea 2-0 Man United",
+     "Man United 3-2 Roma",
+     "Man United 4-4 Aston Villa",
+     "Liverpool 4-0 Man United"
+    ],
+    "p": [
+     75,
+     14,
+     11
+    ],
+    "e": [
+     69.9,
+     16.9,
+     13.2
+    ],
+    "s": [
+     75.4,
+     13.9,
+     10.7
+    ],
+    "x": [
+     80.9,
+     10.8,
+     8.3
+    ],
+    "gb": [
+     84.3,
+     68.1,
+     50.7,
+     59.0
+    ],
+    "goals": {
+     "lam_h": 3.6,
+     "lam_a": 1.2,
+     "o15": 95.1,
+     "o25": 85.3,
+     "o35": 69.9,
+     "btts": 67.6
+    },
+    "top": [
+     [
+      "3-1",
+      7.7
+     ],
+     [
+      "4-1",
+      6.9
+     ],
+     [
+      "3-0",
+      6.5
+     ]
+    ]
+   },
+   "575409": {
+    "home_rank": "#11 (9 poin, selisih gol 4)",
+    "away_rank": "#10 (9 poin, selisih gol 4)",
+    "home_form": [
+     "Club Brugge 2-3 Aston Villa",
+     "Inter 3-4 Club Brugge",
+     "Club Brugge 3-0 RC Lens",
+     "PSV 1-2 Club Brugge"
+    ],
+    "away_form": [
+     "Liverpool 2-0 Brighton Hove",
+     "Liverpool 0-1 Arsenal",
+     "Fenerbahçe 3-2 Liverpool",
+     "Crystal Palace 1-3 Liverpool",
+     "Liverpool 4-0 Man United"
+    ],
+    "e": [
+     36.0,
+     28.0,
+     36.0
+    ],
+    "s": [
+     39.1,
+     23.9,
+     37.0
+    ],
+    "x": [
+     42.2,
+     19.8,
+     38.0
+    ],
+    "gb": [
+     84.3,
+     68.1,
+     50.7,
+     59.0
+    ],
+    "goals": {
+     "lam_h": 2.2,
+     "lam_a": 2.1,
+     "o15": 93.0,
+     "o25": 80.7,
+     "o35": 62.9,
+     "btts": 78.4
+    },
+    "top": [
+     [
+      "2-2",
+      7.2
+     ],
+     [
+      "2-1",
+      6.8
+     ],
+     [
+      "1-2",
+      6.5
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.8437,
+  "tg_msg_id": 471,
+  "outcome": "",
+  "legs_hit": ""
+ },
+ {
+  "id": "2026-11-25-ucl-mix",
+  "date": "2026-11-25",
+  "kind": "mix",
+  "scope": "ucl",
+  "legs": [
+   {
+    "match_id": 575409,
+    "kickoff_utc": "2026-11-25T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Club Brugge KV",
+    "away": "Liverpool FC",
+    "home_s": "Club Brugge",
+    "away_s": "Liverpool",
+    "market": "over15",
+    "pick": "over15",
+    "p": 92.99895445843308,
+    "ai": true,
+    "base": 84.3
+   },
+   {
+    "match_id": 575411,
+    "kickoff_utc": "2026-11-25T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Sporting Clube de Portugal",
+    "away": "Manchester United FC",
+    "home_s": "Sporting CP",
+    "away_s": "Man United",
+    "market": "1x2",
+    "pick": "home",
+    "p": 75.0,
+    "ai": false
+   },
+   {
+    "match_id": 575404,
+    "kickoff_utc": "2026-11-25T17:45:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Sabah FK",
+    "away": "FC Barcelona",
+    "home_s": "Sabah FK",
+    "away_s": "Barça",
+    "market": "1x2",
+    "pick": "away",
+    "p": 72.0,
+    "ai": false
+   },
+   {
+    "match_id": 575405,
+    "kickoff_utc": "2026-11-25T17:45:00Z",
+    "competition": "UEFA Champions League",
+    "home": "SK Slavia Praha",
+    "away": "Villarreal CF",
+    "home_s": "Slavia Praha",
+    "away_s": "Villarreal",
+    "market": "btts",
+    "pick": "btts",
+    "p": 68.10358190476306,
+    "ai": true,
+    "base": 59.0
+   },
+   {
+    "match_id": 575407,
+    "kickoff_utc": "2026-11-25T20:00:00Z",
+    "competition": "UEFA Champions League",
+    "home": "Club Atlético de Madrid",
+    "away": "Viking FK",
+    "home_s": "Atleti",
+    "away_s": "Viking",
+    "market": "1x2",
+    "pick": "home",
+    "p": 67.0,
+    "ai": false
+   }
+  ],
+  "notes": {
+   "575409": {
+    "home_rank": "#11 (9 poin, selisih gol 4)",
+    "away_rank": "#10 (9 poin, selisih gol 4)",
+    "home_form": [
+     "Club Brugge 2-3 Aston Villa",
+     "Inter 3-4 Club Brugge",
+     "Club Brugge 3-0 RC Lens",
+     "PSV 1-2 Club Brugge"
+    ],
+    "away_form": [
+     "Liverpool 2-0 Brighton Hove",
+     "Liverpool 0-1 Arsenal",
+     "Fenerbahçe 3-2 Liverpool",
+     "Crystal Palace 1-3 Liverpool",
+     "Liverpool 4-0 Man United"
+    ],
+    "e": [
+     36.0,
+     28.0,
+     36.0
+    ],
+    "s": [
+     39.1,
+     23.9,
+     37.0
+    ],
+    "x": [
+     42.2,
+     19.8,
+     38.0
+    ],
+    "gb": [
+     84.3,
+     68.1,
+     50.7,
+     59.0
+    ],
+    "goals": {
+     "lam_h": 2.2,
+     "lam_a": 2.1,
+     "o15": 93.0,
+     "o25": 80.7,
+     "o35": 62.9,
+     "btts": 78.4
+    },
+    "top": [
+     [
+      "2-2",
+      7.2
+     ],
+     [
+      "2-1",
+      6.8
+     ],
+     [
+      "1-2",
+      6.5
+     ]
+    ]
+   },
+   "575411": {
+    "home_rank": "#12 (9 poin, selisih gol 4)",
+    "away_rank": "#19 (6 poin, selisih gol 0)",
+    "home_form": [
+     "Sporting CP 2-3 LASK",
+     "Sporting CP 1-2 Acad. Viseu",
+     "Casa Pia 0-2 Sporting CP",
+     "Shaktar 0-1 Sporting CP",
+     "Sporting CP 1-0 Moreirense"
+    ],
+    "away_form": [
+     "Man United 0-3 Bournemouth",
+     "Chelsea 2-0 Man United",
+     "Man United 3-2 Roma",
+     "Man United 4-4 Aston Villa",
+     "Liverpool 4-0 Man United"
+    ],
+    "p": [
+     75,
+     14,
+     11
+    ],
+    "e": [
+     69.9,
+     16.9,
+     13.2
+    ],
+    "s": [
+     75.4,
+     13.9,
+     10.7
+    ],
+    "x": [
+     80.9,
+     10.8,
+     8.3
+    ],
+    "gb": [
+     84.3,
+     68.1,
+     50.7,
+     59.0
+    ],
+    "goals": {
+     "lam_h": 3.6,
+     "lam_a": 1.2,
+     "o15": 95.1,
+     "o25": 85.3,
+     "o35": 69.9,
+     "btts": 67.6
+    },
+    "top": [
+     [
+      "3-1",
+      7.7
+     ],
+     [
+      "4-1",
+      6.9
+     ],
+     [
+      "3-0",
+      6.5
+     ]
+    ]
+   },
+   "575404": {
+    "home_rank": "#30 (3 poin, selisih gol -6)",
+    "away_rank": "#8 (9 poin, selisih gol 8)",
+    "home_form": [
+     "Man United 4-0 Sabah FK",
+     "Sabah FK 2-0 Slavia Praha",
+     "Sabah FK 1-2 Dortmund",
+     "Viking 4-1 Sabah FK"
+    ],
+    "away_form": [
+     "Barça 1-2 Real Madrid",
+     "Barça 6-1 Alavés",
+     "Barça 3-0 Aston Villa",
+     "Atleti 1-2 Barça",
+     "Barça 3-2 Villarreal"
+    ],
+    "p": [
+     13,
+     15,
+     72
+    ],
+    "e": [
+     14.8,
+     17.9,
+     67.3
+    ],
+    "s": [
+     12.5,
+     14.9,
+     72.6
+    ],
+    "x": [
+     10.3,
+     11.8,
+     77.9
+    ],
+    "gb": [
+     84.3,
+     68.1,
+     50.7,
+     59.0
+    ],
+    "goals": {
+     "lam_h": 1.3,
+     "lam_a": 3.5,
+     "o15": 95.4,
+     "o25": 86.3,
+     "o35": 71.4,
+     "btts": 71.6
+    },
+    "top": [
+     [
+      "1-3",
+      7.6
+     ],
+     [
+      "1-4",
+      6.7
+     ],
+     [
+      "1-2",
+      6.5
+     ]
+    ]
+   },
+   "575405": {
+    "home_rank": "#34 (1 poin, selisih gol -4)",
+    "away_rank": "#29 (3 poin, selisih gol -6)",
+    "home_form": [
+     "Slavia Praha 2-3 RC Lens",
+     "Sabah FK 2-0 Slavia Praha",
+     "Fenerbahçe 2-2 Slavia Praha",
+     "Slavia Praha 1-2 Arsenal"
+    ],
+    "away_form": [
+     "Valencia 1-2 Villarreal",
+     "Villarreal 0-1 Espanyol",
+     "Villarreal 0-6 PSG",
+     "Villarreal 2-0 Getafe",
+     "Barça 3-2 Villarreal"
+    ],
+    "p": [
+     32,
+     25,
+     43
+    ],
+    "e": [
+     34.7,
+     27.5,
+     37.8
+    ],
+    "s": [
+     32.4,
+     24.5,
+     43.1
+    ],
+    "x": [
+     30.1,
+     21.6,
+     48.4
+    ],
+    "gb": [
+     84.3,
+     68.1,
+     50.7,
+     59.0
+    ],
+    "goals": {
+     "lam_h": 1.5,
+     "lam_a": 2.0,
+     "o15": 86.9,
+     "o25": 68.8,
+     "o35": 47.4,
+     "btts": 68.1
+    },
+    "top": [
+     [
+      "1-2",
+      8.9
+     ],
+     [
+      "1-1",
+      8.9
+     ],
+     [
+      "2-2",
+      6.9
+     ]
+    ]
+   },
+   "575407": {
+    "home_rank": "#26 (4 poin, selisih gol -1)",
+    "away_rank": "#25 (4 poin, selisih gol -1)",
+    "home_form": [
+     "Atleti 1-0 Deportivo",
+     "Levante 0-2 Atleti",
+     "Atleti 0-2 Bayern",
+     "Atleti 1-2 Barça",
+     "Getafe 0-3 Atleti"
+    ],
+    "away_form": [
+     "Stuttgart 3-1 Viking",
+     "Viking 3-3 Bayern",
+     "Aston Villa 3-1 Viking",
+     "Viking 4-1 Sabah FK"
+    ],
+    "p": [
+     67,
+     17,
+     16
+    ],
+    "e": [
+     65.1,
+     18.7,
+     16.2
+    ],
+    "s": [
+     67.0,
+     17.2,
+     15.8
+    ],
+    "x": [
+     68.9,
+     15.6,
+     15.5
+    ],
+    "gb": [
+     84.3,
+     68.1,
+     50.7,
+     59.0
+    ],
+    "goals": {
+     "lam_h": 2.9,
+     "lam_a": 1.4,
+     "o15": 92.6,
+     "o25": 79.8,
+     "o35": 61.6,
+     "btts": 70.4
+    },
+    "top": [
+     [
+      "2-1",
+      8.1
+     ],
+     [
+      "3-1",
+      7.8
+     ],
+     [
+      "2-0",
+      5.9
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.2291,
+  "tg_msg_id": 471,
+  "outcome": "",
+  "legs_hit": ""
  }
 ]
