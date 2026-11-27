@@ -6802,5 +6802,179 @@
     "hit": true
    }
   }
+ },
+ {
+  "id": "2026-11-27-aman",
+  "date": "2026-11-27",
+  "kind": "aman",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 564765,
+    "kickoff_utc": "2026-11-27T20:00:00Z",
+    "competition": "Primera Division",
+    "home": "Levante UD",
+    "away": "Real Racing Club de Santander",
+    "home_s": "Levante",
+    "away_s": "Santander",
+    "market": "over15",
+    "pick": "over15",
+    "p": 88.79369850726985,
+    "ai": true,
+    "base": 77.0
+   },
+   {
+    "match_id": 565869,
+    "kickoff_utc": "2026-11-27T19:30:00Z",
+    "competition": "Bundesliga",
+    "home": "SV Werder Bremen",
+    "away": "Borussia Mönchengladbach",
+    "home_s": "Bremen",
+    "away_s": "M'gladbach",
+    "market": "under35",
+    "pick": "under35",
+    "p": 62.9045018676474,
+    "ai": true,
+    "base": 54.5
+   }
+  ],
+  "notes": {
+   "564765": {
+    "home_rank": "#15 (12 poin, selisih gol -5)",
+    "away_rank": "#7 (17 poin, selisih gol -12)",
+    "home_form": [
+     "Levante 3-1 Athletic",
+     "Real Sociedad 2-1 Levante",
+     "Levante 0-2 Atleti",
+     "Celta 0-0 Levante",
+     "Levante 1-1 Elche"
+    ],
+    "away_form": [
+     "Osasuna 2-0 Santander",
+     "Santander 2-1 Espanyol",
+     "Santander 0-3 Real Madrid",
+     "Málaga 1-2 Santander",
+     "Santander 3-2 Real Sociedad"
+    ],
+    "p": [
+     50,
+     23,
+     27
+    ],
+    "e": [
+     44.2,
+     25.6,
+     30.2
+    ],
+    "s": [
+     50.1,
+     22.7,
+     27.1
+    ],
+    "x": [
+     56.1,
+     19.8,
+     24.0
+    ],
+    "gb": [
+     77.0,
+     52.0,
+     28.1,
+     56.3
+    ],
+    "goals": {
+     "lam_h": 2.3,
+     "lam_a": 1.5,
+     "o15": 88.8,
+     "o25": 72.2,
+     "o35": 51.5,
+     "btts": 69.0
+    },
+    "top": [
+     [
+      "2-1",
+      9.0
+     ],
+     [
+      "1-1",
+      7.9
+     ],
+     [
+      "3-1",
+      6.9
+     ]
+    ]
+   },
+   "565869": {
+    "home_rank": "#6 (18 poin, selisih gol 6)",
+    "away_rank": "#18 (4 poin, selisih gol -14)",
+    "home_form": [
+     "Bremen 2-2 SC Paderborn",
+     "Mainz 2-3 Bremen",
+     "Bremen 2-0 Hoffenheim",
+     "Stuttgart 1-0 Bremen",
+     "Bremen 4-0 HSV"
+    ],
+    "away_form": [
+     "M'gladbach 1-2 Hoffenheim",
+     "Stuttgart 2-3 M'gladbach",
+     "M'gladbach 0-0 SC Paderborn",
+     "HSV 3-1 M'gladbach",
+     "M'gladbach 0-1 Dortmund"
+    ],
+    "p": [
+     59,
+     21,
+     20
+    ],
+    "e": [
+     59.3,
+     20.7,
+     19.9
+    ],
+    "s": [
+     58.3,
+     21.2,
+     20.5
+    ],
+    "x": [
+     57.3,
+     21.7,
+     21.0
+    ],
+    "gb": [
+     81.9,
+     65.2,
+     45.5,
+     60.3
+    ],
+    "goals": {
+     "lam_h": 2.0,
+     "lam_a": 1.1,
+     "o15": 81.3,
+     "o25": 59.5,
+     "o35": 37.1,
+     "btts": 57.7
+    },
+    "top": [
+     [
+      "1-1",
+      10.1
+     ],
+     [
+      "2-1",
+      9.9
+     ],
+     [
+      "1-0",
+      9.0
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.5586,
+  "tg_msg_id": 498,
+  "outcome": "",
+  "legs_hit": ""
  }
 ]
