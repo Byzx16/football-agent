@@ -7228,8 +7228,22 @@
   },
   "p_comb": 0.7143,
   "tg_msg_id": 513,
-  "outcome": "",
-  "legs_hit": ""
+  "outcome": "lose",
+  "legs_hit": "1/3",
+  "leg_results": {
+   "565868": {
+    "score": "8-1",
+    "hit": false
+   },
+   "565874": {
+    "score": "0-0",
+    "hit": false
+   },
+   "565870": {
+    "score": "2-2",
+    "hit": true
+   }
+  }
  },
  {
   "id": "2026-11-28-mix",
