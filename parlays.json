@@ -6986,5 +6986,646 @@
     "hit": false
    }
   }
+ },
+ {
+  "id": "2026-11-28-aman",
+  "date": "2026-11-28",
+  "kind": "aman",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 565868,
+    "kickoff_utc": "2026-11-28T14:30:00Z",
+    "competition": "Bundesliga",
+    "home": "SC Paderborn 07",
+    "away": "FC Schalke 04",
+    "home_s": "SC Paderborn",
+    "away_s": "Schalke",
+    "market": "under35",
+    "pick": "under35",
+    "p": 91.28517516646919,
+    "ai": true,
+    "base": 54.3
+   },
+   {
+    "match_id": 565874,
+    "kickoff_utc": "2026-11-28T14:30:00Z",
+    "competition": "Bundesliga",
+    "home": "Hamburger SV",
+    "away": "FC Bayern München",
+    "home_s": "HSV",
+    "away_s": "Bayern",
+    "market": "over15",
+    "pick": "over15",
+    "p": 89.35214831189555,
+    "ai": true,
+    "base": 82.0
+   },
+   {
+    "match_id": 565870,
+    "kickoff_utc": "2026-11-28T17:30:00Z",
+    "competition": "Bundesliga",
+    "home": "VfB Stuttgart",
+    "away": "Eintracht Frankfurt",
+    "home_s": "Stuttgart",
+    "away_s": "Frankfurt",
+    "market": "over15",
+    "pick": "over15",
+    "p": 87.57855131288747,
+    "ai": true,
+    "base": 82.0
+   }
+  ],
+  "notes": {
+   "565868": {
+    "home_rank": "#15 (10 poin, selisih gol -7)",
+    "away_rank": "#16 (7 poin, selisih gol -6)",
+    "home_form": [
+     "Bremen 2-2 SC Paderborn",
+     "SC Paderborn 1-0 HSV",
+     "M'gladbach 0-0 SC Paderborn",
+     "SC Paderborn 2-2 Frankfurt",
+     "Leverkusen 4-0 SC Paderborn"
+    ],
+    "away_form": [
+     "Schalke 0-1 Mainz",
+     "1. FC Köln 0-0 Schalke",
+     "Schalke 0-2 RB Leipzig",
+     "Hoffenheim 2-1 Schalke",
+     "Schalke 0-0 Stuttgart"
+    ],
+    "e": [
+     48.6,
+     24.2,
+     27.1
+    ],
+    "s": [
+     44.3,
+     29.2,
+     26.5
+    ],
+    "x": [
+     40.0,
+     34.1,
+     25.8
+    ],
+    "gb": [
+     82.0,
+     65.4,
+     45.7,
+     60.5
+    ],
+    "goals": {
+     "lam_h": 1.0,
+     "lam_a": 0.7,
+     "o15": 49.4,
+     "o25": 23.2,
+     "o35": 8.7,
+     "btts": 31.1
+    },
+    "top": [
+     [
+      "0-0",
+      19.0
+     ],
+     [
+      "1-0",
+      18.2
+     ],
+     [
+      "0-1",
+      13.4
+     ]
+    ]
+   },
+   "565874": {
+    "home_rank": "#12 (12 poin, selisih gol -14)",
+    "away_rank": "#2 (22 poin, selisih gol 20)",
+    "home_form": [
+     "HSV 1-0 Stuttgart",
+     "SC Paderborn 1-0 HSV",
+     "Frankfurt 3-1 HSV",
+     "HSV 3-1 M'gladbach",
+     "Bremen 4-0 HSV"
+    ],
+    "away_form": [
+     "Bayern 2-2 Dortmund",
+     "Atleti 0-2 Bayern",
+     "Mainz 1-2 Bayern",
+     "Bayern 1-1 1. FC Köln",
+     "Lille 2-1 Bayern"
+    ],
+    "p": [
+     12,
+     16,
+     72
+    ],
+    "e": [
+     13.8,
+     17.3,
+     68.8
+    ],
+    "s": [
+     12.0,
+     15.8,
+     72.2
+    ],
+    "x": [
+     10.2,
+     14.2,
+     75.6
+    ],
+    "gb": [
+     82.0,
+     65.4,
+     45.7,
+     60.5
+    ],
+    "goals": {
+     "lam_h": 1.0,
+     "lam_a": 2.8,
+     "o15": 89.4,
+     "o25": 73.3,
+     "o35": 52.9,
+     "btts": 58.7
+    },
+    "top": [
+     [
+      "0-2",
+      8.9
+     ],
+     [
+      "1-2",
+      8.7
+     ],
+     [
+      "0-3",
+      8.4
+     ]
+    ]
+   },
+   "565870": {
+    "home_rank": "#8 (13 poin, selisih gol 0)",
+    "away_rank": "#7 (15 poin, selisih gol -4)",
+    "home_form": [
+     "Leverkusen 2-4 Stuttgart",
+     "Galatasaray 2-0 Stuttgart",
+     "Stuttgart 1-0 Bremen",
+     "Schalke 0-0 Stuttgart",
+     "Inter 2-0 Stuttgart"
+    ],
+    "away_form": [
+     "Frankfurt 1-0 1. FC Köln",
+     "Dortmund 1-0 Frankfurt",
+     "Frankfurt 3-1 HSV",
+     "SC Paderborn 2-2 Frankfurt",
+     "Frankfurt 1-0 Hoffenheim"
+    ],
+    "e": [
+     59.6,
+     20.6,
+     19.8
+    ],
+    "s": [
+     61.8,
+     19.5,
+     18.7
+    ],
+    "x": [
+     64.0,
+     18.4,
+     17.6
+    ],
+    "gb": [
+     82.0,
+     65.4,
+     45.7,
+     60.5
+    ],
+    "goals": {
+     "lam_h": 2.4,
+     "lam_a": 1.2,
+     "o15": 87.6,
+     "o25": 70.0,
+     "o35": 48.8,
+     "btts": 63.7
+    },
+    "top": [
+     [
+      "2-1",
+      9.4
+     ],
+     [
+      "1-1",
+      7.8
+     ],
+     [
+      "2-0",
+      7.8
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.7143,
+  "tg_msg_id": 513,
+  "outcome": "",
+  "legs_hit": ""
+ },
+ {
+  "id": "2026-11-28-mix",
+  "date": "2026-11-28",
+  "kind": "mix",
+  "scope": "all",
+  "legs": [
+   {
+    "match_id": 565868,
+    "kickoff_utc": "2026-11-28T14:30:00Z",
+    "competition": "Bundesliga",
+    "home": "SC Paderborn 07",
+    "away": "FC Schalke 04",
+    "home_s": "SC Paderborn",
+    "away_s": "Schalke",
+    "market": "under35",
+    "pick": "under35",
+    "p": 91.28517516646919,
+    "ai": true,
+    "base": 54.3
+   },
+   {
+    "match_id": 565870,
+    "kickoff_utc": "2026-11-28T17:30:00Z",
+    "competition": "Bundesliga",
+    "home": "VfB Stuttgart",
+    "away": "Eintracht Frankfurt",
+    "home_s": "Stuttgart",
+    "away_s": "Frankfurt",
+    "market": "over15",
+    "pick": "over15",
+    "p": 87.57855131288747,
+    "ai": true,
+    "base": 82.0
+   },
+   {
+    "match_id": 564767,
+    "kickoff_utc": "2026-11-28T15:15:00Z",
+    "competition": "Primera Division",
+    "home": "Málaga CF",
+    "away": "Athletic Club",
+    "home_s": "Málaga",
+    "away_s": "Athletic",
+    "market": "under35",
+    "pick": "under35",
+    "p": 81.47295327678627,
+    "ai": true,
+    "base": 71.7
+   },
+   {
+    "match_id": 564762,
+    "kickoff_utc": "2026-11-28T20:00:00Z",
+    "competition": "Primera Division",
+    "home": "Real Madrid CF",
+    "away": "Deportivo Alavés",
+    "home_s": "Real Madrid",
+    "away_s": "Alavés",
+    "market": "1x2",
+    "pick": "home",
+    "p": 77.0,
+    "ai": false
+   },
+   {
+    "match_id": 559614,
+    "kickoff_utc": "2026-11-28T19:45:00Z",
+    "competition": "Ligue 1",
+    "home": "Paris Saint-Germain FC",
+    "away": "FC Lorient",
+    "home_s": "PSG",
+    "away_s": "Lorient",
+    "market": "1x2",
+    "pick": "home",
+    "p": 74.0,
+    "ai": false
+   }
+  ],
+  "notes": {
+   "565868": {
+    "home_rank": "#15 (10 poin, selisih gol -7)",
+    "away_rank": "#16 (7 poin, selisih gol -6)",
+    "home_form": [
+     "Bremen 2-2 SC Paderborn",
+     "SC Paderborn 1-0 HSV",
+     "M'gladbach 0-0 SC Paderborn",
+     "SC Paderborn 2-2 Frankfurt",
+     "Leverkusen 4-0 SC Paderborn"
+    ],
+    "away_form": [
+     "Schalke 0-1 Mainz",
+     "1. FC Köln 0-0 Schalke",
+     "Schalke 0-2 RB Leipzig",
+     "Hoffenheim 2-1 Schalke",
+     "Schalke 0-0 Stuttgart"
+    ],
+    "e": [
+     48.6,
+     24.2,
+     27.1
+    ],
+    "s": [
+     44.3,
+     29.2,
+     26.5
+    ],
+    "x": [
+     40.0,
+     34.1,
+     25.8
+    ],
+    "gb": [
+     82.0,
+     65.4,
+     45.7,
+     60.5
+    ],
+    "goals": {
+     "lam_h": 1.0,
+     "lam_a": 0.7,
+     "o15": 49.4,
+     "o25": 23.2,
+     "o35": 8.7,
+     "btts": 31.1
+    },
+    "top": [
+     [
+      "0-0",
+      19.0
+     ],
+     [
+      "1-0",
+      18.2
+     ],
+     [
+      "0-1",
+      13.4
+     ]
+    ]
+   },
+   "565870": {
+    "home_rank": "#8 (13 poin, selisih gol 0)",
+    "away_rank": "#7 (15 poin, selisih gol -4)",
+    "home_form": [
+     "Leverkusen 2-4 Stuttgart",
+     "Galatasaray 2-0 Stuttgart",
+     "Stuttgart 1-0 Bremen",
+     "Schalke 0-0 Stuttgart",
+     "Inter 2-0 Stuttgart"
+    ],
+    "away_form": [
+     "Frankfurt 1-0 1. FC Köln",
+     "Dortmund 1-0 Frankfurt",
+     "Frankfurt 3-1 HSV",
+     "SC Paderborn 2-2 Frankfurt",
+     "Frankfurt 1-0 Hoffenheim"
+    ],
+    "e": [
+     59.6,
+     20.6,
+     19.8
+    ],
+    "s": [
+     61.8,
+     19.5,
+     18.7
+    ],
+    "x": [
+     64.0,
+     18.4,
+     17.6
+    ],
+    "gb": [
+     82.0,
+     65.4,
+     45.7,
+     60.5
+    ],
+    "goals": {
+     "lam_h": 2.4,
+     "lam_a": 1.2,
+     "o15": 87.6,
+     "o25": 70.0,
+     "o35": 48.8,
+     "btts": 63.7
+    },
+    "top": [
+     [
+      "2-1",
+      9.4
+     ],
+     [
+      "1-1",
+      7.8
+     ],
+     [
+      "2-0",
+      7.8
+     ]
+    ]
+   },
+   "564767": {
+    "home_rank": "#20 (5 poin, selisih gol -15)",
+    "away_rank": "#8 (16 poin, selisih gol 3)",
+    "home_form": [
+     "Málaga 2-5 Real Sociedad",
+     "Alavés 1-1 Málaga",
+     "Real Betis 2-1 Málaga",
+     "Málaga 1-2 Santander",
+     "Osasuna 1-0 Málaga"
+    ],
+    "away_form": [
+     "Levante 3-1 Athletic",
+     "Athletic 4-0 Getafe",
+     "Athletic 2-1 Real Sociedad",
+     "Osasuna 1-1 Athletic",
+     "Athletic 0-1 Espanyol"
+    ],
+    "e": [
+     36.8,
+     27.8,
+     35.5
+    ],
+    "s": [
+     33.6,
+     28.3,
+     38.1
+    ],
+    "x": [
+     30.4,
+     28.7,
+     40.8
+    ],
+    "gb": [
+     77.0,
+     52.2,
+     28.3,
+     56.4
+    ],
+    "goals": {
+     "lam_h": 1.0,
+     "lam_a": 1.2,
+     "o15": 65.1,
+     "o25": 38.4,
+     "o35": 18.5,
+     "btts": 44.7
+    },
+    "top": [
+     [
+      "1-1",
+      13.3
+     ],
+     [
+      "0-1",
+      13.2
+     ],
+     [
+      "1-0",
+      10.9
+     ]
+    ]
+   },
+   "564762": {
+    "home_rank": "#2 (33 poin, selisih gol 22)",
+    "away_rank": "#9 (16 poin, selisih gol 0)",
+    "home_form": [
+     "Santander 0-3 Real Madrid",
+     "PAE AEK 2-3 Real Madrid",
+     "Valencia 0-3 Real Madrid",
+     "Real Madrid 2-1 Celta",
+     "Real Madrid 5-1 PSV"
+    ],
+    "away_form": [
+     "Celta 2-1 Alavés",
+     "Alavés 1-1 Málaga",
+     "Barça 6-1 Alavés",
+     "Sevilla FC 0-0 Alavés",
+     "Alavés 3-1 Deportivo"
+    ],
+    "p": [
+     77,
+     14,
+     9
+    ],
+    "e": [
+     79.8,
+     12.9,
+     7.3
+    ],
+    "s": [
+     77.2,
+     14.2,
+     8.5
+    ],
+    "x": [
+     74.7,
+     15.5,
+     9.8
+    ],
+    "gb": [
+     77.0,
+     52.2,
+     28.3,
+     56.4
+    ],
+    "goals": {
+     "lam_h": 2.5,
+     "lam_a": 0.8,
+     "o15": 84.3,
+     "o25": 64.4,
+     "o35": 42.3,
+     "btts": 50.6
+    },
+    "top": [
+     [
+      "2-0",
+      11.5
+     ],
+     [
+      "3-0",
+      9.6
+     ],
+     [
+      "2-1",
+      9.2
+     ]
+    ]
+   },
+   "559614": {
+    "home_rank": "#1 (26 poin, selisih gol 13)",
+    "away_rank": "#10 (16 poin, selisih gol 1)",
+    "home_form": [
+     "Le Havre 1-5 PSG",
+     "Villarreal 0-6 PSG",
+     "PSG 1-0 Troyes",
+     "Nice 2-3 PSG",
+     "PSG 2-2 Roma"
+    ],
+    "away_form": [
+     "Lorient 1-0 Monaco",
+     "Angers SCO 0-0 Lorient",
+     "Lorient 0-2 Brest",
+     "Le Havre 0-2 Lorient",
+     "Lorient 1-1 Stade Rennais"
+    ],
+    "p": [
+     74,
+     16,
+     10
+    ],
+    "e": [
+     78.2,
+     13.6,
+     8.2
+    ],
+    "s": [
+     74.1,
+     15.7,
+     10.1
+    ],
+    "x": [
+     70.1,
+     17.9,
+     12.1
+    ],
+    "gb": [
+     75.2,
+     53.7,
+     33.3,
+     54.1
+    ],
+    "goals": {
+     "lam_h": 2.3,
+     "lam_a": 0.8,
+     "o15": 81.5,
+     "o25": 59.9,
+     "o35": 37.5,
+     "btts": 50.4
+    },
+    "top": [
+     [
+      "2-0",
+      11.6
+     ],
+     [
+      "1-0",
+      10.2
+     ],
+     [
+      "2-1",
+      9.6
+     ]
+    ]
+   }
+  },
+  "p_comb": 0.3711,
+  "tg_msg_id": 513,
+  "outcome": "",
+  "legs_hit": ""
  }
 ]
